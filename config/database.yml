@@ -1,0 +1,30 @@
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+
+development:
+  <<: *default
+  host: tesis.cvokgymqgjq1.sa-east-1.rds.amazonaws.com
+  port: 5432
+  database: tesisdev
+  username: postgres
+  password: 200086244b
+
+test:
+  <<: *default
+  host: tesis.cvokgymqgjq1.sa-east-1.rds.amazonaws.com
+  port: 5432
+  database: tesistest
+  username: postgres
+  password: 200086244b
+
+production:
+  <<: *default
+  host: tesis.cvokgymqgjq1.sa-east-1.rds.amazonaws.com
+  port: 5432
+  database: tesisprod
+  username: postgres
+  password: 200086244b
