@@ -7,7 +7,7 @@ class Users::SessionsController < Devise::SessionsController
     if resource.admin?
       admin_dashboard_path # Suponiendo que tienes una ruta 'admin_dashboard_path'
     else
-      user_dashboard_path # Suponiendo que tienes una ruta 'user_dashboard_path'
+      student_dashboard_path # Suponiendo que tienes una ruta 'user_dashboard_path'
     end
   end
 

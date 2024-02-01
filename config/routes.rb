@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/admin_dashboard', to: 'admin#dashboard'
+  get '/student_dashboard', to: 'students#dashboard'
   devise_for :users, controllers: {
   sessions: 'users/sessions',
   registrations: 'users/registrations',
@@ -6,6 +8,10 @@ Rails.application.routes.draw do
   confirmations: 'users/confirmations',
   unlocks: 'users/unlocks'
 }
+devise_scope :user do
+  get '/users/sign_out' => 'users/sessions#destroy'
+end
+
   get 'home/index'
   get 'degrees/by_university', to: 'degrees#by_university'
 
