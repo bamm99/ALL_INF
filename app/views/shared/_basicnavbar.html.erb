@@ -1,0 +1,15 @@
+<div class="fixed top-14.5 right-4 left-4 flex items-center justify-between px-4 py-2 rounded-full border-2 border-gray-300 bg-white">
+
+        <div>
+            <!-- Contenido adicional si es necesario -->
+        </div>
+
+        <div>
+            <!-- Mensaje a la derecha -->
+            <p class="navbar-text float-right text-black">
+                Logged in as <strong><%= current_user.email %></strong>.
+                <%= link_to "Edit profile", edit_user_registration_path, class: "navbar-link bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" %> |
+                <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "navbar-link bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"  %>
+            </p>
+        </div>
+    </div>

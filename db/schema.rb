@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_27_011946) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_27_201749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,9 +35,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_27_011946) do
     t.string "user_last_name", null: false
     t.integer "user_rol", default: 0, null: false
     t.integer "user_student", default: 0, null: false
-    t.bigint "user_university_id", null: false
-    t.bigint "user_degree_id", null: false
-    t.string "user_password", null: false
+    t.bigint "user_university_id"
+    t.bigint "user_degree_id"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"

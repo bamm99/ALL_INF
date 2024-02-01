@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+  sessions: 'users/sessions',
+  registrations: 'users/registrations',
+  passwords: 'users/passwords',
+  confirmations: 'users/confirmations',
+  unlocks: 'users/unlocks'
+}
   get 'home/index'
+  get 'degrees/by_university', to: 'degrees#by_university'
+
   root 'home#index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
