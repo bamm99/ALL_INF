@@ -84,11 +84,12 @@
                       <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700", disabled: true } %>
                     </div>
                     <div class="text-center mt-2">
-                      <%= f.submit "Actualizar", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+                      <%= f.submit "Actualizar", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" %>
                       <!-- Botón de Volver Atrás -->
-                      <button onclick="window.location.href='/admin/dashboard?view=user_info&id=<%= @usuario.id %>'" class="py-2.5 px-4 text-white bg-gray-500 rounded-full hover:bg-gray-700 shadow-md">
+                      <a href="javascript:void(0)" onclick="cargarVista('user_info', <%= @usuario.id %>);" class="py-2.5 px-4 text-white bg-gray-500 rounded-full hover:bg-gray-700 shadow-md">
                         Volver Atrás
-                      </button>
+                      </a>
+
                     </div>
                 <% end %>
                 </div>
