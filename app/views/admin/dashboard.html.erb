@@ -6,7 +6,7 @@
     <title>Dashboard de Administración</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x.x/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" data-current-user-id="<%= current_user.id %>">
     <%= alert %>
     <%= notice %>
 
@@ -94,6 +94,45 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error cargando el contenido:', error));
         };
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(event) {
+        if (event.target.matches('.btn-eliminar')) {
+            const userId = event.target.dataset.userId; 
+            confirmarEliminar(userId);
+        }
+    });
+});
+function confirmarEliminar(userId) {
+    const currentUserID = document.body.getAttribute('data-current-user-id');
+    
+    if (userId === currentUserID) {
+        alert("No puedes eliminar tu propio usuario");
+        return;
+    }
+
+    if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        fetch(`/admin/users/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-Token': token,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+        .then(response => {
+            if (response.ok) {
+                cargarVista('usuarios'); // Recarga la lista de usuarios
+            } else {
+                alert("No se pudo eliminar el usuario.");
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
 </script>
 
 </body>

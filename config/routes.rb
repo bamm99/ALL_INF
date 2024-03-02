@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   get '/admin/dashboard', to: 'admin#dashboard', as: 'admin_dashboard'
   get '/admin/usuarios', to: 'admin#usuarios', as: 'admin_usuarios'
   get 'admin/user_info/:id', to: 'admin#user_info', as: 'admin_user_info'
-  delete '/admin/users/:id', to: 'admin#destroy', as: 'admin_user'
+  delete '/admin/users/:id', to: 'admin#destroy', as: 'admin_destroy_user'
   get '/admin/edit_user/:id', to: 'admin#edit_user', as: 'admin_edit_user'
   patch '/admin/users/:id', to: 'admin#update_user', as: 'admin_update_user'
-  
+
   get '/student_dashboard', to: 'students#dashboard'
   devise_for :users, controllers: {
     sessions: 'users/sessions',
