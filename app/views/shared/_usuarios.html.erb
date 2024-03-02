@@ -18,6 +18,9 @@
           Estudiante
         </th>
         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Administrador
+        </th>
+        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Acciones
         </th>
       </tr>
@@ -41,6 +44,14 @@
               No
             <% end %>
           </td>
+          <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+            <% if usuario.admin? %>
+              Si
+            <% else %>
+              No
+            <% end %>
+          </td>
+
           <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-black">
             <!-- Pasamos el ID del usuario a la función cargarVista -->
             <a href="javascript:void(0)" onclick="cargarVista('user_info', <%= usuario.id %>);" class="info-btn block py-2.5 px-4 text-black rounded hover:bg-purple-200">+ info</a>

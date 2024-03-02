@@ -4,12 +4,11 @@
     <div><strong>Nombre:</strong> <%= usuario.user_name.presence || "-" %></div>
     <div><strong>Apellido:</strong> <%= usuario.user_last_name.presence || "-" %></div>
     <div><strong>Email:</strong> <%= usuario.email.presence || "-" %></div>
-    <div><strong>Rol:</strong> <%= usuario.user_rol == 0 ? "Estudiante" : "Administrador" %></div>
+    <div><strong>Administrador:</strong> <%= usuario.admin? ? "Sí" : "No" %></div>
     <div><strong>Estudiante:</strong> <%= usuario.user_student == 0 ? "No" : "Sí" %></div>
     <div><strong>Universidad:</strong> <%= usuario.user_university&.name || "-" %></div>
     <div><strong>Carrera:</strong> <%= usuario.user_degree&.name || "-" %></div>
     <div><strong>Fecha de registro:</strong> <%= usuario.created_at || "-" %></div>
-    <!-- Agrega más campos según sea necesario -->
   </div>
 <div class="mt-4 flex justify-end space-x-2">
     <!-- Botón de Editar -->

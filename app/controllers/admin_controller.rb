@@ -26,18 +26,25 @@ class AdminController < ApplicationController
     @usuario = User.find(params[:id])
     updated_params = user_params
   
-    # Si el usuario ya no es estudiante, se asegura de que user_university_id y user_degree_id se establezcan en nil.
-    if updated_params[:user_student] == "0"
-      success = @usuario.update(updated_params.except(:user_university_id, :user_degree_id).merge(user_university_id: nil, user_degree_id: nil))
-    else
-      success = @usuario.update(updated_params)
+    # Elimina los parámetros de contraseña si la nueva contraseña está vacía
+    if updated_params[:password].blank?
+      updated_params.delete(:password)
+      updated_params.delete(:password_confirmation)
     end
-  
-    if success
+
+    # Actualiza user_university_id y user_degree_id si el usuario no es estudiante
+    if updated_params[:user_student] == "0"
+      updated_params[:user_university_id] = nil
+      updated_params[:user_degree_id] = nil
+    end
+
+    # Intenta actualizar el usuario con los parámetros actualizados
+    if @usuario.update(updated_params)
       redirect_to admin_dashboard_path, notice: "Usuario actualizado con éxito."
     else
       flash[:alert] = @usuario.errors.full_messages.to_sentence
-      redirect_to admin_dashboard_path, notice: "Error, Usuario no actualizado."
+      # Asegúrate de redirigir o renderizar de manera que el usuario pueda corregir los errores
+      redirect_to admin_dashboard_path(view: 'edit_user', id: @usuario.id), alert: "Error al actualizar el usuario."
     end
   end
 
@@ -55,7 +62,7 @@ class AdminController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:user_name, :user_last_name, :email, :user_rol, :user_student, :user_university_id, :user_degree_id)
+    params.require(:user).permit(:user_name, :user_last_name, :email, :user_rol, :user_student, :user_university_id, :user_degree_id, :password, :password_confirmation)
   end
 
   def check_admin
