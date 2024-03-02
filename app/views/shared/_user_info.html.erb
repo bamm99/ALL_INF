@@ -1,0 +1,49 @@
+<div class="text-black">
+  <h2 class="text-2xl font-bold mb-4">Información del Usuario</h2>
+  <div class="grid grid-cols-2 gap-4">
+    <div><strong>Nombre:</strong> <%= usuario.user_name.presence || "-" %></div>
+    <div><strong>Apellido:</strong> <%= usuario.user_last_name.presence || "-" %></div>
+    <div><strong>Email:</strong> <%= usuario.email.presence || "-" %></div>
+    <div><strong>Rol:</strong> <%= usuario.user_rol == 0 ? "Estudiante" : "Administrador" %></div>
+    <div><strong>Estudiante:</strong> <%= usuario.user_student == 0 ? "No" : "Sí" %></div>
+    <div><strong>Universidad:</strong> <%= usuario.user_university&.name || "-" %></div>
+    <div><strong>Carrera:</strong> <%= usuario.user_degree&.name || "-" %></div>
+    <div><strong>Fecha de registro:</strong> <%= usuario.created_at || "-" %></div>
+    <!-- Agrega más campos según sea necesario -->
+  </div>
+<div class="mt-4 flex justify-end space-x-2">
+    <!-- Botón de Editar -->
+    <button onclick="cargarVista('edit_user', <%= usuario.id %>);" class="py-2.5 px-4 text-white bg-blue-500 rounded-full hover:bg-blue-700 shadow-md">
+      Editar
+    </button>
+    
+    <!-- Botón de Eliminar -->
+    <!-- Implementa la lógica de eliminación adecuada en tu controlador de Rails -->
+    <button onclick="confirmarEliminar(<%= usuario.id %>);" class="py-2.5 px-4 text-white bg-red-500 rounded-full hover:bg-red-700 shadow-md">
+      Eliminar
+    </button>
+    
+    <!-- Botón de Volver Atrás -->
+    <button onclick="cargarVista('usuarios');" class="py-2.5 px-4 text-white bg-gray-500 rounded-full hover:bg-gray-700 shadow-md">
+      Volver Atrás
+    </button>
+  </div>
+</div>
+
+<script>
+function confirmarEliminar(userId) {
+  if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+    fetch(`/admin/users/${userId}`, { method: 'DELETE' })
+      .then(response => {
+        if (response.ok) {
+          cargarVista('usuarios'); // Recarga la lista de usuarios
+        } else {
+          alert("No se pudo eliminar el usuario.");
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+}
+</script>
+</div>
+

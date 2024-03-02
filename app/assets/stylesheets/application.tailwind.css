@@ -2,25 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-
 html, body {
     background-image: radial-gradient(at left bottom, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42));
     font-family: 'Font Mono', monospace;
     padding: 0;
     background-size: cover;
     background-repeat: no-repeat;
-    width: auto;
-    height: 100%;
+    background-attachment: fixed; /* Asegura que el fondo se mantenga fijo */
+    width: 100vw; /* Asegura que el ancho cubra toda la ventana */
+    height: 100vh; /* Asegura que la altura cubra toda la ventana */
     margin: 0;
     display: flex;
     flex-direction: column;
     color: white;
 }
-
-#user_student_checkbox:checked ~ .student-options {
-    display: block;
-  }
-  
-  .student-options {
-    display: none;
-  }

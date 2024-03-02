@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_27_201749) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_02_231730) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "courses", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.string "file"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "degrees", force: :cascade do |t|
     t.string "name"
@@ -20,6 +28,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_27_201749) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["university_id"], name: "index_degrees_on_university_id"
+  end
+
+  create_table "study_materials", force: :cascade do |t|
+    t.string "title"
+    t.string "category"
+    t.string "file"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "universities", force: :cascade do |t|

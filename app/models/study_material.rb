@@ -1,0 +1,2 @@
+class StudyMaterial < ApplicationRecord
+end

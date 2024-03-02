@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x.x/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+    <header class="text-center text-6xl p-4">
+        <h1>/ALL_INF</h1>
+        <h2>Admin Dashboard</h2>
+    </header>
+
+    <nav class="bg-white border-2 border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black">
+        <span>Logged in as <strong><%= current_user.email %></strong></span>
+        <%= link_to "Edit profile", edit_user_registration_path, class: "bg-blue-500 hover:bg-bluelayout: false-700 font-bold py-1 px-3 rounded-full text-sm mr-2" %> |
+        <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
+    </nav>
+
+    <div class="flex flex-row p-4 h-screen">
+        <!-- Sidebar dentro de un Card -->
+        <div class="bg-white w-1/6 rounded overflow-hidden shadow-lg p-4 h-full">
+            <aside class="mb-4">
+                <ul class="space-y-2">
+                    <li><a href="javascript:void(0)" onclick="cargarVista('usuarios');" class="block py-2.5 px-4 text-black rounded hover:bg-purple-200">Usuarios</a></li>
+
+                    <li><a href="#" class="block py-2 px-4 text-black rounded hover:bg-purple-200">Cursos</a></li>
+                    <li>
+                        <button class="dropdown-btn block py-2 px-4 text-black rounded hover:bg-purple-200 w-full text-left focus:outline-none" id="dropdownMenuButton">
+                            Materiales de Estudio
+                        </button>
+                        <ul class="dropdown-content hidden space-y-2 pl-4" aria-labelledby="dropdownMenuButton">
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Programación y Desarrollo</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Ingeniería de Software</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Bases de Datos</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Redes y Seguridad</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Sistemas Operativos y Tecnología</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Inteligencia Artificial y Datos</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Tecnologías Emergentes</a></li>
+                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Gestión Tecnológica</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <!-- Área de Contenido Principal -->
+    <div class="bg-white w-5/6 rounded overflow-hidden shadow-lg p-4 h-full ml-4 contenido-principal">
+        <h2 class="text-center text-3xl mb-4 text-black">Editar Usuario</h2>
+        <div class="w-full max-w-md p-6 mx-auto text-black">
+            <%= form_for(@usuario, url: admin_update_user_path(@usuario), method: :patch) do |f| %>
+
+                  <div class="mb-4">
+                    <%= f.label :user_name, "Nombre", class: "block text-sm font-bold mb-1" %>
+                    <%= f.text_field :user_name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
+                  </div>
+
+                  <div class="mb-4">
+                    <%= f.label :user_last_name, "Apellido", class: "block text-sm font-bold mb-1" %>
+                    <%= f.text_field :user_last_name, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
+                  </div>
+
+                  <div class="mb-4">
+                    <%= f.label :email, "Correo electrónico", class: "block text-sm font-bold mb-1" %>
+                    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
+                  </div>
+
+                  <div class="mb-4 flex items-center">
+                      <span class="text-sm font-medium text-gray-900 dark:text-gray-300">¿Eres estudiante?</span>
+                      <label class="relative inline-flex items-center cursor-pointer ml-3 group">
+                        <%= f.check_box :user_student, id: "user_student_checkbox", class: "sr-only peer" %>
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+
+                    <div id="student_options" class="mb-4">
+                      <%= f.label :user_university_id, "Universidad", for: "universities_select", class: "block text-sm font-bold mb-1" %>
+                      <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700" } %>
+
+                      <%= f.label :user_degree_id, "Carrera", for: "degrees_select", class: "block text-sm font-bold mt-4 mb-1" %>
+                      <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700", disabled: true } %>
+                    </div>
+                    <div class="text-center mt-2">
+                      <%= f.submit "Actualizar", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+                      <!-- Botón de Volver Atrás -->
+                      <button onclick="window.location.href='/admin/dashboard?view=user_info&id=<%= @usuario.id %>'" class="py-2.5 px-4 text-white bg-gray-500 rounded-full hover:bg-gray-700 shadow-md">
+                        Volver Atrás
+                      </button>
+                    </div>
+                <% end %>
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el menú desplegable del sidebar
+        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
+            var dropdownContent = this.nextElementSibling;
+            dropdownContent.classList.toggle('hidden');
+        });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const studentCheckbox = document.getElementById('user_student_checkbox');
+      const universitySelect = document.getElementById('universities_select');
+      const degreeSelect = document.getElementById('degrees_select');
+
+      function toggleSelects(enable) {
+        universitySelect.disabled = !enable;
+        degreeSelect.disabled = !enable;
+        if (!enable) {
+          universitySelect.value = '';
+          degreeSelect.innerHTML = '<option value="">Primero elige una universidad</option>';
+        }
+      }
+
+      toggleSelects(studentCheckbox.checked);
+
+      studentCheckbox.addEventListener('change', function() {
+        toggleSelects(this.checked);
+      });
+
+      universitySelect.addEventListener('change', function() {
+        fetch(`/degrees/by_university?university_id=${this.value}`)
+          .then(response => response.json())
+          .then(data => {
+            degreeSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
+            degreeSelect.disabled = false;
+            data.forEach((degree) => {
+              let option = new Option(degree.name, degree.id);
+              degreeSelect.appendChild(option);
+              });
+            });
+        });
+      });
+    </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Función para volver a la vista de información del usuario
+    window.volverAtras = (usuarioId) => {
+        window.location.href = `/admin/dashboard?view=user_info&id=${usuarioId}`;
+    };
+
+    // Función para cargar las vistas en el área de contenido principal
+    window.cargarVista = (vista, id = null) => {
+        let url = '';
+        switch (vista) {
+            case 'usuarios':
+                url = '/admin/dashboard?view=usuarios';
+                break;
+            case 'user_info':
+                url = `/admin/dashboard?view=user_info&id=${id}`;
+                break;
+            case 'edit_user':
+                window.location.href = `/admin/edit_user/${id}`;
+                return;
+            default:
+                url = '/admin/dashboard';
+        }
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                document.querySelector('.contenido-principal').innerHTML = html;
+            })
+            .catch(error => console.error('Error cargando el contenido:', error));
+    };
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
