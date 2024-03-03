@@ -29,7 +29,7 @@
                 <ul class="space-y-2">
                     <li><a href="javascript:void(0)" onclick="cargarVista('usuarios');" class="block py-2.5 px-4 text-black rounded hover:bg-purple-200">Usuarios</a></li>
 
-                    <li><a href="#" class="block py-2 px-4 text-black rounded hover:bg-purple-200">Cursos</a></li>
+                    <li><a href="javascript:void(0)" onclick="cargarVista('cursos');" class="block py-2.5 px-4 text-black rounded hover:bg-purple-200">Cursos</a></li>
                     <li>
                         <button class="dropdown-btn block py-2 px-4 text-black rounded hover:bg-purple-200 w-full text-left focus:outline-none" id="dropdownMenuButton">
                             Materiales de Estudio
@@ -56,6 +56,9 @@
             <% if params[:view] == 'usuarios' %>
                 <%= render 'shared/usuarios', usuarios: @usuarios %>
             <% end %>
+            <% if params[:view] == 'cursos' %>
+                <%= render 'shared/cursos', cursos: @cursos %>
+            <% end %>
         </div>
     </div>
 
@@ -73,6 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.cargarVista = (vista, id = null) => {
         let url = '';
         switch (vista) {
+            case 'cursos':
+                url = '/admin/dashboard?view=cursos';
+                break;
             case 'usuarios':
                 url = '/admin/dashboard?view=usuarios';
                 break;
@@ -97,42 +103,42 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(event) {
-        if (event.target.matches('.btn-eliminar')) {
-            const userId = event.target.dataset.userId; 
-            confirmarEliminar(userId);
-        }
-    });
-});
-function confirmarEliminar(userId) {
-    const currentUserID = document.body.getAttribute('data-current-user-id');
-    
-    if (userId === currentUserID) {
-        alert("No puedes eliminar tu propio usuario");
-        return;
-    }
-
-    if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        fetch(`/admin/users/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-Token': token,
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        })
-        .then(response => {
-            if (response.ok) {
-                cargarVista('usuarios'); // Recarga la lista de usuarios
-            } else {
-                alert("No se pudo eliminar el usuario.");
+    document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('click', function(event) {
+            if (event.target.matches('.btn-eliminar')) {
+                const userId = event.target.dataset.userId; 
+                confirmarEliminar(userId);
             }
-        })
-        .catch(error => console.error('Error:', error));
+        });
+    });
+    function confirmarEliminar(userId) {
+        const currentUserID = document.body.getAttribute('data-current-user-id');
+        
+        if (userId === currentUserID) {
+            alert("No puedes eliminar tu propio usuario");
+            return;
+        }
+
+        if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            fetch(`/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-Token': token,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            })
+            .then(response => {
+                if (response.ok) {
+                    cargarVista('usuarios'); // Recarga la lista de usuarios
+                } else {
+                    alert("No se pudo eliminar el usuario.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
     }
-}
 </script>
 
 </body>

@@ -1,3 +1,3 @@
 class Course < ApplicationRecord
-    mount_uploader :file, CourseFileUploader
-end
+    has_one_attached :file
+end  

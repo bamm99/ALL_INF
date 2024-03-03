@@ -34,7 +34,7 @@
 
 
 
-     <div class="mb-4 flex items-center">
+      <div class="mb-4 flex items-center">
         <span class="text-sm font-medium text-gray-900 dark:text-gray-300">¿Eres estudiante?</span>
         <label class="relative inline-flex items-center cursor-pointer ml-3 group">
           <%= f.check_box :user_student, id: "user_student_checkbox", class: "sr-only peer" %>
@@ -42,26 +42,23 @@
         </label>
       </div>
 
-<div id="student_options" class="mb-4">
-  <%= f.label :user_university_id, "Universidad", for: "universities_select", class: "block text-sm font-bold mb-1" %>
-  <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700" } %>
+      <div id="student_options" class="mb-4">
+        <%= f.label :user_university_id, "Universidad", for: "universities_select", class: "block text-sm font-bold mb-1" %>
+        <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700" } %>
 
-  <%= f.label :user_degree_id, "Carrera", for: "degrees_select", class: "block text-sm font-bold mt-4 mb-1" %>
-  <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700", disabled: true } %>
-</div>
-
-
+        <%= f.label :user_degree_id, "Carrera", for: "degrees_select", class: "block text-sm font-bold mt-4 mb-1" %>
+        <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700", disabled: true } %>
+      </div>
 
 
       <div class="text-center mt-2">
         <div class="flex justify-center items-center">
-          <div>
-            <%= f.submit "Registrarse", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2" %>
-          </div>
-        </div>
-          <div class="text-center mt-2 mb-4">
+          <a>
+            <%= f.submit "Registrarse", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" %>
             <%= render "devise/shared/links" %>
-          </div>
+          </a>
+        </div>
+
       </div>
     <% end %>
   </div>

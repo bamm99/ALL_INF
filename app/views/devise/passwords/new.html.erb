@@ -1,16 +1,67 @@
-<h2>Forgot your password?</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olvidaste tu Contraseña</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x.x/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <%= alert %>
+    <%= notice %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <header>
+        <h1 class="text-center text-6xl p-4">/ALL_INF</h1>
+        <h2 class="text-center text-4xl p-4">¿Olvidaste tu Contraseña?</h2>
+    </header>
+  
+    <div class="w-1/3 mx-auto mt-8">
+      <p class="text-center mb-4">
+        Para poder cambiar la contraseña de tu cuenta, envía un correo a un administrador para que cambien tu contraseña.
+      </p>
+      <div class="usuarios-list">
+        <h3 class="text-xl mb-4 text-center">Correos de administradores</h3>
+        <table class="min-w-full leading-normal rounded-lg overflow-hidden"> <!-- Aquí se añadió rounded-lg y overflow-hidden -->
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Correo
+              </th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-black bg-white">
+            <% @admin_emails.each do |email| %>
+              <tr>
+                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                  <%= email %>
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                  <button onclick="copyToClipboard('<%= email %>')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Copiar</button>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+    <div class="text-center text-xl mt-4">
+      <%= render "devise/shared/links" %>
+    </div>
 
-<%= render "devise/shared/links" %>
+    <script>
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+          console.log('Copiado al portapapeles');
+          alert('Correo copiado al portapapeles: ' + text);
+        }, function(err) {
+          console.error('Error al copiar al portapapeles: ', err);
+        });
+      }
+    </script>
+</body>
+</html>

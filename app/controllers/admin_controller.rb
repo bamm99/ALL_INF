@@ -12,6 +12,10 @@ class AdminController < ApplicationController
     elsif params[:view] == 'edit_user' && params[:id].present?
       @usuario = User.find(params[:id])
       render partial: "shared/edit_user", locals: { usuario: @usuario }, layout: false
+    elsif params[:view] == 'cursos'
+      @cursos = Course.all
+      @nuevo_curso = Course.new
+      render partial: 'shared/cursos', locals: { cursos: @cursos, nuevo_curso: @nuevo_curso }, layout: false  
     else
       # Código para la vista principal del dashboard si es necesario
     end
@@ -58,11 +62,42 @@ class AdminController < ApplicationController
     end
   end
 
+  def cursos
+    @cursos = Course.all
+    # Aquí también puedes construir un nuevo curso para el formulario
+    @nuevo_curso = Course.new
+    render partial: 'cursos', locals: { cursos: @cursos, nuevo_curso: @nuevo_curso }
+  end
+
+  def create_course
+    @course = Course.new(course_params)
+    if @course.save
+      redirect_to admin_dashboard_path(view: 'cursos'), notice: 'Curso creado con éxito.'
+    else
+      flash[:alert] = @course.errors.full_messages.to_sentence
+      redirect_to admin_dashboard_path(view: 'cursos')
+    end
+  end
+  
+
+  def update_course
+    @course = Course.find(params[:id])
+    if @course.update(course_params)
+      # Redireccionar o renderizar vista con éxito
+    else
+      # Renderizar vista de error
+    end
+  end
 
   private
 
   def user_params
     params.require(:user).permit(:user_name, :user_last_name, :email, :user_rol, :user_student, :user_university_id, :user_degree_id, :password, :password_confirmation)
+  end
+
+  def course_params
+    # Asegúrate de incluir :file o :files en los parámetros permitidos
+    params.require(:course).permit(:title, :description, :file)
   end
 
   def check_admin

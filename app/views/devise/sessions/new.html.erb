@@ -26,13 +26,17 @@
         </div>
       <% end %>
 
-      <div class="text-center mt-2">
-        <%= f.submit "Iniciar sesión", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
+      <div class="text-center">
+        <div class=" items-center justify-between">
+          <%= f.submit "Iniciar sesión", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-2" %>
+        </div>
       </div>
-    <% end %>
+      <% end %>
+      <div class="text-center mt-2 ">
+        <%= render "devise/shared/links" %>
+      </div>
+  </div> 
 
-    <div class="text-center mt-4">
-      <%= render "devise/shared/links", class: "text-blue-600 hover:text-blue-800" %>
-    </div>
+
   </div>
 </div>

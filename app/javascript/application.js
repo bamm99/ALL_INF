@@ -2,3 +2,5 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 import { Application } from "@hotwired/stimulus"
+
+require("@rails/activestorage").start();
