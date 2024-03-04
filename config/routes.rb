@@ -13,6 +13,11 @@ Rails.application.routes.draw do
   delete '/admin/courses/:id', to: 'admin#delete_course', as: 'admin_course'
 
   get '/student_dashboard', to: 'students#dashboard'
+  get '/student_dashboard/mostrar_cursos', to: 'students#mostrar_curso', as: 'mostrar_curso'
+
+
+
+  
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',

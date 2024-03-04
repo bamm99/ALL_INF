@@ -70,3 +70,5 @@ gem "cssbundling-rails", "~> 1.4"
 
 gem "devise", "~> 4.9"
 
+gem 'redcarpet'
+gem 'rouge'

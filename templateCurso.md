@@ -1,9 +1,15 @@
-#titulo del curso
+# titulo del curso
 
-##descripcion
+## descripcion
 
 explicacion general
 
-#punto 1
+# punto 1
 
 explicacion
+
+```
+
+ejemplo /de/codigo
+
+```

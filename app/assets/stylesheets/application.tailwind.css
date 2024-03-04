@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import 'github_markdown';
 html, body {
     background-image: radial-gradient(at left bottom, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42));
     font-family: 'Font Mono', monospace;
