@@ -1,10 +1,59 @@
 class AdminController < ApplicationController
   before_action :authenticate_user!
   before_action :check_admin
+  before_action :set_curso, only: [:ver_curso, :editar_curso, :actualizar_curso, :eliminar_curso]
+
+  #-------------------Cursos-------------------#
+
+  def cursos
+    @cursos = Course.all
+    render 'admin/cursos/admin_cursos'
+
+  end
+
+  def nuevo_curso
+    @curso = Course.new
+    render 'admin/cursos/admin_agregar_curso' # Asegúrate de que esta línea apunte correctamente al archivo de la vista
+
+  end
+
+  def crear_curso
+    @curso = Course.new(course_params)
+    if @curso.save
+      redirect_to admin_cursos_path, notice: 'Curso creado con éxito.'
+    else
+      render :nuevo_curso
+    end
+  end
+
+  def ver_curso
+    @curso = Course.find(params[:id])
+    render 'admin/cursos/admin_curso_info' 
+  end
+
+  def editar_curso
+  end
+
+  def actualizar_curso
+    if @curso.update(course_params)
+      redirect_to ver_curso_admin_path(@curso), notice: 'Curso actualizado con éxito.'
+    else
+      render :editar_curso
+    end
+  end
+
+  def eliminar_curso
+    @curso.destroy
+    redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
+  end
+
+  #-------------------Dashboard-------------------#
 
   def dashboard
     #dashboard 
   end
+
+  #-------------------Usuarios-------------------#
 
   def usuarios
     @usuarios = User.all
@@ -47,8 +96,6 @@ class AdminController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
   end
-  
-  
 
   def destroy
     @usuario = User.find(params[:id])
@@ -62,17 +109,27 @@ class AdminController < ApplicationController
     head :not_found
   end
 
+#-------------------Privado-------------------#
+
   private
 
   def user_params
     params.require(:user).permit(:user_name, :user_last_name, :email, :user_rol, :user_student, :user_university_id, :user_degree_id, :password, :password_confirmation)
   end
 
+  def check_admin
+    head :forbidden unless current_user.admin?
+  end
+
+  def set_curso
+    @curso = Course.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_cursos_path, alert: 'Curso no encontrado.'
+  end
+
   def course_params
     params.require(:course).permit(:title, :description, :file)
   end
 
-  def check_admin
-    head :forbidden unless current_user.admin?
-  end
+
 end
