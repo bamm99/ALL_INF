@@ -1,0 +1,22 @@
+<!-- app/views/shared/_nuevocurso.html.erb -->
+<div class="p-4 text-black">
+    <h3 class="text-3xl mb-4 text-black">Agregar Nuevo Curso</h3>
+    <%= form_for @nuevo_curso, url: admin_create_course_path, html: { multipart: true } do |f| %>
+        <div class="mb-4">
+            <%= f.label :title, "Nombre del curso", class: "text-black block text-sm font-bold mb-1" %>
+            <%= f.text_field :title, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
+        </div>
+
+        <div class="mb-4">
+            <%= f.label :description, "Descripción", class: "text-black block text-sm font-bold mb-1" %>
+            <%= f.text_area :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
+        </div>
+
+        <%= f.label :file, "Archivo del curso (README)", class: "text-black block text-sm font-bold mb-1" %>
+        <div class="mb-4">
+            <%= f.file_field :file, direct_upload: true, class: "shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        </div>
+
+        <%= f.submit "Subir Curso", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    <% end %>
+</div>
