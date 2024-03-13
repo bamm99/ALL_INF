@@ -28,16 +28,36 @@ class AdminController < ApplicationController
 
   def ver_curso
     @curso = Course.find(params[:id])
-    render 'admin/cursos/admin_curso_info' 
+    # Cantidad total de completaciones del curso
+    @total_completions = @curso.course_completions.count
+    # Solo las completaciones que tienen feedback no nulo y no vacío
+    @feedbacks = @curso.course_completions.where.not(feedback: [nil, ""])
+    render 'admin/cursos/admin_curso_info'
   end
+  
 
   def editar_curso
+    @curso = Course.find(params[:id])
+    if @curso.file.attached?
+      @curso_content = @curso.file.download.force_encoding('UTF-8')
+    else
+      @curso_content = ""
+    end
+    render 'admin/cursos/admin_editar_curso'
   end
+  
 
   def actualizar_curso
-    if @curso.update(course_params)
+    if @curso.update(course_params.except(:file))
+      # Actualizar el archivo .md si es necesario
+      if params[:file_content].present?
+        # Reemplazar el archivo existente o adjuntar uno nuevo
+        @curso.file.attach(io: StringIO.new(params[:file_content]), filename: 'contenido.md') if params[:file_content].present?
+      end
+  
       redirect_to ver_curso_admin_path(@curso), notice: 'Curso actualizado con éxito.'
     else
+      @curso_content = params[:file_content] || ""
       render :editar_curso
     end
   end

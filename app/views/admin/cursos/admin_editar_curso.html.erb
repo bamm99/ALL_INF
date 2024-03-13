@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,51 +51,33 @@
             </aside>
         </div>
         <!-- Área de Contenido Principal -->
-        <div class="bg-white w-5/6 rounded overflow-hidden shadow-lg p-4 h-full ml-4 contenido-principal">
-            <div class="text-black p-4">
-                <div class="text-black">
-                    <h3 class="text-3xl mb-4 text-black float-left">Gestión de Cursos</h3>
-                    <div class="mb-4 text-right">
-                        <%= link_to 'Agregar Curso', nuevo_curso_admin_path, class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"%>
-                    </div>
-                    
-                    <div class="clear-both mt-6">
-                        <h4 class="text-lg mb-2">Cursos Disponibles</h4>
-                        <table class="min-w-full leading-normal">
-                            <thead>
-                                <tr>
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                        Nombre del curso
-                                    </th>
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                        Descripción
-                                    </th>
-                                    <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                        Acciones
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-black">
-                                <% @cursos.each do |curso| %>
-                                    <tr>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <%= curso.title %>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <%= curso.description %>
-                                        </td>
-                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-black">
-                                            <a href="<%= ver_curso_admin_path(curso.id) %>" class="info-btn block py-2.5 px-4 text-black rounded hover:bg-purple-200">+ info</a>
-                                        </td>
-                                    </tr>
-                                <% end %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="bg-white w-5/6 text-black rounded overflow-hidden shadow-lg p-4 h-full ml-4 contenido-principal">
+            <h2 class="text-2xl font-semibold mb-5">Editar Curso</h2>
+            
+            <%= form_with model: @curso, url: actualizar_curso_admin_path(@curso), local: true, class: "space-y-6" do |form| %>
+            
+            <div>
+                <%= form.label :title, "Título", class: "block text-sm font-medium text-gray-700" %>
+                <%= form.text_field :title, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
             </div>
+
+            <div>
+                <%= form.label :description, "Descripción", class: "block text-sm font-medium text-gray-700" %>
+                <%= form.text_area :description, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+            </div>
+
+            <div>
+                <%= form.label :file, "Contenido del Curso (.md)", class: "block text-sm font-medium text-gray-700" %>
+                <%= text_area_tag :file_content, @curso_content, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", rows: 10 %>
+            </div>
+
+            <div class="flex justify-between">
+                <%= form.submit "Guardar Cambios", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+                <%= link_to 'Volver', admin_cursos_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+            </div>
+            <% end %>
         </div>
-    </div>
+
 
 
     <script>
@@ -104,5 +87,7 @@
             dropdownContent.classList.toggle('hidden');
         });
     </script>
+
+
 </body>
 </html>

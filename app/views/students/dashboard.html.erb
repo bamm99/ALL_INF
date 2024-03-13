@@ -1,64 +1,72 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Estudiante</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x.x/dist/tailwind.min.css" rel="stylesheet">
     <%= stylesheet_link_tag 'github_markdown' %>
-
 </head>
-<body class="bg-gray-100" data-current-user-id="<%= current_user.id %>">
+<body class="bg-gray-100 h-full flex flex-col">
     <%= alert %>
     <%= notice %>
 
     <header class="text-center text-6xl p-4">
         <h1>/ALL_INF</h1>
         <h2>Student Dashboard</h2>
-
     </header>
 
-        <nav class="bg-white border-2 border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black">
-            <span>Logged in as <strong><%= current_user.email %></strong></span>
-            <%= link_to "Edit profile", edit_user_registration_path, class: "bg-blue-500 hover:bg-bluelayout: false-700 font-bold py-1 px-3 rounded-full text-sm mr-2" %> |
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
-            </nav>
+    <nav class="bg-white border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black">
+        <span>Logged in as <strong><%= current_user.email %></strong></span>
+        <%= link_to "Edit profile", edit_user_registration_path, class: "bg-blue-500 hover:bg-blue-700 font-bold py-1 px-3 rounded-full text-sm mr-2" %> |
+        <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
+    </nav>
 
-    <div class="flex flex-row p-4 my-4 h-screen">            
-        <div class="  bg-white w-4/6 rounded overflow-hidden shadow-lg p-4 h-full">
-            <h1 class= "text-black text-6xl">terminal linux</h1>
+    <div class="flex flex-row flex-auto overflow-hidden p-2">
+        <!-- div de la terminal -->
+        <div class="ml-4 bg-white w-4/6 rounded shadow-lg p-4 flex-auto mr-2">
+            <h1 class="text-black text-6xl">terminal linux</h1>
         </div>
-        <div class="mx-4 bg-white w-2/6 rounded overflow-hidden shadow-lg p-4 h-full">
-            <h1 class="text-black text-2xl">Cursos</h1>
-                <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
-                    <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select", class: "block w-full py-2 px-3 border rounded leading-tight focus:outline-none focus:shadow-outline text-gray-700" } %>
-                <% end %>
-
-                <div id="course_content" class="mt-4 text-black markdown-body">
-                    <!-- carga de vista parcial -->
+        <!-- div de los cursos -->
+        <div class="mr-4 bg-white w-2/6 rounded shadow-lg p-4 flex flex-col overflow-hidden">
+            <h1 class="text-black text-2xl mb-2">Cursos</h1>
+            <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
+                <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select", class: "block w-full py-2 px-3 border rounded focus:outline-none focus:shadow-outline text-gray-700" } %>
+            <% end %>
+            <div class="flex-1 overflow-y-auto mt-2">
+                <div id="course_content" class="markdown-body">
+                    <!-- carga de vista parcial del curso -->
                 </div>
+                <div id="feedback_form" class="mt-4">
+                    <!-- carga de vista parcial del formulario de feedback -->
+                </div>
+            </div>
         </div>
     </div>
-    </body>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        const selectElement = document.getElementById("courses_select");
+</body>
 
-        selectElement.addEventListener("change", function() {
-            const courseId = this.value;
-            if (courseId) {
-            fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
-                .then(response => response.json()) // Espera una respuesta JSON
-                .then(data => {
-                document.getElementById("course_content").innerHTML = data.content;
-                })
-                .catch(error => console.error('Error al cargar el curso:', error));
-            } else {
-            document.getElementById("course_content").innerHTML = '';
-            }
-        });
-        });
+<script>
+    document.addEventListener("turbo:load", function() {
+    const selectElement = document.getElementById("courses_select");
 
-    </script>
+    selectElement.addEventListener("change", function() {
+        const courseId = this.value;
+        if (courseId) {
+        fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
+            .then(response => response.json())
+            .then(data => {
+            document.getElementById("course_content").innerHTML = data.curso_html;
+            document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
+            })
+            .catch(error => console.error('Error al cargar el curso:', error));
+        } else {
+        document.getElementById("course_content").innerHTML = '';
+        document.getElementById("feedback_form").innerHTML = '';
+        }
+    });
+    });
+
+</script>
+
 
 </html>

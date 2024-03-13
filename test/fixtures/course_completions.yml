@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  course: one
+  feedback: MyText
+  completed_at: 2024-03-12 03:14:36
+
+two:
+  user: two
+  course: two
+  feedback: MyText
+  completed_at: 2024-03-12 03:14:36
