@@ -1,4 +1,4 @@
-<div class='text-black '>
+<div class='text-black overflow-hidden' style="margin-bottom: 20px;">
   <%= form_with url: complete_course_path, method: :post, class: "space-y-4" do |form| %>
     <%= form.hidden_field :course_id, value: @curso.id %>
     

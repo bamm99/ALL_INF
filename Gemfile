@@ -73,5 +73,5 @@ gem "devise", "~> 4.9"
 gem 'redcarpet'
 gem 'rouge'
 gem 'net-ssh'
-
+gem 'redis'
 gem 'dotenv-rails', groups: [:development, :test]
