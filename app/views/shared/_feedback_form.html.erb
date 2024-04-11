@@ -1,4 +1,4 @@
-<div class='text-black overflow-hidden' style="margin-bottom: 20px;">
+<div class='text-black overflow-hidden'>
   <%= form_with url: complete_course_path, method: :post, class: "space-y-4" do |form| %>
     <%= form.hidden_field :course_id, value: @curso.id %>
     
@@ -8,7 +8,7 @@
     </div>
     
     <div class="flex justify-end">
-      <%= form.submit "Terminar Curso", class: "px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" %>
+      <%= form.submit "Terminar Curso", class: "px-4 py-2 bg-blue-600 text-black font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" %>
     </div>
   <% end %>
 </div>

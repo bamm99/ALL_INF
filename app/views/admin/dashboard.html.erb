@@ -8,7 +8,20 @@
 </head>
 
 <body class="bg-gray-100" data-current-user-id="<%= current_user.id %>">
-    <%= render 'shared/header' %>
+    <%= alert %>
+    <%= notice %>
+
+    <header class="text-center text-6xl p-4">
+        <h1>/ALL_INF</h1>
+        <h2>Admin Dashboard</h2>
+    </header>
+
+    <nav class="border-2 border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black" style="background-color: #F5F6F4;">
+        <span>Logged in as <strong><%= current_user.email %></strong></span>
+        <%= link_to "Edit profile", edit_user_registration_path, class: "bg-blue-500 hover:bg-blue-700 font-bold py-1 px-3 rounded-full text-sm mr-2" %> |
+        <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
+    </nav>
+
     <div class="flex flex-row p-4 h-screen">
         <!-- Sidebar dentro de un Card -->
         <div class="w-1/6 rounded overflow-hidden shadow-lg p-4 h-full" style="background-color: #F5F6F4;">

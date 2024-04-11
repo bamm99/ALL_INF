@@ -17,7 +17,7 @@
 
     <header class="text-center text-6xl p-4">
         <h1>/ALL_INF</h1>
-        <h2>Student Dashboard</h2>
+
     </header>
 
     <nav class="border-2 border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black" style="background-color: #F5F6F4;">
@@ -26,20 +26,18 @@
         <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
     </nav>
 
-    <div class="flex flex-row flex-auto h-full p-2">
+    <div class="flex flex-row flex-auto h-full p-2 mb-4">
         <!-- div de la terminal -->
-        <div class="w-4/6 rounded overflow-hidden shadow-lg p-4 h-full" style="background-color: #F5F6F4;">
-            <style>
-            .xterm .xterm-viewport { background-color: #300A24; }
-            .xterm .xterm-text-layer { color: #FFFFFF; }
-            .xterm .xterm-cursor-layer .xterm-cursor { background-color: #E95420; }
-            .xterm .xterm-selection-layer .xterm-selection { background-color: rgba(233, 84, 32, 0.3); }
-            </style>
+        <div class="w-4/6 rounded shadow-lg p-4 ml-4 overflow-hidden text-black" style="background-color: #F5F6F4;">
             
-            <div id="terminal-container"></div>
+            <a href="#" class="block max-w-sm p-2.5 mb-1 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mb-4"> <!-- Aquí agregué mb-4 para margen inferior -->
+                <p class="font-normal text-gray-700 dark:text-gray-400">Para iniciar sesion en la terminal tu usuario es "la primera letra de tu nombre"+"tu apellido", la clave generica es "allinf", puedes cambiarla si deseas, pero no la pierdas, ya que deberas contactarte con un administrador para poder recuperarla.</p>
+            </a>
+            <!-- aquí va SHELL IN A BOX -->
+
+            <iframe src="http://ec2-54-94-57-100.sa-east-1.compute.amazonaws.com:4200/" style="width: 100%; height: 90%; border: none;"></iframe>
+
         </div>
-
-
         <!-- div de los cursos -->
         <style>
             .contenido-curso {
@@ -50,12 +48,21 @@
                 margin-top: 20px;
             }
         </style>
-        <div class="w-2/6 rounded shadow-lg p-4 ml-4 overflow-hidden" style="background-color: #F5F6F4;">
+        <div class="w-2/6 rounded shadow-lg p-4 ml-4" style="background-color: #F5F6F4;">
             <h1 class="text-black text-2xl mb-2">Cursos</h1>
             <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
                 <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select", class: "block w-full py-2 px-3 border rounded focus:outline-none focus:shadow-outline text-gray-700" } %>
             <% end %>
-            <div class="contenido-curso">
+            <style>
+                .contenido-curso {
+                    overflow-y: auto; /* Permite el desplazamiento vertical si el contenido excede la altura del contenedor */
+                    max-height: calc(100vh - 850px); /* Ajusta esta altura según sea necesario */
+                }
+                .feedback-container {
+                    margin-top: 20px;
+                }
+            </style>
+            <div class="contenido-curso  overflow-hidden">
                 <div id="course_content" class="markdown-body">
                     <!-- Carga de vista parcial del curso -->
                 </div>
@@ -63,6 +70,7 @@
                     <!-- Carga de vista parcial del formulario de feedback -->
                 </div>
             </div>
+
         </div>
 
     </div>
