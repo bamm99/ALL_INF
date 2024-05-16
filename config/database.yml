@@ -7,24 +7,24 @@ default: &default
 
 development:
   <<: *default
-  host: tesis.cvokgymqgjq1.sa-east-1.rds.amazonaws.com
+  host: pgsql.face.ubiobio.cl
   port: 5432
-  database: tesisdev
-  username: postgres
-  password: 200086244b
+  database: bmosso_bd
+  username: bmosso
+  password: bmosso1479
 
 test:
   <<: *default
-  host: tesis.cvokgymqgjq1.sa-east-1.rds.amazonaws.com
+  host: pgsql.face.ubiobio.cl
   port: 5432
-  database: tesistest
-  username: postgres
-  password: 200086244b
+  database: bmosso_bd
+  username: bmosso
+  password: bmosso1479
 
 production:
   <<: *default
-  host: tesis.cvokgymqgjq1.sa-east-1.rds.amazonaws.com
+  host: pgsql.face.ubiobio.cl
   port: 5432
-  database: tesisprod
-  username: postgres
-  password: 200086244b
+  database: bmosso_bd
+  username: bmosso
+  password: bmosso1479

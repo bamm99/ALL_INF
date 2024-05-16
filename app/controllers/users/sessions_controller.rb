@@ -1,70 +1,59 @@
 class Users::SessionsController < Devise::SessionsController
-  # before_action :configure_sign_in_params, only: [:create]
-  require 'open3'
-
-  def after_sign_in_path_for(resource)
-    # Llama a la función para crear/verificar la sesión screen para el usuario
-    create_remote_user(resource)
-    super
-    # Redirige al usuario a su dashboard correspondiente
-    if resource.admin?
-      admin_dashboard_path
-    else
-      student_dashboard_path
-  
-    end
-  end
   require 'net/ssh'
 
-  def create_remote_user(resource)
-    remote_user_name = "#{resource.user_name[0].downcase}#{resource.user_last_name.downcase}"
-    user_home_dir = "/home/#{remote_user_name}"
+  def after_sign_in_path_for(resource)
+    setup_user_environment(resource)
+    resource.admin? ? admin_dashboard_path : student_dashboard_path
+  end
+
+  private
+
+  def setup_user_environment(resource)
+    username = format_username(resource)
     generic_password = "allinf"
-    
-    hostname = 'ec2-54-94-57-100.sa-east-1.compute.amazonaws.com'
-    username = 'shellbox'
-    ssh_password = 'qwerty'
-  
-    Net::SSH.start(hostname, username, password: ssh_password) do |ssh|
-      commands = [
-        "echo '#{ssh_password}' | sudo -S groupadd webappusers || true",
-        "echo '#{ssh_password}' | sudo -S useradd -m -d #{user_home_dir} -s /bin/rbash -g webappusers #{remote_user_name} || true",
-        "echo '#{ssh_password}' | sudo -S sh -c \"echo '#{remote_user_name}:#{generic_password}' | chpasswd\""
-      ]
-  
-      commands.each do |command|
-        stdout_data = ""
-        stderr_data = ""
-        exit_code = nil
-        ssh.open_channel do |channel|
-          channel.exec(command) do |ch, success|
-            unless success
-              abort "FAILED: couldn't execute command (ssh.channel.exec)"
-            end
-            channel.on_data do |ch, data|
-              stdout_data += data
-            end
-  
-            channel.on_extended_data do |ch, type, data|
-              stderr_data += data
-            end
-  
-            channel.on_request("exit-status") do |ch, data|
-              exit_code = data.read_long
-            end
-          end
-        end
-        ssh.loop
-        
-        puts "stdout: #{stdout_data}"
-        puts "stderr: #{stderr_data}" unless stderr_data.empty?
-        puts "exit code: #{exit_code}"
+    hostname = '146.83.194.188'
+    port = 22
+    ssh_username = 'dev'
+    ssh_password = 'dolcegusto'
+
+    begin
+      Net::SSH.start(hostname, ssh_username, password: ssh_password, port: port) do |ssh|
+        execute_user_setup_script(ssh, username, generic_password, ssh_password)
+      end
+    rescue Net::SSH::AuthenticationFailed, Net::SSH::ConnectionTimeout
+      puts "SSH connection error with #{hostname}"
+    end
+  end
+
+  def format_username(resource)
+    "#{resource.user_name[0].downcase}#{resource.user_last_name.downcase}"
+  end
+
+  def execute_user_setup_script(ssh, username, password, ssh_password)
+    commands = [
+      "cd ~/tesis && echo '#{ssh_password}' | sudo -S ./script.sh '#{username}' '#{password}'"
+    ]
+    commands.each do |command|
+      stdout_data, stderr_data, exit_code = execute_ssh_command(ssh, command)
+      log_command_results(stdout_data, stderr_data, exit_code)
+    end
+  end
+
+  def execute_ssh_command(ssh, command)
+    stdout_data, stderr_data, exit_code = "", "", nil
+    ssh.open_channel do |channel|
+      channel.exec(command) do |ch, success|
+        raise "Command execution failed" unless success
+        channel.on_data { |ch, data| stdout_data += data }
+        channel.on_extended_data { |ch, type, data| stderr_data += data }
+        channel.on_request("exit-status") { |ch, data| exit_code = data.read_long }
       end
     end
-  rescue Net::SSH::AuthenticationFailed => e
-    puts "Authentication failed for user #{username} on #{hostname}"
+    ssh.loop
+    [stdout_data, stderr_data, exit_code]
   end
-  
 
+  def log_command_results(stdout, stderr, exit_code)
+    puts "Command STDOUT: #{stdout}", "Command STDERR: #{stderr}", "Exit Code: #{exit_code}"
+  end
 end
-
