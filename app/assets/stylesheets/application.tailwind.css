@@ -3,7 +3,7 @@
 @tailwind utilities;
 @import 'github_markdown';
 @import 'github_markdown_dark';
-@import 'xterm';
+
 html, body {
     background-image: radial-gradient(at left bottom, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42));
     font-family: 'Font Mono', monospace;
