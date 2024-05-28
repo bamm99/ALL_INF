@@ -21,10 +21,29 @@ html, body {
     font-size: clamp(4rem, 10vw, 8rem); /* Ajusta estos valores según tus necesidades */
     text-align: center;
     margin-top: -20vh; /* Ajusta este valor para colocarlo en el tercio superior */
-
-/* Ajusta el desplazamiento hacia arriba según sea necesario */
   }
   .homesubTitle {
     font-size: clamp(1rem, 2vw, 1.5rem); /* Ajusta estos valores según tus necesidades */
     text-align: center;
   }
+
+  .input-custom {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro con 50% de opacidad */
+    color: white; /* Texto blanco para contraste */
+}
+.regularTitle {
+    font-size: clamp(3rem, 5vw, 7rem); /* Ajusta estos valores según tus necesidades */
+    text-align: center;
+    margin-top: -20vh; /* Ajusta este valor para colocarlo en el tercio superior */
+  }
+  .regularsubTitle {
+    font-size: clamp(1.5rem, 2vw, 2rem); /* Ajusta estos valores según tus necesidades */
+    text-align: center;
+  }
+  .box_login {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro con 50% de opacidad */
+    color: white;/* Fondo blanco con 80% de opacidad */
+    padding: clamp(1.5rem, 2vw, 2rem); /* Mantiene el padding de la clase box */
+    border-radius: 12px; /* Mantiene el borde redondeado de la clase box */
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1); /* Mantiene la sombra de la clase box */
+}

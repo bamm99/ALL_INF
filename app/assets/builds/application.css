@@ -22365,6 +22365,26 @@ body {
   font-size: clamp(1rem, 2vw, 1.5rem);
   text-align: center;
 }
+.input-custom {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+.regularTitle {
+  font-size: clamp(3rem, 5vw, 7rem);
+  text-align: center;
+  margin-top: -20vh;
+}
+.regularsubTitle {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  text-align: center;
+}
+.box_login {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: clamp(1.5rem, 2vw, 2rem);
+  border-radius: 12px;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+}
 /*! Bundled license information:
 
 bulma/css/bulma.css:

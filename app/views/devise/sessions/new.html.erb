@@ -1,42 +1,56 @@
-<div class="font-mono flex items-center justify-center h-screen">
-  
-  <div class="w-full max-w-md p-6 mx-auto">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>/ALL_IECI</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <!-- Otros elementos del head como enlaces a hojas de estilo, etc. -->
+</head>
+<body>
+    <div class="section is-flex is-align-items-center is-justify-content-center is-fullheight">
+        <div class="container is-max-desktop p-6">
+            <h1 class="regularTitle has-text-centered mt-4">./all_inf</h1>
+            <h2 class="regularsubTitle has-text-centered mb-4">Iniciar sesión</h2>
+            <div class="box box_login">
+              <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              <%= render "devise/shared/error_messages", resource: resource %>
 
-      <h1 class="text-center pt-4 font-mono text-6xl">/ALL_IECI</h1>
-      <h2 class="text-center text-3xl mb-4">Iniciar sesión</h2>
+              <div class="field mb-4">
+                  <label class="label"><%= f.label :email %></label>
+                  <div class="control">
+                      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-custom" %>
+                  </div>
+              </div>
 
+              <div class="field mb-4">
+                  <label class="label"><%= f.label :password %></label>
+                  <div class="control">
+                      <%= f.password_field :password, autocomplete: "current-password", class: "input input-custom" %>
+                  </div>
+              </div>
 
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
+              <% if devise_mapping.rememberable? %>
+                  <div class="field mb-4">
+                      <div class="control">
+                          <label class="checkbox">
+                              <%= f.check_box :remember_me %>
+                              <%= f.label :remember_me %>
+                          </label>
+                      </div>
+                  </div>
+              <% end %>
 
-      <div class="mb-4">
-        <%= f.label :email, class: "block text-sm font-bold mb-1" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
+              <div class="field is-grouped is-grouped-centered">
+                  <div class="control">
+                      <%= f.submit "Iniciar sesión", class: "button is-primary" %>
+                  </div>
+              </div>
+              <% end %>
 
-      <div class="mb-4">
-        <%= f.label :password, class: "block text-sm font-bold mb-1" %>
-        <%= f.password_field :password, autocomplete: "current-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      </div>
-
-      <% if devise_mapping.rememberable? %>
-        <div class="mb-4 flex items-center ">
-          <%= f.check_box :remember_me, class: "mr-2 leading-tight" %>
-          <%= f.label :remember_me, class: "text-sm font-medium text-gray-100" %>
+              <div class="has-text-centered mt-2">
+                  <%= render "devise/shared/links" %>
+              </div>
+            </div>
         </div>
-      <% end %>
-
-      <div class="text-center">
-        <div class=" items-center justify-between">
-          <%= f.submit "Iniciar sesión", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-2" %>
-        </div>
-      </div>
-      <% end %>
-      <div class="text-center mt-2 ">
-        <%= render "devise/shared/links" %>
-      </div>
-  </div> 
-
-
-  </div>
-</div>
+    </div>
+</body>
+</html>
