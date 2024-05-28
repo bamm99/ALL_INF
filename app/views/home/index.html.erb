@@ -5,35 +5,28 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <!-- Otros elementos del head como enlaces a hojas de estilo, etc. -->
 </head>
-<body class="text-xl font-ubuntu text-gray-900 dark:text-white">
+<body>
     <!-- Mensajes de alerta y aviso -->
     <%= alert %>
     <%= notice %>
 
     <!-- Contenido principal -->
-    <div class="flex flex-col items-center justify-center h-screen mb-32">
-        <h1 class="text-8xl mb-4">/ALL_IECI</h1>
-        <h4 class="text-2xl mb-8">¡Bienvenido a la página de inicio!</h4>
+    <div class="section has-text-centered is-fullheight">
+        <h1 class="homeTitle mt-6">./all_inf</h1>
+        <h4 class="homesubTitle mt-1 mb-3">
+        ¡Bienvenido a ./all_inf!<br />
+        Una plataforma desarrollada para que aprendas todo lo necesario sobre el mundo de la informática.
+        </h4>
 
         <!-- Botones -->
-        <div>
-            <button onclick="window.location.href='users/sign_in'" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-lime-800">
-                <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-
-                    Iniciar sesión
-                </span>
+        <div class="mt-4">
+            <button onclick="window.location.href='users/sign_in'" class="button is-primary">
+                Iniciar sesión
             </button>
-            
-
-            <button onclick="window.location.href='users/sign_up'" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-                <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                    Registrarse
-                </span>
+            <button onclick="window.location.href='users/sign_up'" class="button is-link">
+                Registrarse
             </button>
         </div>
     </div>
 </body>
 </html>
-
-
-

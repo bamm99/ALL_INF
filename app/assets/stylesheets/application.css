@@ -1,8 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css";
+
 @import 'github_markdown';
-@import 'github_markdown_dark';
+
 
 html, body {
     background-image: radial-gradient(at left bottom, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42));
@@ -18,3 +17,14 @@ html, body {
     flex-direction: column;
     color: white;
 }
+.homeTitle {
+    font-size: clamp(4rem, 10vw, 8rem); /* Ajusta estos valores según tus necesidades */
+    text-align: center;
+    margin-top: -20vh; /* Ajusta este valor para colocarlo en el tercio superior */
+
+/* Ajusta el desplazamiento hacia arriba según sea necesario */
+  }
+  .homesubTitle {
+    font-size: clamp(1rem, 2vw, 1.5rem); /* Ajusta estos valores según tus necesidades */
+    text-align: center;
+  }
