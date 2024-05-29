@@ -22356,10 +22356,33 @@ body {
   flex-direction: column;
   color: white;
 }
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.columns {
+  flex-grow: 1;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+}
+.box_terminal,
+.box_cursos {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.box_terminal .is-flex-grow-1,
+.box_cursos .contenido-curso {
+  flex-grow: 1;
+}
 .homeTitle {
   font-size: clamp(4rem, 10vw, 8rem);
   text-align: center;
   margin-top: -20vh;
+  color: white;
 }
 .homesubTitle {
   font-size: clamp(1rem, 2vw, 1.5rem);
@@ -22390,6 +22413,39 @@ body {
   padding: clamp(1.5rem, 2vw, 2rem);
   border-radius: 12px;
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+}
+.box_terminal {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: clamp(1.5rem, 2vw, 2rem);
+  border-radius: 12px;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+}
+.navbar_custom {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 0.25rem 0.5rem;
+}
+.navbar-item {
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+.navbar-start {
+  margin-right: auto;
+}
+.navbar-end {
+  margin-left: auto;
+}
+.button.is-small {
+  padding: 0.25rem 0.5rem;
+}
+.contenido-curso {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.is-flex-grow-1 {
+  flex-grow: 1;
 }
 /*! Bundled license information:
 
