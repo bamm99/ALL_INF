@@ -22355,6 +22355,19 @@ body {
   display: flex;
   flex-direction: column;
   color: white;
+  overflow: hidden;
+}
+.mobile-warning {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  padding: 1em;
+  z-index: 1000;
 }
 .container {
   display: flex;
@@ -22383,6 +22396,7 @@ body {
   text-align: center;
   margin-top: -20vh;
   color: white;
+  font-family: "Font Mono", monospace;
 }
 .homesubTitle {
   font-size: clamp(1rem, 2vw, 1.5rem);
@@ -22402,6 +22416,7 @@ body {
 .regularTitle {
   font-size: clamp(3rem, 5vw, 7rem);
   text-align: center;
+  font-family: "Font Mono", monospace;
 }
 .regularsubTitle {
   font-size: clamp(1.5rem, 2vw, 2rem);
@@ -22446,6 +22461,40 @@ body {
 }
 .is-flex-grow-1 {
   flex-grow: 1;
+}
+.menu .dropdown-content {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.menu .dropdown-content button {
+  border: none;
+  background-color: rgba(100, 50, 150, 0.8);
+  text-align: left;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  color: white;
+  word-wrap: break-word;
+  white-space: normal;
+  margin: 5px 0;
+  border-radius: 8px;
+}
+.menu-list > li > button {
+  background-color: rgb(88, 28, 135);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+.menu .dropdown-content.is-hidden {
+  display: none;
+}
+.table-custom {
+  color: white;
+}
+.table-custom tbody tr:nth-child(even) {
+  background-color: rgba(53, 53, 53, 0.9);
+}
+.table-custom tbody tr:nth-child(odd) {
+  background-color: rgba(53, 53, 53, 0.5);
 }
 /*! Bundled license information:
 

@@ -7,24 +7,24 @@ default: &default
 
 development:
   <<: *default
-  host: 192.168.1.14
+  host: 146.83.194.142
   port: 5432
-  database: allinf_dev
-  username: dev
-  password: allinf
+  database: bmosso_bd
+  username: bmosso
+  password: bmosso1479
 
 test:
   <<: *default
-  host: 192.168.1.14
+  host: 146.83.194.142
   port: 5432
-  database: allinf_test
-  username: dev
-  password: allinf
+  database: bmosso_bd
+  username: bmosso
+  password: bmosso1479
 
 production:
   <<: *default
-  host: 192.168.1.14
+  host: 146.83.194.142
   port: 5432
-  database: allinf_prod
-  username: dev
-  password: allinf
+  database: bmosso_bd
+  username: bmosso
+  password: bmosso1479

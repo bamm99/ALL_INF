@@ -3,89 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Dashboard de Administración</title>
-    <link rel="stylesheet" href="/assets/builds/application.tailwind.css">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </head>
-<body class="bg-gray-100" data-current-user-id="<%= current_user.id %>">
+<body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class='container'>
+        <%= alert %>
+        <%= notice %>
 
-    <%= alert %>
-    <%= notice %>
+        <header class="has-text-centered">
+            <h1 class="regularTitle">./all_inf</h1>
+            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+        </header>
 
-    <header class="text-center text-6xl p-4">
-        <h1>/ALL_INF</h1>
-        <h2>Admin Dashboard</h2>
+        <nav>
+            <%= render 'shared/adminnavbar' %>
+        </nav>
 
-    </header>
+        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+            <!-- Sidebar -->
+            <div class="is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+                <%= render 'shared/adminsidebar' %>
+            </div>
+            <!-- Área de Contenido Principal -->
+            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+                <div class="ml-4 contenido-principal">
+                    <div class="pt-4">
+                        <h2 class="title is-3 mb-4">Información del Usuario</h2>
+                        <div>
+                            <div><strong>Nombre:</strong> <%= usuario.user_name.presence || "-" %></div>
+                            <div><strong>Apellido:</strong> <%= usuario.user_last_name.presence || "-" %></div>
+                            <div><strong>Email:</strong> <%= usuario.email.presence || "-" %></div>
+                            <div><strong>Administrador:</strong> <%= usuario.admin? ? "Sí" : "No" %></div>
+                            <div><strong>Estudiante:</strong> <%= usuario.user_student == 0 ? "No" : "Sí" %></div>
+                            <div><strong>Universidad:</strong> <%= usuario.user_university&.name || "-" %></div>
+                            <div><strong>Carrera:</strong> <%= usuario.user_degree&.name || "-" %></div>
+                            <div><strong>Fecha de registro:</strong> <%= usuario.created_at || "-" %></div>
+                        </div>
+                        <div class="mt-4 navbar-end">
+                            <!-- Botón de Editar -->
+                            <%= link_to 'Editar', admin_edit_user_path(usuario), class: "button is-dark mx-2" %>
 
-    <nav class="border-2 border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black" style="background-color: #F5F6F4;">
-        <span>Logged in as <strong><%= current_user.email %></strong></span>
-        <%= link_to "Edit profile", edit_user_registration_path, class: "bg-blue-500 hover:bg-blue-700 font-bold py-1 px-3 rounded-full text-sm mr-2" %> |
-        <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
-    </nav>
+                            <!-- Botón de Eliminar -->
+                            <%= link_to 'Eliminar', admin_delete_user_path(usuario), method: :delete, 
+                                        class: "btn-eliminar button is-danger", 
+                                        data: { 
+                                        user_id: usuario.id, 
+                                        current_user_id: current_user.id
+                                        } %>
 
-    <div class="flex flex-row p-4 h-screen">
-        <!-- Sidebar dentro de un Card -->
-        <div class="w-1/6 rounded overflow-hidden shadow-lg p-4 h-full" style="background-color: #F5F6F4;">
-            <aside class="mb-4">
-                <ul class="space-y-2">
-                    <li><a href="<%= admin_users_path %>" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Usuarios</a></li>
-                    <li><a href="<%= admin_cursos_path %>" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Cursos</a></li>
-                    <li>
-                        <button class="dropdown-btn block py-2 px-4 text-black rounded hover:bg-purple-200 w-full text-left focus:outline-none" id="dropdownMenuButton">
-                            Materiales de Estudio
-                        </button>
-                        <ul class="dropdown-content hidden space-y-2 pl-4" aria-labelledby="dropdownMenuButton">
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Programación y Desarrollo</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Ingeniería de Software</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Bases de Datos</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Redes y Seguridad</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Sistemas Operativos y Tecnología</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Inteligencia Artificial y Datos</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Tecnologías Emergentes</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Gestión Tecnológica</a></li>
-
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-        </div>
-        <!-- Área de Contenido Principal -->
-        <div class="w-5/6 rounded overflow-hidden shadow-lg p-4 h-full ml-4 contenido-principal" style="background-color: #F5F6F4;">
-            <div class="text-black p-4">
-                <h2 class="text-2xl font-bold mb-4">Información del Usuario</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><strong>Nombre:</strong> <%= usuario.user_name.presence || "-" %></div>
-                    <div><strong>Apellido:</strong> <%= usuario.user_last_name.presence || "-" %></div>
-                    <div><strong>Email:</strong> <%= usuario.email.presence || "-" %></div>
-                    <div><strong>Administrador:</strong> <%= usuario.admin? ? "Sí" : "No" %></div>
-                    <div><strong>Estudiante:</strong> <%= usuario.user_student == 0 ? "No" : "Sí" %></div>
-                    <div><strong>Universidad:</strong> <%= usuario.user_university&.name || "-" %></div>
-                    <div><strong>Carrera:</strong> <%= usuario.user_degree&.name || "-" %></div>
-                    <div><strong>Fecha de registro:</strong> <%= usuario.created_at || "-" %></div>
+                            <!-- Botón de Volver Atrás -->
+                            <%= link_to 'Volver Atrás', admin_users_path, class: "button is-warning mx-2" %>
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-4 flex text-black font-bold justify-end space-x-2">
-                    <!-- Botón de Editar -->
-                    <%= link_to 'Editar', admin_edit_user_path(usuario), class: "py-2.5 px-4 bg-blue-500 rounded-full hover:bg-blue-700 shadow-md" %>
-
-                    <!-- Botón de Eliminar -->
-                    <%= link_to 'Eliminar', admin_delete_user_path(usuario), method: :delete, 
-                                class: "btn-eliminar py-2.5 px-4 bg-red-500 rounded-full hover:bg-red-700 shadow-md", 
-                                data: { 
-                                user_id: usuario.id, 
-                                current_user_id: current_user.id
-                                } %>
 
 
-
-                    <!-- Botón de Volver Atrás -->
-                    <%= link_to 'Volver Atrás', admin_users_path, class: "py-2.5 px-4 bg-gray-500 rounded-full hover:bg-gray-700 shadow-md" %>
-
-
-                </div>
             </div>
         </div>
     </div>
 
+    <script>
+        // Función para mostrar/ocultar el menú desplegable del sidebar
+        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
+            var dropdownContent = this.nextElementSibling;
+            dropdownContent.classList.toggle('is-hidden');
+        });
+    </script>
 
     <script>
         document.addEventListener("turbo:load", function() {
@@ -137,6 +123,6 @@
         });
 
     </script>
-
+    <%= render 'shared/screenwarning' %>
 </body>
 </html>

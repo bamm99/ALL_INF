@@ -1,0 +1,22 @@
+<div class="mobile-warning" id="mobileWarning">
+    Esta web está diseñada para ser utilizada en un computador.
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function checkScreenWidth() {
+            var warningElement = document.getElementById('mobileWarning');
+            if (window.innerWidth < 768) {
+                warningElement.style.display = 'block';
+            } else {
+                warningElement.style.display = 'none';
+            }
+        }
+
+        // Check screen width on load
+        checkScreenWidth();
+
+        // Check screen width on resize
+        window.addEventListener('resize', checkScreenWidth);
+    });
+</script>

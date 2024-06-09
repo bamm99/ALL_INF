@@ -1,49 +1,60 @@
 <%= render 'shared/header' %>
 
-<h2 class="text-center text-3xl mb-4">Editar <%= resource_name.to_s.humanize %></h2>
+<h2 class="title is-3 has-text-centered mb-4">Editar <%= resource_name.to_s.humanize %></h2>
 
-<div class="font-mono flex items-center justify-center h-screen">
-  <div class="w-full max-w-md p-6 mx-auto">
+<div class="has-text-centered is-flex is-align-items-center is-justify-content-center" style="height: 100vh;">
+  <div class="box box_login" style="width: 100%; max-width: 24rem; padding: 1.5rem;">
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
-      <div class="mb-4">
-        <%= f.label :email, class: "block text-sm font-bold mb-1" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <div class="field mb-4">
+        <%= f.label :email, class: "label" %>
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+        </div>
       </div>
 
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-        <div class="mb-4">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+        <div class="notification is-warning mb-4">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
       <% end %>
 
-      <div class="mb-4">
-        <%= f.label :password, "Nueva contraseña (dejar en blanco si no deseas cambiarla)", class: "block text-sm font-bold mb-1" %>
-        <%= f.password_field :password, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <div class="field mb-4">
+        <%= f.label :password, "Nueva contraseña", class: "label" %>
+        <p> (dejar en blanco si no deseas cambiarla)</p>
+        <div class="control">
+          <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
+        </div>
         <% if @minimum_password_length %>
-          <div class="text-sm"><em><%= @minimum_password_length %> caracteres mínimo</em></div>
+          <p class="help is-info"><em><%= @minimum_password_length %> caracteres mínimo</em></p>
         <% end %>
       </div>
 
-      <div class="mb-4">
-        <%= f.label :password_confirmation, class: "block text-sm font-bold mb-1" %>
-        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <div class="field mb-4">
+        <%= f.label :password_confirmation, class: "label" %>
+        <div class="control">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+        </div>
       </div>
 
-      <div class="mb-4">
-        <%= f.label :current_password, "Contraseña actual (necesaria para confirmar cambios)", class: "block text-sm font-bold mb-1" %>
-        <%= f.password_field :current_password, autocomplete: "current-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <div class="field mb-4">
+        <%= f.label :current_password, "Contraseña actual (necesaria para confirmar cambios)", class: "label" %>
+        <div class="control">
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
+        </div>
       </div>
 
-      <div class="text-center mt-2">
-        <%= f.submit "Actualizar", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
+      <div class="field is-grouped is-grouped-centered mt-2">
+        <div class="control">
+          <%= f.submit "Actualizar", class: "button is-success" %>
+        </div>
       </div>
     <% end %>
 
-    <div class="text-center mt-4">
-      <h3 class="text-lg font-bold">Cancelar mi cuenta</h3>
-      <div>¿No estás contento? <%= button_to "Cancelar mi cuenta", registration_path(resource_name), data: { confirm: "¿Estás seguro?", turbo_confirm: "¿Estás seguro?" }, method: :delete, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %></div>
+    <div class="has-text-centered mt-4">
+      <h3 class="subtitle is-5">Cancelar mi cuenta</h3>
+      <p>¿No estás contento? <%= button_to "Cancelar mi cuenta", registration_path(resource_name), data: { confirm: "¿Estás seguro?", turbo_confirm: "¿Estás seguro?" }, method: :delete, class: "button is-danger" %></p>
     </div>
 
-    <%= link_to "Volver", :back, class: "text-blue-600 hover:text-blue-800" %>
+    <%= link_to "Volver", :back, class: "button is-text is-link" %>
   </div>
 </div>
