@@ -22355,7 +22355,7 @@ body {
   display: flex;
   flex-direction: column;
   color: white;
-  overflow: hidden;
+  overflow: auto;
 }
 .mobile-warning {
   display: none;
@@ -22376,6 +22376,7 @@ body {
 }
 .columns {
   flex-grow: 1;
+  overflow: hidden;
 }
 .column {
   display: flex;
@@ -22414,7 +22415,7 @@ body {
   width: 100%;
 }
 .regularTitle {
-  font-size: clamp(3rem, 5vw, 7rem);
+  font-size: clamp(3rem, 5vw, 4rem);
   text-align: center;
   font-family: "Font Mono", monospace;
 }
@@ -22487,6 +22488,13 @@ body {
 .menu .dropdown-content.is-hidden {
   display: none;
 }
+.table-container {
+  max-height: clamp(15rem, 20vw, 20rem);
+  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
 .table-custom {
   color: white;
 }
@@ -22495,6 +22503,10 @@ body {
 }
 .table-custom tbody tr:nth-child(odd) {
   background-color: rgba(53, 53, 53, 0.5);
+}
+.contenido-principal {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 /*! Bundled license information:
 

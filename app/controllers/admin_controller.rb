@@ -67,6 +67,11 @@ class AdminController < ApplicationController
     redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
   end
 
+  def eliminar_feedbacks
+    Feedback.where(id: params[:feedback_ids]).destroy_all
+    redirect_to request.referer, notice: 'Feedbacks eliminados correctamente.'
+  end
+
   #-------------------Dashboard-------------------#
 
   def dashboard

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   delete '/admin_delete_user/:id', to: 'admin#destroy', as: :admin_delete_user
   patch '/admin_update_user/:id', to: 'admin#update_user', as: :admin_update_user
   # rutas admin/courses
+
   get 'admin/cursos', to: 'admin#cursos', as: 'admin_cursos'
   get 'admin/cursos/nuevo', to: 'admin#nuevo_curso', as: 'nuevo_curso_admin'
   post 'admin/cursos', to: 'admin#crear_curso', as: 'crear_curso_admin'
@@ -25,6 +26,8 @@ Rails.application.routes.draw do
   get 'admin/cursos/:id/editar', to: 'admin#editar_curso', as: 'editar_curso_admin'
   patch 'admin/cursos/:id', to: 'admin#actualizar_curso', as: 'actualizar_curso_admin'
   delete 'admin/cursos/:id', to: 'admin#eliminar_curso', as: 'eliminar_curso_admin'
+  #feedbacks cursos
+  delete 'admin/feedbacks', to: 'admin#eliminar_feedbacks', as: 'eliminar_feedbacks_admin'
 
 
   # Rutas de Estudiantes

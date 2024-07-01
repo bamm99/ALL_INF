@@ -14,7 +14,7 @@ html, body {
     display: flex;
     flex-direction: column;
     color: white;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .mobile-warning {
@@ -38,6 +38,7 @@ html, body {
 
 .columns {
     flex-grow: 1;
+    overflow: hidden; /* Evitar que los hijos crezcan fuera del contenedor */
 }
 
 .column {
@@ -84,7 +85,7 @@ html, body {
 }
 
 .regularTitle {
-    font-size: clamp(3rem, 5vw, 7rem);
+    font-size: clamp(3rem, 5vw, 4rem);
     text-align: center;
     font-family: 'Font Mono', monospace;
 }
@@ -174,6 +175,13 @@ html, body {
     display: none;
 }
 
+.table-container{
+    max-height: clamp(15rem, 20vw, 20rem);
+    overflow-x: auto;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+}
 .table-custom {
     color: white; /* Texto blanco */
 }
@@ -185,3 +193,9 @@ html, body {
 .table-custom tbody tr:nth-child(odd) {
     background-color: rgba(53, 53, 53, 0.5); /* Fondo 50% transparente */
 }
+
+.contenido-principal {
+    max-height: calc(100vh - 200px); /* Ajusta este valor según tus necesidades */
+    overflow-y: auto;
+}
+
