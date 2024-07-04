@@ -2,19 +2,20 @@ class AdminController < ApplicationController
   before_action :authenticate_user!
   before_action :check_admin
   before_action :set_curso, only: [:ver_curso, :editar_curso, :actualizar_curso, :eliminar_curso]
+  before_action :set_universidad, only: [:ver_universidad, :editar_universidad, :actualizar_universidad, :eliminar_universidad, :eliminar_carreras, :agregar_carrera]
+
+  include MarkdownHelper
 
   #-------------------Cursos-------------------#
 
   def cursos
     @cursos = Course.all
     render 'admin/cursos/admin_cursos'
-
   end
 
   def nuevo_curso
     @curso = Course.new
-    render 'admin/cursos/admin_agregar_curso' # Asegúrate de que esta línea apunte correctamente al archivo de la vista
-
+    render 'admin/cursos/admin_agregar_curso' 
   end
 
   def crear_curso
@@ -28,14 +29,13 @@ class AdminController < ApplicationController
 
   def ver_curso
     @curso = Course.find(params[:id])
-    # Cantidad total de completaciones del curso
-    @total_completions = @curso.course_completions.count
+    # Cantidad total de usuarios únicos que han completado el curso
+    @total_completions = @curso.course_completions.select(:user_id).distinct.count
     # Solo las completaciones que tienen feedback no nulo y no vacío
     @feedbacks = @curso.course_completions.where.not(feedback: [nil, ""])
     render 'admin/cursos/admin_curso_info'
   end
   
-
   def editar_curso
     @curso = Course.find(params[:id])
     if @curso.file.attached?
@@ -46,7 +46,6 @@ class AdminController < ApplicationController
     render 'admin/cursos/admin_editar_curso'
   end
   
-
   def actualizar_curso
     if @curso.update(course_params.except(:file))
       # Actualizar el archivo .md si es necesario
@@ -63,19 +62,143 @@ class AdminController < ApplicationController
   end
 
   def eliminar_curso
-    @curso.destroy
+    ActiveRecord::Base.transaction do
+      @curso = Course.find(params[:id])
+      @curso.course_completions.destroy_all
+      @curso.destroy
+    end
     redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
+  rescue ActiveRecord::RecordNotDestroyed => e
+    redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
+  rescue => e
+    redirect_to admin_cursos_path, alert: "Ocurrió un error: #{e.message}"
   end
 
   def eliminar_feedbacks
-    Feedback.where(id: params[:feedback_ids]).destroy_all
+    CourseCompletion.where(id: params[:feedback_ids]).destroy_all
     redirect_to request.referer, notice: 'Feedbacks eliminados correctamente.'
+  rescue ActiveRecord::RecordNotFound => e
+    redirect_to request.referer, alert: "Algunos feedbacks no se pudieron encontrar: #{e.message}"
+  rescue => e
+    redirect_to request.referer, alert: "Ocurrió un error al eliminar los feedbacks: #{e.message}"
   end
 
   #-------------------Dashboard-------------------#
 
   def dashboard
     #dashboard 
+  end
+
+  #-------------------Universidades-------------------#
+
+  def universidades
+    @universidades = University.all
+    render 'admin/universidades/admin_universidades'
+  end
+  def nuevo_universidad
+    @universidad = University.new
+    render 'admin/universidades/admin_agregar_universidad'
+  end
+  def crear_universidad
+    @universidad = University.new(name: params[:university_name])
+    if @universidad.save
+      redirect_to admin_universidades_path, notice: 'Universidad creada con éxito.'
+    else
+      redirect_to admin_universidades_path, alert: 'Error al crear la universidad.'
+    end
+  end
+
+  def ver_universidad
+    @usuarios_count = User.where(user_university_id: @universidad.id).count
+    @degrees = @universidad.degrees
+    render 'admin/universidades/admin_universidad_info'
+  end
+
+  def agregar_carrera
+    degree_name = params[:degree_name]
+    if degree_name.present?
+      @universidad.degrees.create!(name: degree_name)
+      redirect_to ver_universidad_admin_path(@universidad), notice: 'Carrera agregada con éxito.'
+    else
+      redirect_to ver_universidad_admin_path(@universidad), alert: 'El nombre de la carrera no puede estar vacío.'
+    end
+  rescue => e
+    redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al agregar la carrera: #{e.message}"
+  end
+
+  def eliminar_carreras
+    begin
+      Degree.transaction do
+        Degree.where(id: params[:degree_ids]).each do |degree|
+          User.where(user_degree: degree).update_all(user_degree_id: nil)
+          degree.destroy!
+        end
+      end
+      redirect_to ver_universidad_admin_path(@universidad), notice: 'Carreras eliminadas con éxito. Los usuarios han sido actualizados.'
+    rescue => e
+      redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al eliminar las carreras: #{e.message}"
+    end
+  end
+
+  def eliminar_universidad
+    ActiveRecord::Base.transaction do
+      @universidad = University.find(params[:id])
+      degrees = @universidad.degrees
+      degrees.each do |degree|
+        User.where(user_degree_id: degree.id).update_all(user_degree_id: nil)
+      end
+      User.where(user_university_id: @universidad.id).update_all(user_university_id: nil)
+      degrees.destroy_all
+      @universidad.destroy
+    end
+    redirect_to admin_universidades_path, notice: 'Universidad eliminada con éxito.'
+  rescue => e
+    redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
+  end
+  
+
+
+  def editar_universidad
+    @universidad = University.find(params[:id])
+    render 'admin/universidades/admin_editar_universidad'
+  end
+
+  def actualizar_universidad
+    if @universidad.update(university_params)
+      redirect_to ver_universidad_admin_path(@universidad), notice: 'Universidad actualizada con éxito.'
+    else
+      render :editar_universidad
+    end
+  end
+
+  #-------------------Studentview-------------------#
+  def student_view
+    @cursos = Course.all
+    render 'admin/studentview'
+  end
+
+  def mostrar_curso
+    @curso = Course.find(params[:course_id])
+    markdown_content = @curso.file.download
+    html_content = MarkdownHelper.markdown_to_html(markdown_content) # Asegúrate de que esta llamada sea correcta.
+  
+    curso_html = render_to_string(partial: 'shared/curso', locals: { curso: @curso, html_content: html_content })
+    feedback_form_html = render_to_string(partial: 'shared/feedback_form', locals: { curso: @curso })
+    
+    render json: { curso_html: curso_html, feedback_form_html: feedback_form_html }
+  end
+
+  def complete_course
+    # Crea un nuevo registro de CourseCompletion con el ID del curso, el ID del usuario actual y el feedback (si lo hay)
+    completion = CourseCompletion.new(course_id: params[:course_id], user_id: current_user.id, feedback: params[:feedback], completed_at: Time.current)
+
+    if completion.save
+      # Si el registro se guarda correctamente, redirige al usuario con un mensaje de éxito.
+      redirect_to student_dashboard_path, notice: '¡Curso completado con éxito! Gracias por tu feedback.'
+    else
+      # Si hay un error al guardar, redirige al usuario con un mensaje de error.
+      redirect_to student_dashboard_path, alert: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.'
+    end
   end
 
   #-------------------Usuarios-------------------#
@@ -134,7 +257,7 @@ class AdminController < ApplicationController
     head :not_found
   end
 
-#-------------------Privado-------------------#
+  #-------------------Privado-------------------#
 
   private
 
@@ -146,6 +269,16 @@ class AdminController < ApplicationController
     head :forbidden unless current_user.admin?
   end
 
+  def set_universidad
+    @universidad = University.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_universidades_path, alert: 'Universidad no encontrada.'
+  end
+
+  def university_params
+    params.require(:university).permit(:name)
+  end
+
   def set_curso
     @curso = Course.find(params[:id])
   rescue ActiveRecord::RecordNotFound
@@ -155,6 +288,4 @@ class AdminController < ApplicationController
   def course_params
     params.require(:course).permit(:title, :description, :file)
   end
-
-
 end

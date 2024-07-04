@@ -3,92 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Dashboard de Administración</title>
-    <link rel="stylesheet" href="/assets/builds/application.tailwind.css">
-
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </head>
-<body class="bg-gray-100" data-current-user-id="<%= current_user.id %>">
-    <%= alert %>
-    <%= notice %>
+<body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class='container'>
+        <%= alert %>
+        <%= notice %>
+        <%= render 'shared/screenwarning' %>
+        <header class="has-text-centered">
+            <h1 class="regularTitle">./all_inf</h1>
+            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+        </header>
 
-    <header class="text-center text-6xl p-4">
-        <h1>/ALL_INF</h1>
-        <h2>Admin Dashboard</h2>
+        <nav>
+            <%= render 'shared/adminnavbar' %>
+        </nav>
 
-    </header>
+        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+            <!-- Sidebar -->
+            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+                <%= render 'shared/adminsidebar' %>
+            </div>
+            <!-- Área de Contenido Principal -->
+            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+                <div class="p-4">
+                    <div class="p-4">
+                        <h3 class="title is-3 mb-4">Agregar Nuevo Curso</h3>
+                        <%= form_with(model: @curso, url: crear_curso_admin_path, local: true) do |form| %>
+                            <div class="field mb-4">
+                                <%= form.label :title, "Nombre del curso", class: "label" %>
+                                <div class="control">
+                                    <%= form.text_field :title, class: "input" %>
+                                </div>
+                            </div>
 
-    <nav class="border-2 border-gray-300 rounded-full m-2 p-1 flex justify-end items-center text-black" style="background-color: #F5F6F4;">
-        <span>Logged in as <strong><%= current_user.email %></strong></span>
-        <%= link_to "Edit profile", edit_user_registration_path, class: "bg-blue-500 hover:bg-bluelayout: false-700 font-bold py-1 px-3 rounded-full text-sm mr-2" %> |
-        <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded-full text-sm" %>
-    </nav>
+                            <div class="field mb-4">
+                                <%= form.label :description, "Descripción", class: "label" %>
+                                <div class="control">
+                                    <%= form.text_area :description, class: "textarea input-custom" %>
+                                </div>
+                            </div>
 
-    <div class="flex flex-row p-4 h-screen">
-        <!-- Sidebar dentro de un Card -->
-        <div class="w-1/6 rounded overflow-hidden shadow-lg p-4 h-full" style="background-color: #F5F6F4;">
-            <aside class="mb-4">
-                <ul class="space-y-2">
-                    <li><a href="<%= admin_users_path %>" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Usuarios</a></li>
-                    <li><a href="<%= admin_cursos_path %>" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Cursos</a></li>
-                    
-                        <button class="dropdown-btn block py-2 px-4 text-black rounded hover:bg-purple-200 w-full text-left focus:outline-none" id="dropdownMenuButton">
-                            Materiales de Estudio
-                        </button>
-                        <ul class="dropdown-content hidden space-y-2 pl-4" aria-labelledby="dropdownMenuButton">
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Programación y Desarrollo</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Ingeniería de Software</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Bases de Datos</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Redes y Seguridad</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Sistemas Operativos y Tecnología</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Inteligencia Artificial y Datos</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Tecnologías Emergentes</a></li>
-                            <li><a href="#" class="block py-1 px-4 text-black rounded hover:bg-purple-200">Gestión Tecnológica</a></li>
-
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-        </div>
-        <!-- Área de Contenido Principal -->
-        <div class="w-5/6 rounded overflow-hidden shadow-lg p-4 h-full ml-4 contenido-principal" style="background-color: #F5F6F4;">
-            <div class="text-black p-4">
-                <div class="p-4 text-black">
-                    <h3 class="text-3xl mb-4 text-black">Agregar Nuevo Curso</h3>
-                    <%= form_with(model: @curso, url: crear_curso_admin_path, local: true) do |form| %>
-                        <div class="mb-4">
-                            <%= form.label :title, "Nombre del curso", class: "text-black block text-sm font-bold mb-1" %>
-                            <%= form.text_field :title, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
-                        </div>
-
-                        <div class="mb-4">
-                            <%= form.label :description, "Descripción", class: "text-black block text-sm font-bold mb-1" %>
-                            <%= form.text_area :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-1" %>
-                        </div>
-
-                        <%= form.label :file, "Archivo del curso (README)", class: "text-black block text-sm font-bold mb-1" %>
-                        <div class="mb-4">
-                            <%= form.file_field :file, direct_upload: true, class: "shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-                        </div>
-                        <div class="mb-4 text-right">
-                            <%= form.submit "Agregar Curso", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" %>
-                        </div>
-                    <% end %>
-
+                            <div class="field mb-4">
+                                <%= form.label :file, "Archivo del curso (formato '.md' Markdown)", class: "label" %>
+                                <div class="control">
+                                    <%= form.file_field :file, accept: ".md", direct_upload: true, class: "input input-custom" %>
+                                </div>
+                            </div>
+                            
+                            <div class="field mb-4 is-pulled-right">
+                                <div class="control">
+                                    <%= form.submit "Agregar Curso", class: "button is-success" %>
+                                </div>
+                            </div>
+                        <% end %>
+                    </div>
                 </div>
- 
             </div>
         </div>
     </div>
 
-
     <script>
         // Función para mostrar/ocultar el menú desplegable del sidebar
         document.getElementById('dropdownMenuButton').addEventListener('click', function () {
-            var dropdownContent = this.nextElementSibling;
-            dropdownContent.classList.toggle('hidden');
+            var dropdownContent = document.getElementById('dropdownContent');
+            dropdownContent.classList.toggle('is-hidden');
         });
     </script>
-
-
 </body>
 </html>

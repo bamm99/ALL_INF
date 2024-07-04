@@ -29,7 +29,7 @@
             </div>
             <!-- Área de Contenido Principal -->
             <div class="column is-three-quarters box p-4 mx-4 mb-5">
-                <div class="usuarios-list p-4">
+                <div class="p-4">
                     <h3 class="title is-3 mb-4">Listado de Cursos</h3>
                     <div class="is-flex is-justify-content-flex-end mb-4">
                         <%= link_to 'Agregar Curso', nuevo_curso_admin_path, class: "button is-success" %>
@@ -44,7 +44,7 @@
                         </thead>
                         <tbody>
                             <% @cursos.each_with_index do |curso, index| %>
-                            <tr ">
+                            <tr>
                                 <td><%= curso.title %></td>
                                 <td><%= curso.description %></td>
                                 <td><a href="<%= ver_curso_admin_path(curso.id) %>" class="button is-info">+ info</a></td>

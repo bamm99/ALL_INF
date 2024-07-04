@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dashboard de Administración</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+<body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class='container'>
+        <%= alert %>
+        <%= notice %>
+        <%= render 'shared/screenwarning' %>
+        <header class="has-text-centered">
+            <h1 class="regularTitle">./all_inf</h1>
+            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+        </header>
+
+        <nav>
+            <%= render 'shared/adminnavbar' %>
+        </nav>
+
+        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+            <!-- Sidebar -->
+            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+                <%= render 'shared/adminsidebar' %>
+            </div>
+            <!-- Área de Contenido Principal -->
+            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+                <div class="ml-4 contenido-principal">
+                    <h3 class="title is-3 pt-4">Información de la Universidad</h3>
+                        <div>
+                            <p><strong class="pt-2">Nombre:</strong> <%= @universidad.name %></p>
+                            <p><strong class="pt-2">Cantidad de Carreras:</strong> <%= @universidad.degrees.count %></p>
+                            <p><strong class="pt-2">Cantidad de Usuarios:</strong> <%= @usuarios_count %></p>
+                            <p><strong class="pt-2">Fecha de Registro:</strong> <%= @universidad.created_at.strftime("%d/%m/%Y") %></p>
+                            <div class="buttons">
+                                <button id="edit_university_button" class="button is-warning">Editar</button>
+                                <%= link_to 'Eliminar', eliminar_universidad_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar esta universidad? Hay #{@usuarios_count} usuarios registrados. Los usuarios serán actualizados para no tener universidad." }, class: "button is-danger" %>
+                                <%= link_to 'Volver', admin_universidades_path, class: "button is-link" %>
+                                <button id="add_degree_button" class="button is-success">Agregar Carrera</button>
+                            </div>
+                        </div>
+                    <div class="content mt-2">
+
+                        <!-- Formulario para editar nombre de la universidad (oculto por defecto) -->
+                        <div id="edit_university_form" class="mt-4 is-hidden">
+                            <%= form_with(model: @universidad, url: actualizar_universidad_admin_path(@universidad), local: true) do |form| %>
+                                <div class="field">
+                                    <label class="label">Nombre de la Universidad</label>
+                                    <div class="control">
+                                        <%= form.text_field :name, class: 'input' %>
+                                    </div>
+                                </div>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <%= form.submit 'Guardar', class: 'button is-primary' %>
+                                    </div>
+                                    <div class="control">
+                                        <button type="button" id="cancel_edit_university" class="button is-light">Cancelar</button>
+                                    </div>
+                                </div>
+                            <% end %>
+                        </div>
+
+                        <!-- Formulario para agregar nueva carrera (oculto por defecto) -->
+                        <div id="add_degree_form" class="mt-4 is-hidden">
+                        <%= form_tag agregar_carrera_admin_path(@universidad), method: :post do %>
+                            <div class="field">
+                            <label class="label">Nombre de la Carrera</label>
+                            <div class="control">
+                                <input type="text" name="degree_name" class="input" required>
+                            </div>
+                            </div>
+                            <div class="field is-grouped">
+                            <div class="control">
+                                <button type="submit" class="button is-primary">Agregar</button>
+                            </div>
+                            <div class="control">
+                                <button type="button" id="cancel_add_degree" class="button is-light">Cancelar</button>
+                            </div>
+                            </div>
+                        <% end %>
+                        </div>
+
+                        <% if @degrees.any? %>
+                        <h4 class="title is-4 mt-4">Carreras</h4>
+                        <%= form_tag eliminar_carreras_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar las carreras seleccionadas? Los usuarios de estas carreras serán actualizados para no tener carrera." } do %>
+                            <div class="table-container is-flex is-justify-content-center">
+                            <table class="table is-fullwidth table-custom">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select_all"></th>
+                                    <th>Nombre de la Carrera</th>
+                                    <th>Cantidad de Usuarios Registrados</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% @degrees.each do |degree| %>
+                                    <tr>
+                                    <td><input type="checkbox" name="degree_ids[]" value="<%= degree.id %>"></td>
+                                    <td><%= degree.name %></td>
+                                    <td><%= User.where(user_degree: degree).count %></td>
+                                    </tr>
+                                <% end %>
+                                </tbody>
+                            </table>
+                            </div>
+                            <div class="is-flex is-justify-content-flex-end mt-4">
+                            <button type="submit" class="button is-danger">Eliminar Carreras Seleccionadas</button>
+                            </div>
+                        <% end %>
+                        <% else %>
+                        <p>No hay carreras para mostrar.</p>
+                        <% end %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el formulario de agregar carrera
+        document.getElementById('add_degree_button').addEventListener('click', function() {
+            document.getElementById('add_degree_form').classList.toggle('is-hidden');
+        });
+
+        // Función para cancelar la acción de agregar carrera
+        document.getElementById('cancel_add_degree').addEventListener('click', function() {
+            document.getElementById('add_degree_form').classList.add('is-hidden');
+        });
+
+        // Función para mostrar/ocultar el formulario de editar universidad
+        document.getElementById('edit_university_button').addEventListener('click', function() {
+            document.getElementById('edit_university_form').classList.toggle('is-hidden');
+        });
+
+        // Función para cancelar la acción de editar universidad
+        document.getElementById('cancel_edit_university').addEventListener('click', function() {
+            document.getElementById('edit_university_form').classList.add('is-hidden');
+        });
+
+        // Función para mostrar/ocultar el menú desplegable del sidebar
+        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
+            var dropdownContent = document.getElementById('dropdownContent');
+            dropdownContent.classList.toggle('is-hidden');
+        });
+
+        // Función para seleccionar/deseleccionar todos los checkboxes
+        document.getElementById('select_all').addEventListener('click', function(event) {
+            var checkboxes = document.querySelectorAll('input[name="degree_ids[]"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = event.target.checked;
+            });
+        });
+    </script>
+</body>
+</html>

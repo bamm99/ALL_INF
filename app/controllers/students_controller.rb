@@ -7,6 +7,7 @@ class StudentsController < ApplicationController
     @cursos = Course.all
     # Aquí se prepara la variable @cursos para usar en la vista dashboard
   end
+  
   def mostrar_curso
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download

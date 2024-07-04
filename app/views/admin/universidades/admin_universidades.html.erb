@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dashboard de Administración</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+<body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class='container'>
+        <%= alert %>
+        <%= notice %>
+        <%= render 'shared/screenwarning' %>
+        <header class="has-text-centered">
+            <h1 class="regularTitle">./all_inf</h1>
+            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+        </header>
+
+        <nav>
+            <%= render 'shared/adminnavbar' %>
+        </nav>
+
+        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+            <!-- Sidebar -->
+            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+                <%= render 'shared/adminsidebar' %>
+            </div>  
+
+            <!-- Área de Contenido Principal -->
+            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+                <div class="p-4">
+                    <h3 class="title is-3 mb-4">Listado de Universidades</h3>
+                    <div class="is-flex is-justify-content-flex-end mb-4">
+                        <button id="add_university_button" class="button is-success">Agregar Universidad</button>
+                    </div>
+                    
+                    <!-- Formulario para agregar nueva universidad (oculto por defecto) -->
+                    <div id="add_university_form" class="mt-4 is-hidden">
+                        <%= form_tag crear_universidad_admin_path, method: :post do %>
+                            <div class="field">
+                                <label class="label">Nombre de la Universidad</label>
+                                <div class="control">
+                                    <input type="text" name="university_name" class="input" required>
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button type="submit" class="button is-primary">Agregar</button>
+                                </div>
+                                <div class="control">
+                                    <button type="button" id="cancel_add_university" class="button is-light">Cancelar</button>
+                                </div>
+                            </div>
+                        <% end %>
+                    </div>
+
+                    <table class="table is-fullwidth table-custom">
+                        <thead>
+                            <tr>
+                                <th>Nombre de la Universidad</th>
+                                <th>Carreras</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @universidades.each_with_index do |universidad, index| %>
+                            <tr>
+                                <td><%= universidad.name %></td>
+                                <td><%= universidad.degrees.count %></td>
+                                <td><a href="<%= ver_universidad_admin_path(universidad.id) %>" class="button is-info">+ info</a></td>
+                            </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el formulario de agregar universidad
+        document.getElementById('add_university_button').addEventListener('click', function() {
+            document.getElementById('add_university_form').classList.toggle('is-hidden');
+        });
+
+        // Función para cancelar la acción de agregar universidad
+        document.getElementById('cancel_add_university').addEventListener('click', function() {
+            document.getElementById('add_university_form').classList.add('is-hidden');
+        });
+
+        // Función para mostrar/ocultar el menú desplegable del sidebar
+        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
+            var dropdownContent = document.getElementById('dropdownContent');
+            dropdownContent.classList.toggle('is-hidden');
+        });
+    </script>
+</body>
+</html>
