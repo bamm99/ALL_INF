@@ -49,17 +49,11 @@ Rails.application.routes.draw do
   delete 'admin/materiales/:id', to: 'admin#destroy_study_material', as: 'destroy_study_material'
   get 'admin/materiales/:id/descargar', to: 'admin#download_study_material', as: 'download_study_material'
 
-  # ruta student_view para admin
-  get '/admin/student_view', to: 'admin#student_view', as: 'admin_student_view'
-
-  # Rutas de Estudiantes
-  get '/student_dashboard', to: 'students#dashboard', as: 'student_dashboard'
+  # rutas students
+  get 'student_dashboard', to: 'students#dashboard', as: 'student_dashboard'
+  get 'student_dashboard/materiales', to: 'students#study_materials', as: 'student_materials'
   get 'student_dashboard/mostrar_cursos', to: 'students#mostrar_curso', as: 'mostrar_curso'
   post 'students/complete_course', to: 'students#complete_course', as: 'complete_course'
-
-  # Rutas adicionales
-  get 'home/index', as: 'home'
-  get 'degrees/by_university', to: 'degrees#by_university', as: 'degrees_by_university'
 
   # Ruta raíz
   root 'home#index'

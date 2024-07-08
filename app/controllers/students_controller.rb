@@ -31,5 +31,15 @@ class StudentsController < ApplicationController
       redirect_to student_dashboard_path, alert: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.'
     end
   end
-  
+
+  def study_materials
+    @categories = Category.all
+    @study_materials = if params[:search].present? || params[:category_id].present?
+                         StudyMaterial.where('title ILIKE ? OR description ILIKE ?', "%#{params[:search]}%", "%#{params[:search]}%")
+                                      .where(category_id: params[:category_id].presence || StudyMaterial.all)
+                       else
+                         StudyMaterial.all
+                       end
+    render 'students/study_material'
+  end
 end

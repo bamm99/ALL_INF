@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Dashboard de Estudiante">
+    <title>Dashboard de Estudiante</title>
+    <%= stylesheet_link_tag 'github_markdown' %>
+    <%= stylesheet_link_tag 'application.css'%>
+</head>
+<body data-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class="container is-flex is-flex-direction-column is-flex-grow-1">
+        <%= alert %>
+        <%= notice %>
+
+        <header class="has-text-centered regularTitle">
+            <h1>./all_inf</h1>
+        </header>
+        
+        <!-- Navbar -->
+        <%= render 'shared/basicnavbar' %>
+
+        <div class="box mt-2 is-flex is-flex-direction-column is-flex-grow-1 mx-3 mb-5">
+            <h2 class="regularheadTitle">Material de Estudio</h2>
+
+            <%= form_with(url: student_materials_path, method: :get, local: true) do %>
+                <div class="field">
+                    <div class="control">
+                        <%= text_field_tag :search, params[:search], placeholder: "Buscar por título o descripción", class: "input" %>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <%= select_tag :category_id, options_from_collection_for_select(@categories, :id, :name, params[:category_id]), include_blank: "Seleccionar categoría", class: "input" %>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <%= submit_tag "Filtrar", class: "button is-primary" %>
+                    </div>
+                </div>
+            <% end %>
+
+            <div class="is-flex-grow-1">
+                <table class="table is-fullwidth table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Título</th>
+                            <th style="width: 50%;">Descripción</th>
+                            <th style="width: 20%;">Categoría</th>
+                            <th style="width: 10%;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @study_materials.each do |material| %>
+                            <tr>
+                                <td><%= material.title %></td>
+                                <td><%= material.description %></td>
+                                <td><%= material.category.name %></td>
+                                <td>
+                                    <%= link_to download_study_material_path(material), class: "button is-info" do %>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                            <polyline points="7 11 12 16 17 11" />
+                                            <line x1="12" y1="4" x2="12" y2="16" />
+                                        </svg>
+                                    <% end %>
+                                </td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <%= render 'shared/screenwarning' %>
+</body>
+</html>

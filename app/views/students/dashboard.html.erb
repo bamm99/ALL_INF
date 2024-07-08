@@ -18,21 +18,10 @@
             <h1>./all_inf</h1>
         </header>
         
-        <nav class="navbar navbar_custom mx-3 my-1 is-flex is-align-items-center">
-            <div class="navbar-start">
-                <%= link_to "Material de estudio", "#", class: "button is-info is-small" %>
-            </div>
-            <div class="navbar-end is-flex is-align-items-center">
-                <div class="navbar-item">
-                    <span>Logged in as <strong><%= current_user.email %></strong></span>
-                </div>
-                <div class="navbar-item">
-                    <%= link_to "Edit profile", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
-                    <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
-                </div>
-            </div>
-        </nav>
-
+        <!-- Navbar -->
+        <%= render 'shared/basicnavbar' %>
+        
+        <!--contenido principal -->
         <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
             <!-- div de la terminal -->
             <div class="column is-two-thirds box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
@@ -58,6 +47,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
 
     <script>
@@ -87,5 +77,6 @@
         });
     });
     </script>
+        <%= render 'shared/screenwarning' %>
 </body>
 </html>

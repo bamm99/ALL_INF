@@ -22440,6 +22440,9 @@ body {
   font-size: clamp(1.5rem, 2vw, 2rem);
   text-align: center;
 }
+.regularheadTitle {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+}
 .box_login {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
