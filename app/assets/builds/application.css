@@ -22528,6 +22528,13 @@ body {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
+.notification {
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.notification.slide-out {
+  opacity: 0;
+  transform: translateY(-20px);
+}
 /*! Bundled license information:
 
 bulma/css/bulma.css:

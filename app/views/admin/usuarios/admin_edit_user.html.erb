@@ -1,162 +1,165 @@
-<!DOCTYPE html>
-<html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard de Administración</title>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Dashboard de Administración</title>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 </head>
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
-    <div class='container'>
-        <%= alert %>
-        <%= notice %>
-        <%= render 'shared/screenwarning' %>
-            <header class="has-text-centered">
-            <h1 class="regularTitle">./all_inf</h1>
-            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
-        </header>
+  <div class='container'>
+    <%= render 'shared/screenwarning' %>
+    <header class="has-text-centered">
+      <h1 class="regularTitle">./all_inf</h1>
+      <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+    </header>
 
-        <nav>
-            <%= render 'shared/adminnavbar' %>
-        </nav>
+    <nav>
+      <%= render 'shared/adminnavbar' %>
+    </nav>
 
-        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
-            <!-- Sidebar -->
-            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
-                <%= render 'shared/adminsidebar' %>
-            </div>
-            
-            <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
-                <div class="ml-4 contenido-principal">
-                    <div class="pt-4">
-                        <h2 class="title is-3 mb-4">Editar Usuario</h2>
-                        <%= form_for(@usuario, url: admin_update_user_path(@usuario), method: :patch) do |f| %>
-                            <div>
-                                <%= f.label :user_name, "Nombre" %>
-                                <%= f.text_field :user_name, class:"input input-custom my-2" %>
-                            </div>
-                            <div>
-                                <%= f.label :user_last_name, "Apellido" %>
-                                <%= f.text_field :user_last_name, class:"input input-custom my-2" %>
-                            </div>
-                            <div>
-                                <%= f.label :email, "Correo electrónico" %>
-                                <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input input-custom my-2" %>
-                            </div>
-                            <div class="field">
-                                <%= f.label :password, "Contraseña"%>
-                                <p class="help">Si no desea cambiar la contraseña, dejar en blanco.</p>
-                                <div class="field has-addons">
-                                    <div class="control is-expanded">
-                                        <%= f.password_field :password, autocomplete: "new-password", id: "user_password", placeholder: "Generar contraseña automáticamente", class: "input" %>
-                                    </div>
-                                    <div class="control">
-                                        <button type="button" id="generate_password" class="button is-dark">Generar</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="my-2">                                    
-                                <label class="checkbox">
-                                    <%= f.check_box :user_rol, {checked: @usuario.admin?}, "admin", "normal" %>
-                                </label>
-                                <span>¿Es Administrador?</span>
-                            </div>
-                            <div class="my-2">
-                                <label class="checkbox">
-                                    <%= f.check_box :user_student, id: "user_student_checkbox" %>
-                                </label>
-                                <span>¿Eres estudiante?</span>
-                            </div>
-
-                            <div id="student_options">
-                                <%= f.label :user_university_id, "Universidad", for: "universities_select" %>
-                                <div class="control select select-custom my-2">
-                                    <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select" ,class: "select" } %>
-                                </div>
-                                <br/>
-                                    <%= f.label :user_degree_id, "Carrera", for: "degrees_select" %>
-                                <div class="control select select-custom my-2">
-                                    <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", disabled: true, class: "select" } %>
-                                </div>
-                            </div>
-                            <div class="mt-4 navbar-end">
-                                <%= f.submit "Actualizar", class: "button is-success"%>
-                                <%= link_to 'Volver Atrás', admin_user_info_path, class: "button is-warning mx-2" %>
-                            </div>
-                        <% end %>
-                    </div>
+    <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+      <!-- Sidebar -->
+      <div class="is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+        <%= render 'shared/adminsidebar' %>
+      </div>
+      <!-- Área de Contenido Principal -->
+      <div class="column is-three-quarters box p-4 mx-4 mb-5">
+        <div class="ml-4 contenido-principal">
+          <div class="pt-4">
+            <h2 class="title is-3 mb-4">Editar Usuario</h2>
+            <%= form_for(@usuario, url: admin_update_user_path(@usuario), method: :patch) do |f| %>
+              <div>
+                <%= f.label :user_name, "Nombre" %>
+                <%= f.text_field :user_name, class:"input input-custom my-2" %>
+              </div>
+              <div>
+                <%= f.label :user_last_name, "Apellido" %>
+                <%= f.text_field :user_last_name, class:"input input-custom my-2" %>
+              </div>
+              <div>
+                <%= f.label :email, "Correo electrónico" %>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"input input-custom my-2" %>
+              </div>
+              <div class="field">
+                <%= f.label :password, "Contraseña"%>
+                <p class="help">Si no desea cambiar la contraseña, dejar en blanco.</p>
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <%= f.password_field :password, autocomplete: "new-password", id: "user_password", placeholder: "Generar contraseña automáticamente", class: "input" %>
+                  </div>
+                  <div class="control">
+                    <button type="button" id="generate_password" class="button is-dark">Generar</button>
+                  </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <script>
-    document.addEventListener('turbo:load', () => {
+              </div>
+              <div class="my-2">                                    
+                <label class="checkbox">
+                  <%= f.check_box :user_rol, {checked: @usuario.admin?}, "admin", "normal" %>
+                </label>
+                <span>¿Es Administrador?</span>
+              </div>
+              <div class="my-2">
+                <label class="checkbox">
+                  <%= f.check_box :user_student, id: "user_student_checkbox" %>
+                </label>
+                <span>¿Eres estudiante?</span>
+              </div>
 
+              <div id="student_options">
+                <%= f.label :user_university_id, "Universidad", for: "universities_select" %>
+                <div class="control select select-custom my-2">
+                  <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select" ,class: "select" } %>
+                </div>
+                <br/>
+                <%= f.label :user_degree_id, "Carrera", for: "degrees_select" %>
+                <div class="control select select-custom my-2">
+                  <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", disabled: true, class: "select" } %>
+                </div>
+              </div>
+              <div class="mt-4 navbar-end">
+                <%= f.submit "Actualizar", class: "button is-success"%>
+                <%= link_to 'Volver Atrás', admin_user_info_path(@usuario), class: "button is-warning mx-2" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('turbo:load', () => {
         // Funcionalidad para el checkbox de estudiante y selección de universidad/carrera
         const studentCheckbox = document.getElementById('user_student_checkbox');
         const universitySelect = document.getElementById('universities_select');
         const degreeSelect = document.getElementById('degrees_select');
 
-        const toggleSelects = (enable) => {
-            universitySelect.disabled = !enable;
-            degreeSelect.disabled = !enable;
-            if (!enable) {
-                universitySelect.value = '';
-                degreeSelect.innerHTML = '<option value="">Primero elige una universidad</option>';
-            }
-        };
+        if (studentCheckbox) {
+            const toggleSelects = (enable) => {
+                if (universitySelect && degreeSelect) {
+                    universitySelect.disabled = !enable;
+                    degreeSelect.disabled = !enable;
+                    if (!enable) {
+                        universitySelect.value = '';
+                        degreeSelect.innerHTML = '<option value="">Primero elige una universidad</option>';
+                    }
+                }
+            };
 
-        toggleSelects(studentCheckbox.checked);
+            toggleSelects(studentCheckbox.checked);
 
-        studentCheckbox.addEventListener('change', function() {
-            toggleSelects(this.checked);
-        });
-
-        universitySelect.addEventListener('change', function() {
-            fetch(`/degrees/by_university?university_id=${this.value}`)
-              .then(response => response.json())
-              .then(data => {
-                degreeSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
-                degreeSelect.disabled = false;
-                data.forEach((degree) => {
-                  let option = new Option(degree.name, degree.id);
-                  degreeSelect.appendChild(option);
-                });
+            studentCheckbox.addEventListener('change', function () {
+                toggleSelects(this.checked);
             });
-        });
+
+            if (universitySelect) {
+                universitySelect.addEventListener('change', function () {
+                    fetch(`/degrees/by_university?university_id=${this.value}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            degreeSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
+                            degreeSelect.disabled = false;
+                            data.forEach((degree) => {
+                                let option = new Option(degree.name, degree.id);
+                                degreeSelect.appendChild(option);
+                            });
+                        });
+                });
+            }
+        }
 
         // Generar contraseña automáticamente y copiar al portapapeles
         const generatePasswordButton = document.getElementById('generate_password');
         const passwordInput = document.getElementById('user_password');
 
-        generatePasswordButton.addEventListener('click', () => {
-            const newPassword = generatePassword(8);
-            passwordInput.value = newPassword;
-            copyToClipboard(newPassword);
-            alert("Contraseña generada y copiada al portapapeles");
-        });
-
-        const generatePassword = (length) => {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        };
-
-        const copyToClipboard = (text) => {
-            navigator.clipboard.writeText(text).then(() => {
-                console.log('Texto copiado al portapapeles');
-            }).catch(err => {
-                console.error('Error al copiar al portapapeles: ', err);
+        if (generatePasswordButton && passwordInput) {
+            generatePasswordButton.addEventListener('click', () => {
+                const newPassword = generatePassword(8);
+                passwordInput.value = newPassword;
+                copyToClipboard(newPassword);
+                alert("Contraseña generada y copiada al portapapeles");
             });
-        };
+
+            const generatePassword = (length) => {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return result;
+            };
+
+            const copyToClipboard = (text) => {
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('Texto copiado al portapapeles');
+                }).catch(err => {
+                    console.error('Error al copiar al portapapeles: ', err);
+                });
+            };
+        }
     });
-    </script>
+  </script>
 
 </body>
 </html>

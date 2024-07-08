@@ -169,7 +169,17 @@ class AdminController < ApplicationController
   #-------------------Materiales de Estudio-------------------#
 
   def study_materials
+    @categories = Category.all
     @study_materials = StudyMaterial.all
+
+    if params[:search].present?
+      @study_materials = @study_materials.where('title ILIKE ? OR description ILIKE ?', "%#{params[:search]}%", "%#{params[:search]}%")
+    end
+
+    if params[:category_id].present?
+      @study_materials = @study_materials.where(category_id: params[:category_id])
+    end
+
     render 'admin/study_materials/admin_study_materials'
   end
 

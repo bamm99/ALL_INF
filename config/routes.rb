@@ -39,15 +39,21 @@ Rails.application.routes.draw do
   delete 'admin/universidades/:id', to: 'admin#eliminar_universidad', as: 'eliminar_universidad_admin'
   delete 'admin/universidades/:id/carreras', to: 'admin#eliminar_carreras', as: 'eliminar_carreras_admin'
   post 'admin/universidades/:id/agregar_carrera', to: 'admin#agregar_carrera', as: 'agregar_carrera_admin'
+  get 'degrees/by_university', to: 'degrees#by_university'
+
 
   # rutas admin/study_materials
-  get 'admin/materiales', to: 'admin#study_materials', as: 'study_materials'
+  get 'admin/materiales', to: 'admin#study_materials', as: 'admin_study_materials'
   get 'admin/materiales/nuevo', to: 'admin#new_study_material', as: 'new_study_material'
   post 'admin/materiales', to: 'admin#create_study_material', as: 'create_study_material'
   get 'admin/materiales/:id/editar', to: 'admin#edit_study_material', as: 'edit_study_material'
   patch 'admin/materiales/:id', to: 'admin#update_study_material', as: 'update_study_material'
   delete 'admin/materiales/:id', to: 'admin#destroy_study_material', as: 'destroy_study_material'
   get 'admin/materiales/:id/descargar', to: 'admin#download_study_material', as: 'download_study_material'
+
+
+    # ruta student_view para admin
+  get '/admin/student_view', to: 'admin#student_view', as: 'admin_student_view'
 
   # rutas students
   get 'student_dashboard', to: 'students#dashboard', as: 'student_dashboard'

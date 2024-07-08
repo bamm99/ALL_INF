@@ -12,7 +12,7 @@
     <div class='container'>
         <%= alert %>
         <%= notice %>
-
+        <%= render 'shared/screenwarning' %>
         <header class="has-text-centered">
             <h1 class="regularTitle">./all_inf</h1>
             <h2 class="regularsubTittle"> Dashboard de Administración </h2>
@@ -29,18 +29,36 @@
             </div>
             <!-- Área de Contenido Principal -->
             <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
-                <div>
+               <div class="p-4">
                     <h1 class="title">Materiales de Estudio</h1>
-                    <div class="buttons">
+                    <div class="is-flex is-justify-content-flex-end mb-4">
                         <%= link_to 'Agregar Material de Estudio', new_study_material_path, class: "button is-success" %>
                     </div>
+
+                    <%= form_with(url: admin_study_materials_path, method: :get, local: true) do %>
+                        <div class="field is-grouped mb-4">
+                            <p class="control is-expanded">
+                                <%= text_field_tag :search, params[:search], placeholder: "Buscar por título o descripción", class: "input" %>
+                            </p>
+                            <p class="control is-expanded">
+                                <%= select_tag :category_id, options_from_collection_for_select(@categories, :id, :name, params[:category_id]), include_blank: "Seleccionar categoría", class: "input" %>
+                            </p>
+                            <p class="control">
+                                <%= submit_tag "Filtrar", class: "button is-info" %>
+                            </p>
+                            <p class="control">
+                                <%= button_to "Limpiar Filtros", admin_study_materials_path, method: :get, class: "button is-light" %>
+                            </p>
+                        </div>
+                    <% end %>
+
                     <table class="table is-fullwidth table-custom">
                         <thead>
                             <tr>
-                                <th>Título</th>
-                                <th>Descripción</th>
-                                <th>Categoría</th>
-                                <th>Acciones</th>
+                                <th style="width: 20%;">Título</th>
+                                <th style="width: 40%;">Descripción</th>
+                                <th style="width: 20%;">Categoría</th>
+                                <th style="width: 20%;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,10 +84,10 @@
                                                     <path d="M10 11l0 6" />
                                                     <path d="M14 11l0 6" />
                                                     <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                    <path d="M9 7l1 -3h4l1 3" />
+                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                                 </svg>
                                             <% end %>
-                                            <%= link_to download_study_material_path(material), class: "button is-info" do %>
+                                            <%= link_to rails_blob_path(material.file, disposition: 'attachment'), class: "button is-info" do %>
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                     <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
@@ -87,8 +105,6 @@
             </div>
         </div>
     </div>
-
-    <%= render 'shared/screenwarning' %>
 
 </body>
 </html>
