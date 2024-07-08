@@ -82,12 +82,6 @@
     </div>
 
     <script>
-        // Función para mostrar/ocultar el menú desplegable del sidebar
-        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
-            var dropdownContent = document.getElementById('dropdownContent');
-            dropdownContent.classList.toggle('is-hidden');
-        });
-
         // Función para seleccionar/deseleccionar todos los checkboxes
         document.getElementById('select_all').addEventListener('click', function(event) {
             var checkboxes = document.querySelectorAll('input[name="feedback_ids[]"]');

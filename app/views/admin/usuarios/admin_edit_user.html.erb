@@ -94,11 +94,6 @@
     </div>
     <script>
     document.addEventListener('turbo:load', () => {
-        // Mostrar/ocultar el menú desplegable del sidebar
-        document.getElementById('dropdownMenuButton').addEventListener('click', function() {
-            var dropdownContent = this.nextElementSibling;
-            dropdownContent.classList.toggle('hidden');
-        });
 
         // Funcionalidad para el checkbox de estudiante y selección de universidad/carrera
         const studentCheckbox = document.getElementById('user_student_checkbox');

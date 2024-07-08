@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dashboard de Administración</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+<body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class='container'>
+        <%= alert %>
+        <%= notice %>
+
+        <header class="has-text-centered">
+            <h1 class="regularTitle">./all_inf</h1>
+            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+        </header>
+
+        <nav>
+            <%= render 'shared/adminnavbar' %>
+        </nav>
+
+        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+            <!-- Sidebar -->
+            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+                <%= render 'shared/adminsidebar' %>
+            </div>
+            <!-- Área de Contenido Principal -->
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
+                <div>
+                    <h1 class="title">Materiales de Estudio</h1>
+                    <div class="buttons">
+                        <%= link_to 'Agregar Material de Estudio', new_study_material_path, class: "button is-success" %>
+                    </div>
+                    <table class="table is-fullwidth table-custom">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @study_materials.each do |material| %>
+                                <tr>
+                                    <td><%= material.title %></td>
+                                    <td><%= material.description %></td>
+                                    <td><%= material.category.name %></td>
+                                    <td>
+                                        <div class="buttons">
+                                            <%= link_to edit_study_material_path(material), class: "button is-warning" do %>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                                    <path d="M16 5l3 3" />
+                                                </svg>
+                                            <% end %>
+                                            <%= link_to destroy_study_material_path(material), method: :delete, data: { confirm: "¿Estás seguro de eliminar este material de estudio?" }, class: "button is-danger" do %>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M4 7l16 0" />
+                                                    <path d="M10 11l0 6" />
+                                                    <path d="M14 11l0 6" />
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                    <path d="M9 7l1 -3h4l1 3" />
+                                                </svg>
+                                            <% end %>
+                                            <%= link_to download_study_material_path(material), class: "button is-info" do %>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                                    <path d="M7 11l5 5l5 -5" />
+                                                    <path d="M12 4l0 12" />
+                                                </svg>
+                                            <% end %>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%= render 'shared/screenwarning' %>
+
+</body>
+</html>

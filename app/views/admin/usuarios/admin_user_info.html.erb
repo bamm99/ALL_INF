@@ -66,14 +66,6 @@
     </div>
 
     <script>
-        // Función para mostrar/ocultar el menú desplegable del sidebar
-        document.getElementById('dropdownMenuButton').addEventListener('click', function () {
-            var dropdownContent = this.nextElementSibling;
-            dropdownContent.classList.toggle('is-hidden');
-        });
-    </script>
-
-    <script>
         document.addEventListener("turbo:load", function() {
             document.querySelectorAll('.btn-eliminar').forEach(function(button) {
                 // Asegura que solo se añade un event listener por botón

@@ -1,0 +1,77 @@
+<!-- app/views/admin/study_materials/admin_new_study_material.html.erb -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dashboard de Administración</title>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+<body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
+    <div class='container'>
+        <%= alert %>
+        <%= notice %>
+
+        <header class="has-text-centered">
+            <h1 class="regularTitle">./all_inf</h1>
+            <h2 class="regularsubTittle"> Dashboard de Administración </h2>
+        </header>
+
+        <nav>
+            <%= render 'shared/adminnavbar' %>
+        </nav>
+
+        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+            <!-- Sidebar -->
+            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+                <%= render 'shared/adminsidebar' %>
+            </div>
+            <!-- Área de Contenido Principal -->
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
+                <h1 class="title">Agregar Material de Estudio</h1>
+                <%= form_with(model: @study_material, url: create_study_material_path, local: true) do |form| %>
+                    <div class="field">
+                        <%= form.label :title, 'Título' %>
+                        <div class="control">
+                            <%= form.text_field :title, class: 'input' %>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <%= form.label :description, 'Descripción' %>
+                        <div class="control">
+                            <%= form.text_area :description, class: 'textarea' %>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <%= form.label :category_id, 'Categoría' %>
+                        <div class="control">
+                            <%= form.collection_select :category_id, @categories, :id, :name, {}, { class: 'input' } %>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <%= form.label :file, 'Archivo' %>
+                        <div class="control">
+                            <%= form.file_field :file, class: 'input' %>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <%= form.submit 'Guardar', class: 'button is-primary' %>
+                            <%= link_to 'Volver Atrás', study_materials_path, class: 'button is-light' %>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+
+    <%= render 'shared/screenwarning' %>
+
+</body>
+</html>

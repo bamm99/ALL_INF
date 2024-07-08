@@ -3,9 +3,9 @@ class AdminController < ApplicationController
   before_action :check_admin
   before_action :set_curso, only: [:ver_curso, :editar_curso, :actualizar_curso, :eliminar_curso]
   before_action :set_universidad, only: [:ver_universidad, :editar_universidad, :actualizar_universidad, :eliminar_universidad, :eliminar_carreras, :agregar_carrera]
+  before_action :set_study_material, only: [:edit_study_material, :update_study_material, :destroy_study_material, :download_study_material]
 
   include MarkdownHelper
-
   #-------------------Cursos-------------------#
 
   def cursos
@@ -15,7 +15,7 @@ class AdminController < ApplicationController
 
   def nuevo_curso
     @curso = Course.new
-    render 'admin/cursos/admin_agregar_curso' 
+    render 'admin/cursos/admin_agregar_curso'
   end
 
   def crear_curso
@@ -29,13 +29,11 @@ class AdminController < ApplicationController
 
   def ver_curso
     @curso = Course.find(params[:id])
-    # Cantidad total de usuarios únicos que han completado el curso
     @total_completions = @curso.course_completions.select(:user_id).distinct.count
-    # Solo las completaciones que tienen feedback no nulo y no vacío
     @feedbacks = @curso.course_completions.where.not(feedback: [nil, ""])
     render 'admin/cursos/admin_curso_info'
   end
-  
+
   def editar_curso
     @curso = Course.find(params[:id])
     if @curso.file.attached?
@@ -45,15 +43,12 @@ class AdminController < ApplicationController
     end
     render 'admin/cursos/admin_editar_curso'
   end
-  
+
   def actualizar_curso
     if @curso.update(course_params.except(:file))
-      # Actualizar el archivo .md si es necesario
       if params[:file_content].present?
-        # Reemplazar el archivo existente o adjuntar uno nuevo
         @curso.file.attach(io: StringIO.new(params[:file_content]), filename: 'contenido.md') if params[:file_content].present?
       end
-  
       redirect_to ver_curso_admin_path(@curso), notice: 'Curso actualizado con éxito.'
     else
       @curso_content = params[:file_content] || ""
@@ -86,7 +81,7 @@ class AdminController < ApplicationController
   #-------------------Dashboard-------------------#
 
   def dashboard
-    #dashboard 
+    # Dashboard content
   end
 
   #-------------------Universidades-------------------#
@@ -95,10 +90,12 @@ class AdminController < ApplicationController
     @universidades = University.all
     render 'admin/universidades/admin_universidades'
   end
+
   def nuevo_universidad
     @universidad = University.new
     render 'admin/universidades/admin_agregar_universidad'
   end
+
   def crear_universidad
     @universidad = University.new(name: params[:university_name])
     if @universidad.save
@@ -155,8 +152,6 @@ class AdminController < ApplicationController
   rescue => e
     redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
   end
-  
-
 
   def editar_universidad
     @universidad = University.find(params[:id])
@@ -171,7 +166,54 @@ class AdminController < ApplicationController
     end
   end
 
+  #-------------------Materiales de Estudio-------------------#
+
+  def study_materials
+    @study_materials = StudyMaterial.all
+    render 'admin/study_materials/admin_study_materials'
+  end
+
+  def new_study_material
+    @study_material = StudyMaterial.new
+    @categories = Category.all
+    render 'admin/study_materials/admin_new_study_material'
+  end
+
+  def create_study_material
+    @study_material = StudyMaterial.new(study_material_params)
+    if @study_material.save
+      redirect_to study_materials_path, notice: 'Material de estudio creado con éxito.'
+    else
+      @categories = Category.all
+      render 'admin/study_materials/admin_new_study_material'
+    end
+  end
+
+  def edit_study_material
+    @categories = Category.all
+    render 'admin/study_materials/admin_edit_study_material'
+  end
+
+  def update_study_material
+    if @study_material.update(study_material_params)
+      redirect_to study_materials_path, notice: 'Material de estudio actualizado con éxito.'
+    else
+      @categories = Category.all
+      render 'admin/study_materials/admin_edit_study_material'
+    end
+  end
+
+  def destroy_study_material
+    @study_material.destroy
+    redirect_to study_materials_path, notice: 'Material de estudio eliminado con éxito.'
+  end
+
+  def download_study_material
+    redirect_to rails_blob_path(@study_material.file, disposition: 'attachment')
+  end
+
   #-------------------Studentview-------------------#
+
   def student_view
     @cursos = Course.all
     render 'admin/studentview'
@@ -180,23 +222,20 @@ class AdminController < ApplicationController
   def mostrar_curso
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download
-    html_content = MarkdownHelper.markdown_to_html(markdown_content) # Asegúrate de que esta llamada sea correcta.
-  
+    html_content = MarkdownHelper.markdown_to_html(markdown_content)
+
     curso_html = render_to_string(partial: 'shared/curso', locals: { curso: @curso, html_content: html_content })
     feedback_form_html = render_to_string(partial: 'shared/feedback_form', locals: { curso: @curso })
-    
+
     render json: { curso_html: curso_html, feedback_form_html: feedback_form_html }
   end
 
   def complete_course
-    # Crea un nuevo registro de CourseCompletion con el ID del curso, el ID del usuario actual y el feedback (si lo hay)
     completion = CourseCompletion.new(course_id: params[:course_id], user_id: current_user.id, feedback: params[:feedback], completed_at: Time.current)
 
     if completion.save
-      # Si el registro se guarda correctamente, redirige al usuario con un mensaje de éxito.
       redirect_to student_dashboard_path, notice: '¡Curso completado con éxito! Gracias por tu feedback.'
     else
-      # Si hay un error al guardar, redirige al usuario con un mensaje de error.
       redirect_to student_dashboard_path, alert: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.'
     end
   end
@@ -228,17 +267,15 @@ class AdminController < ApplicationController
 
   def update_user
     @usuario = User.find(params[:id])
-  
-    # Omitir la actualización de la contraseña si el campo está en blanco
+
     if params[:user][:password].blank?
       params[:user].delete(:password)
-      params[:user].delete(:password_confirmation) # También es buena idea eliminar la confirmación si existe
+      params[:user].delete(:password_confirmation)
     end
-  
+
     if @usuario.update(user_params)
       redirect_to admin_user_info_path(@usuario), notice: 'Usuario actualizado con éxito.'
     else
-      # Pasar @usuario a la vista como variable de instancia para evitar problemas de scope
       render 'admin/usuarios/admin_edit_user', status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordNotFound
@@ -251,7 +288,7 @@ class AdminController < ApplicationController
       render json: { error: "No puedes eliminar tu propio usuario." }, status: :forbidden
     else
       @usuario.destroy
-      head :no_content # Indica éxito sin contenido de retorno
+      head :no_content
     end
   rescue ActiveRecord::RecordNotFound
     head :not_found
@@ -287,5 +324,19 @@ class AdminController < ApplicationController
 
   def course_params
     params.require(:course).permit(:title, :description, :file)
+  end
+
+  def set_study_material
+    @study_material = StudyMaterial.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to study_materials_path, alert: 'Material de estudio no encontrado.'
+  end
+
+  def study_material_params
+    params.require(:study_material).permit(:title, :description, :category_id, :file)
+  end
+
+  def set_categories
+    @categories = Category.all
   end
 end

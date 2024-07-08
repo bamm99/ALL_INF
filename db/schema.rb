@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_12_061436) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_07_230522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_12_061436) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "course_completions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
@@ -70,10 +76,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_12_061436) do
 
   create_table "study_materials", force: :cascade do |t|
     t.string "title"
-    t.string "category"
     t.string "file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_study_materials_on_category_id"
   end
 
   create_table "universities", force: :cascade do |t|
@@ -107,6 +115,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_12_061436) do
   add_foreign_key "course_completions", "courses"
   add_foreign_key "course_completions", "users"
   add_foreign_key "degrees", "universities"
+  add_foreign_key "study_materials", "categories"
   add_foreign_key "users", "degrees", column: "user_degree_id"
   add_foreign_key "users", "universities", column: "user_university_id"
 end

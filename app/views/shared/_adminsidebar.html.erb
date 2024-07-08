@@ -1,3 +1,4 @@
+<!-- app/views/shared/_adminsidebar.html.erb -->
 <aside class="menu box_cursos">
   <ul class="menu-list">
     <li>
@@ -10,25 +11,7 @@
       <button class="button is-fullwidth" onclick="location.href='<%= admin_universidades_path %>'">Universidades</button>
     </li>
     <li>
-      <button class="button is-fullwidth" id="dropdownMenuButton">Materiales de Estudio</button>
-      <ul class="dropdown-content is-hidden" aria-labelledby="dropdownMenuButton">
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Programación y Desarrollo</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Ingeniería de Software</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Bases de Datos</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Redes y Seguridad</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Sistemas Operativos y Tecnología</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Inteligencia Artificial y Datos</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Tecnologías Emergentes</button></li>
-        <li><button class="button is-fullwidth" onclick="location.href='#'">Gestión Tecnológica</button></li>
-      </ul>
+      <button class="button is-fullwidth" onclick="location.href='<%= study_materials_path %>'">Materiales de Estudio</button>
     </li>
   </ul>
 </aside>
-
-<script>
-  // Función para mostrar/ocultar el menú desplegable del sidebar
-  document.getElementById('dropdownMenuButton').addEventListener('click', function () {
-    var dropdownContent = this.nextElementSibling;
-    dropdownContent.classList.toggle('is-hidden');
-  });
-</script>

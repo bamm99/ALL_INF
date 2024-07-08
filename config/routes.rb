@@ -29,16 +29,25 @@ Rails.application.routes.draw do
   #feedbacks cursos
   delete 'admin/feedbacks', to: 'admin#eliminar_feedbacks', as: 'eliminar_feedbacks_admin'
 
-# rutas admin/universities
-get 'admin/universidades', to: 'admin#universidades', as: 'admin_universidades'
-get 'admin/universidades/nuevo', to: 'admin#nuevo_universidad', as: 'nuevo_universidad_admin'
-post 'admin/universidades', to: 'admin#crear_universidad', as: 'crear_universidad_admin'
-get 'admin/universidades/:id', to: 'admin#ver_universidad', as: 'ver_universidad_admin'
-get 'admin/universidades/:id/editar', to: 'admin#editar_universidad', as: 'editar_universidad_admin'
-patch 'admin/universidades/:id', to: 'admin#actualizar_universidad', as: 'actualizar_universidad_admin'
-delete 'admin/universidades/:id', to: 'admin#eliminar_universidad', as: 'eliminar_universidad_admin'
-delete 'admin/universidades/:id/carreras', to: 'admin#eliminar_carreras', as: 'eliminar_carreras_admin'
-post 'admin/universidades/:id/agregar_carrera', to: 'admin#agregar_carrera', as: 'agregar_carrera_admin'
+  # rutas admin/universities
+  get 'admin/universidades', to: 'admin#universidades', as: 'admin_universidades'
+  get 'admin/universidades/nuevo', to: 'admin#nuevo_universidad', as: 'nuevo_universidad_admin'
+  post 'admin/universidades', to: 'admin#crear_universidad', as: 'crear_universidad_admin'
+  get 'admin/universidades/:id', to: 'admin#ver_universidad', as: 'ver_universidad_admin'
+  get 'admin/universidades/:id/editar', to: 'admin#editar_universidad', as: 'editar_universidad_admin'
+  patch 'admin/universidades/:id', to: 'admin#actualizar_universidad', as: 'actualizar_universidad_admin'
+  delete 'admin/universidades/:id', to: 'admin#eliminar_universidad', as: 'eliminar_universidad_admin'
+  delete 'admin/universidades/:id/carreras', to: 'admin#eliminar_carreras', as: 'eliminar_carreras_admin'
+  post 'admin/universidades/:id/agregar_carrera', to: 'admin#agregar_carrera', as: 'agregar_carrera_admin'
+
+  # rutas admin/study_materials
+  get 'admin/materiales', to: 'admin#study_materials', as: 'study_materials'
+  get 'admin/materiales/nuevo', to: 'admin#new_study_material', as: 'new_study_material'
+  post 'admin/materiales', to: 'admin#create_study_material', as: 'create_study_material'
+  get 'admin/materiales/:id/editar', to: 'admin#edit_study_material', as: 'edit_study_material'
+  patch 'admin/materiales/:id', to: 'admin#update_study_material', as: 'update_study_material'
+  delete 'admin/materiales/:id', to: 'admin#destroy_study_material', as: 'destroy_study_material'
+  get 'admin/materiales/:id/descargar', to: 'admin#download_study_material', as: 'download_study_material'
 
   # ruta student_view para admin
   get '/admin/student_view', to: 'admin#student_view', as: 'admin_student_view'
