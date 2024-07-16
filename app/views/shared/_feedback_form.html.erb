@@ -3,12 +3,12 @@
     <%= form.hidden_field :course_id, value: @curso.id %>
     
     <div>
-      <label for="feedback" class="block mb-2 text-xl font-medium text-gray-900">¿Qué te pareció el curso?</label>
-      <%= form.text_area :feedback, placeholder: "Deja tu feedback aquí", rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" %>
+      <label for="feedback" class="">¿Qué te pareció el curso?</label>
+      <%= form.text_area :feedback, placeholder: "Deja tu feedback aquí", rows: 4, class: "textarea" %>
     </div>
     
     <div class="flex justify-end">
-      <%= form.submit "Terminar Curso", class: "px-4 py-2 bg-blue-600 text-black font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" %>
+      <%= form.submit "Terminar Curso", class: "button is-primary flex" %>
     </div>
   <% end %>
 </div>

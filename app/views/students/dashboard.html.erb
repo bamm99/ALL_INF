@@ -25,7 +25,7 @@
         <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
             <!-- div de la terminal -->
             <div class="column is-two-thirds box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
-                <div class="box">
+                <div class="box box_disclaimer">
                     <p>Para iniciar sesión en la terminal tu usuario es "la primera letra de tu nombre"+"tu apellido", la clave genérica es "allinf". Puedes cambiarla si deseas, pero no la pierdas, ya que deberás contactarte con un administrador para poder recuperarla.</p>
                 </div>
                 
@@ -35,9 +35,9 @@
             </div>
             <!-- div de los cursos -->
             <div class="column box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
-                <h1 class="title is-4 mb-2">Cursos</h1>
+                <h1 class="cursoTitle mb-2">Cursos</h1>
                 <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
-                    <div class="select is-fullwidth">
+                    <div class="select select_curso is-fullwidth">
                         <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select" } %>
                     </div>
                 <% end %>

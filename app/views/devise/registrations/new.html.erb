@@ -8,35 +8,35 @@
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="field mb-4">
-        <label class="label"><%= f.label :user_name, "Nombre" %></label>
+        <label class="label has-text-primary-color"><%= f.label :user_name, "Nombre" %></label>
         <div class="control">
           <%= f.text_field :user_name, class: "input input-custom" %>
         </div>
       </div>
 
       <div class="field mb-4">
-        <label class="label"><%= f.label :user_last_name, "Apellido" %></label>
+        <label class="label has-text-primary-color"><%= f.label :user_last_name, "Apellido" %></label>
         <div class="control">
           <%= f.text_field :user_last_name, class: "input input-custom" %>
         </div>
       </div>
 
       <div class="field mb-4">
-        <label class="label"><%= f.label :email, "Correo electrónico" %></label>
+        <label class="label has-text-primary-color"><%= f.label :email, "Correo electrónico" %></label>
         <div class="control">
           <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-custom" %>
         </div>
       </div>
 
       <div class="field mb-4">
-        <label class="label"><%= f.label :password , "Contraseña" %></label>
+        <label class="label has-text-primary-color"><%= f.label :password , "Contraseña" %></label>
         <div class="control">
           <%= f.password_field :password, autocomplete: "new-password", class: "input input-custom" %>
         </div>
       </div>
 
       <div class="field mb-4">
-        <label class="label"><%= f.label :password_confirmation , "Confirmar contraseña" %></label>
+        <label class="label has-text-primary-color"><%= f.label :password_confirmation , "Confirmar contraseña" %></label>
         <div class="control">
           <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input input-custom" %>
         </div>
@@ -44,8 +44,8 @@
 
       <div class="field mb-4">
         <div class="control">
-          <label class="checkbox">
-            <%= f.check_box :user_student, id: "user_student_checkbox" %>
+          <label class="checkbox has-text-primary-color">
+            <%= f.check_box :user_student, id: "user_student_checkbox", class: "checkbox-custom" %>
             ¿Eres estudiante?
           </label>
         </div>
@@ -53,16 +53,16 @@
 
       <div id="student_options" class="mb-4">
         <div class="field mb-4">
-          <label class="label"><%= f.label :user_university_id, "Universidad", for: "universities_select" %></label>
+          <label class="label has-text-primary-color"><%= f.label :user_university_id, "Universidad", for: "universities_select" %></label>
           <div class="control select select-custom">
-            <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select", class: "select" } %>
+            <%= f.collection_select :user_university_id, University.all, :id, :name, { include_blank: 'Seleccione una' }, { id: "universities_select", class: "select select-custom", disabled: true } %>
           </div>
         </div>
 
         <div class="field mb-4">
-          <label class="label"><%= f.label :user_degree_id, "Carrera", for: "degrees_select" %></label>
+          <label class="label has-text-primary-color"><%= f.label :user_degree_id, "Carrera", for: "degrees_select" %></label>
           <div class="control select select-custom">
-            <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "select", disabled: true } %>
+            <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "select select-custom", disabled: true } %>
           </div>
         </div>
       </div>

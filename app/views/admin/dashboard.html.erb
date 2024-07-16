@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard de Administración</title>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-</head>
+
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
     <div class='container'>
-        <%= alert %>
-        <%= notice %>
 
         <header class="has-text-centered">
             <h1 class="regularTitle">./all_inf</h1>
@@ -24,11 +13,11 @@
 
         <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
             <!-- Sidebar -->
-            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_main">
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_main">
                 <div>
                     <h1>Vista administrador</h1>
                     <p>Bienvenido a la vista de administrador</p>
@@ -36,8 +25,6 @@
             </div>
         </div>
     </div>
-
     <%= render 'shared/screenwarning' %>
-
 </body>
-</html>
+

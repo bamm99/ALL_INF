@@ -2,8 +2,11 @@
 <html>
 <head>
     <title>/ALL_IECI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <!-- Otros elementos del head como enlaces a hojas de estilo, etc. -->
+
 </head>
 <body>
     <div class="section is-flex is-align-items-center is-justify-content-center is-fullheight">
@@ -15,14 +18,14 @@
               <%= render "devise/shared/error_messages", resource: resource %>
 
               <div class="field mb-4">
-                  <label class="label"><%= f.label :email %></label>
+                  <label class="label has-text-primary-color"><%= f.label :email %></label>
                   <div class="control">
                       <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-custom" %>
                   </div>
               </div>
 
               <div class="field mb-4">
-                  <label class="label"><%= f.label :password %></label>
+                  <label class="label has-text-primary-color"><%= f.label :password %></label>
                   <div class="control">
                       <%= f.password_field :password, autocomplete: "current-password", class: "input input-custom" %>
                   </div>
@@ -31,7 +34,7 @@
               <% if devise_mapping.rememberable? %>
                   <div class="field mb-4">
                       <div class="control">
-                          <label class="checkbox">
+                          <label class="checkbox has-text-primary-color">
                               <%= f.check_box :remember_me %>
                               <%= f.label :remember_me %>
                           </label>
@@ -53,4 +56,3 @@
         </div>
     </div>
 </body>
-</html>
