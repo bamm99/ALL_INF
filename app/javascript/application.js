@@ -21,11 +21,36 @@ window.$ = window.jQuery = $;
 Rails.start();
 require("@rails/activestorage").start();
 
+function calculatePageLength() {
+  const windowHeight = $(window).height();
+  const baseLength = 8; // Número base de filas por página
+  let pageLength;
+
+  if (windowHeight < 600) {
+    pageLength = Math.max(3, baseLength - 4); // Mínimo 3 filas si la pantalla es muy pequeña
+  } else if (windowHeight < 800) {
+    pageLength = Math.max(5, baseLength - 2); // Mínimo 5 filas para pantallas medianas
+  } else {
+    pageLength = baseLength; // Usar el número base para pantallas grandes
+  }
+
+  // Ajuste para dejar espacio para los botones
+  if (pageLength >= 7) {
+    return pageLength - 1;
+  } else if (pageLength >= 5) {
+    return pageLength - 1;
+  } else if (pageLength >= 4) {
+    return pageLength - 1;
+  } else {
+    return pageLength;
+  }
+}
+
 function initializeDataTables() {
   // Inicializa DataTables en las tablas con la clase .table-datatables
   document.querySelectorAll('.table-datatables').forEach(table => {
     if (!$.fn.DataTable.isDataTable(table)) {
-      $(table).DataTable({
+      var tableInstance = $(table).DataTable({
         dom: 'Bfrtip',
         buttons: [
           {
@@ -44,7 +69,13 @@ function initializeDataTables() {
         paging: true,
         searching: true,
         info: true,
-        ordering: true
+        ordering: true,
+        pageLength: calculatePageLength(),
+      });
+
+      // Recalcular la longitud de página en cambio de tamaño de ventana
+      window.addEventListener('resize', function() {
+        tableInstance.page.len(calculatePageLength()).draw();
       });
     }
   });

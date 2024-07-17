@@ -1,4 +1,3 @@
-
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
     <div class='container'>
 
@@ -37,7 +36,7 @@
                             <h4 class="title is-4 mt-4">Feedback de los usuarios</h4>
                             <%= form_tag eliminar_feedbacks_admin_path, method: :delete do %>
                                 <div class="table-container is-flex is-justify-content-center">
-                                    <table class="table is-fullwidth table-custom">
+                                    <table class="table is-fullwidth table-custom table-datatables">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" id="select_all"></th>
@@ -81,4 +80,3 @@
         });
     </script>
 </body>
-

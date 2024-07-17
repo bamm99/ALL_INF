@@ -26308,10 +26308,31 @@ var import_jquery = __toESM(require_jquery());
 window.$ = window.jQuery = import_jquery.default;
 Rails.start();
 require_activestorage().start();
+function calculatePageLength() {
+  const windowHeight = (0, import_jquery.default)(window).height();
+  const baseLength = 8;
+  let pageLength;
+  if (windowHeight < 600) {
+    pageLength = Math.max(3, baseLength - 4);
+  } else if (windowHeight < 800) {
+    pageLength = Math.max(5, baseLength - 2);
+  } else {
+    pageLength = baseLength;
+  }
+  if (pageLength >= 7) {
+    return pageLength - 1;
+  } else if (pageLength >= 5) {
+    return pageLength - 1;
+  } else if (pageLength >= 4) {
+    return pageLength - 1;
+  } else {
+    return pageLength;
+  }
+}
 function initializeDataTables() {
   document.querySelectorAll(".table-datatables").forEach((table) => {
     if (!import_jquery.default.fn.DataTable.isDataTable(table)) {
-      (0, import_jquery.default)(table).DataTable({
+      var tableInstance = (0, import_jquery.default)(table).DataTable({
         dom: "Bfrtip",
         buttons: [
           {
@@ -26332,7 +26353,11 @@ function initializeDataTables() {
         paging: true,
         searching: true,
         info: true,
-        ordering: true
+        ordering: true,
+        pageLength: calculatePageLength()
+      });
+      window.addEventListener("resize", function() {
+        tableInstance.page.len(calculatePageLength()).draw();
       });
     }
   });

@@ -1,4 +1,3 @@
-
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
     <div class='container'>
         <%= render 'shared/screenwarning' %>
@@ -33,7 +32,6 @@
                             </div>
                         </div>
                     <div class="content mt-2">
-
                         <!-- Formulario para editar nombre de la universidad (oculto por defecto) -->
                         <div id="edit_university_form" class="mt-4 is-hidden">
                             <%= form_with(model: @universidad, url: actualizar_universidad_admin_path(@universidad), local: true) do |form| %>
@@ -78,7 +76,7 @@
                         <h4 class="title is-4 mt-4">Carreras</h4>
                         <%= form_tag eliminar_carreras_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar las carreras seleccionadas? Los usuarios de estas carreras serán actualizados para no tener carrera." } do %>
                             <div class="table-container is-flex is-justify-content-center">
-                            <table class="table is-fullwidth table-custom">
+                            <table class="table is-fullwidth table-custom table-datatables">
                                 <thead>
                                 <tr>
                                     <th><input type="checkbox" id="select_all"></th>
@@ -141,4 +139,3 @@
         });
     </script>
 </body>
-

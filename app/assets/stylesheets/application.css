@@ -53,7 +53,7 @@ html, body {
   display: flex;
   flex-direction: column;
   color: var(--primary-color);
-  overflow: auto;
+  overflow: hidden; /* Cambiado a hidden para evitar desbordamiento */
 }
 
 .label.has-text-primary-color,
@@ -226,15 +226,15 @@ html, body {
 }
 
 .table-container {
-  max-height: clamp(15rem, 20vw, 20rem);
-  overflow-x: auto;
-  overflow-y: auto;
+  height: 100%; /* Hacer que el contenedor de la tabla ocupe todo el alto disponible */
+  overflow: auto;
   display: flex;
   justify-content: center;
 }
 
 .table-custom {
   color: var(--primary-color);
+  width: 100%;
 }
 
 .table-custom tbody tr:nth-child(even) {
@@ -280,4 +280,24 @@ html, body {
 .box_cursos .select {
   background-color: var(--primary-bg) !important;
   color: var(--primary-color) !important;
+}
+.table-container {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dataTables_wrapper {
+  height: 100%;
+}
+
+.table-datatables {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.dataTables_scrollBody {
+  height: 100% !important;
 }
