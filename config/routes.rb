@@ -51,6 +51,8 @@ Rails.application.routes.draw do
   delete 'admin/materiales/:id', to: 'admin#destroy_study_material', as: 'destroy_study_material'
   get 'admin/materiales/:id/descargar', to: 'admin#download_study_material', as: 'download_study_material'
 
+  # ruta admin/statistics
+  get 'admin/statistics', to: 'admin#statistics', as: 'admin_statistics'
 
     # ruta student_view para admin
   get '/admin/student_view', to: 'admin#student_view', as: 'admin_student_view'

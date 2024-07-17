@@ -7,7 +7,6 @@ class AdminController < ApplicationController
 
   include MarkdownHelper
   #-------------------Cursos-------------------#
-
   def cursos
     @cursos = Course.all
     render 'admin/cursos/admin_cursos'
@@ -63,29 +62,51 @@ class AdminController < ApplicationController
       @curso.destroy
     end
     redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
-    rescue ActiveRecord::RecordNotDestroyed => e
-      redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
-    rescue => e
-      redirect_to admin_cursos_path, alert: "Ocurrió un error: #{e.message}"
+  rescue ActiveRecord::RecordNotDestroyed => e
+    redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
+  rescue => e
+    redirect_to admin_cursos_path, alert: "Ocurrió un error: #{e.message}"
   end
 
   def eliminar_feedbacks
     CourseCompletion.where(id: params[:feedback_ids]).destroy_all
     redirect_to request.referer, notice: 'Feedbacks eliminados correctamente.'
-    rescue ActiveRecord::RecordNotFound => e
-      redirect_to request.referer, alert: "Algunos feedbacks no se pudieron encontrar: #{e.message}"
-    rescue => e
-      redirect_to request.referer, alert: "Ocurrió un error al eliminar los feedbacks: #{e.message}"
+  rescue ActiveRecord::RecordNotFound => e
+    redirect_to request.referer, alert: "Algunos feedbacks no se pudieron encontrar: #{e.message}"
+  rescue => e
+    redirect_to request.referer, alert: "Ocurrió un error al eliminar los feedbacks: #{e.message}"
   end
 
   #-------------------Dashboard-------------------#
-
   def dashboard
     # Dashboard content
   end
 
-  #-------------------Universidades-------------------#
+  #-------------------Estadisticas----------------#
+  def statistics
+    @chart_type = params[:chart_type] || 'courses_completed_per_month'
+    @month = params[:month].present? ? Date.strptime(params[:month], "%Y-%m") : Date.today.beginning_of_month
+    @universities = University.all
+    @selected_university = params[:university_id].present? ? University.find(params[:university_id]) : nil
 
+    @chart_data = case @chart_type
+                  when 'courses_completed_per_month'
+                    generate_courses_completed_per_month_data
+                  when 'course_completions_by_month'
+                    generate_course_completions_by_month_data(@month)
+                  when 'user_distribution_by_university'
+                    generate_user_distribution_by_university_data
+                  when 'user_distribution_by_degree_and_university'
+                    generate_user_distribution_by_degree_and_university_data(@selected_university)
+                  when 'study_materials_distribution_by_category'
+                    generate_study_materials_distribution_by_category_data
+                  else
+                    {}
+                  end
+
+    render 'admin/statistics/admin_statistics'
+  end
+  #-------------------Universidades-------------------#
   def universidades
     @universidades = University.all
     render 'admin/universidades/admin_universidades'
@@ -119,8 +140,8 @@ class AdminController < ApplicationController
     else
       redirect_to ver_universidad_admin_path(@universidad), alert: 'El nombre de la carrera no puede estar vacío.'
     end
-    rescue => e
-      redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al agregar la carrera: #{e.message}"
+  rescue => e
+    redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al agregar la carrera: #{e.message}"
   end
 
   def eliminar_carreras
@@ -148,9 +169,9 @@ class AdminController < ApplicationController
       degrees.destroy_all
       @universidad.destroy
     end
-      redirect_to admin_universidades_path, notice: 'Universidad eliminada con éxito.'
-    rescue => e
-      redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
+    redirect_to admin_universidades_path, notice: 'Universidad eliminada con éxito.'
+  rescue => e
+    redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
   end
 
   def editar_universidad
@@ -167,7 +188,6 @@ class AdminController < ApplicationController
   end
 
   #-------------------Materiales de Estudio-------------------#
-
   def study_materials
     @categories = Category.all
     @study_materials = StudyMaterial.all
@@ -223,7 +243,6 @@ class AdminController < ApplicationController
   end
 
   #-------------------Studentview-------------------#
-
   def student_view
     @cursos = Course.all
     render 'admin/studentview'
@@ -251,7 +270,6 @@ class AdminController < ApplicationController
   end
 
   #-------------------Usuarios-------------------#
-
   def usuarios
     @usuarios = User.all
     render 'admin/usuarios/admin_users', locals: { usuarios: @usuarios }
@@ -277,12 +295,12 @@ class AdminController < ApplicationController
 
   def update_user
     @usuario = User.find(params[:id])
-  
+
     if params[:user][:password].blank?
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
     end
-  
+
     if @usuario.update(user_params)
       flash[:notice] = 'Usuario actualizado con éxito.'
       redirect_to admin_user_info_path(@usuario)
@@ -293,7 +311,6 @@ class AdminController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
   end
-  
 
   def destroy
     @usuario = User.find(params[:id])
@@ -308,7 +325,6 @@ class AdminController < ApplicationController
   end
 
   #-------------------Privado-------------------#
-
   private
 
   def user_params
@@ -351,5 +367,39 @@ class AdminController < ApplicationController
 
   def set_categories
     @categories = Category.all
+  end
+
+  def generate_courses_completed_per_month_data
+    (0..11).map { |i| Date.today.beginning_of_month - i.months }.reverse.map do |month|
+      [month.strftime("%B %Y"), CourseCompletion.where(completed_at: month..month.end_of_month).count]
+    end.to_h
+  end
+
+  def generate_course_completions_by_month_data(month)
+    CourseCompletion.where(completed_at: month.beginning_of_month..month.end_of_month)
+                    .group('course_id')
+                    .order('count_id desc')
+                    .count('id')
+                    .transform_keys { |course_id| Course.find(course_id).title }
+  end
+
+  def generate_user_distribution_by_university_data
+    User.joins(:user_university)
+        .group('universities.name')
+        .count
+  end
+
+  def generate_user_distribution_by_degree_and_university_data(university)
+    return {} unless university
+
+    university.users.joins(:user_degree)
+              .group('degrees.name')
+              .count
+  end
+
+  def generate_study_materials_distribution_by_category_data
+    StudyMaterial.joins(:category)
+                 .group('categories.name')
+                 .count
   end
 end

@@ -36,3 +36,6 @@ gem 'redis'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'toastr-rails'
 
+gem 'chart-js-rails'
+gem 'chartkick'
+gem 'groupdate'
