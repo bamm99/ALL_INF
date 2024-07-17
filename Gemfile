@@ -7,7 +7,8 @@ gem "sprockets-rails"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "jsbundling-rails"
-gem "turbo-rails"
+gem 'rails-ujs'
+gem 'turbo-rails'
 gem "stimulus-rails"
 gem "jbuilder"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -33,3 +34,5 @@ gem 'rouge'
 gem 'net-ssh'
 gem 'redis'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'toastr-rails'
+

@@ -1,19 +1,6 @@
-<!-- app/views/admin/study_materials/admin_new_study_material.html.erb -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard de Administración</title>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-</head>
+
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
     <div class='container'>
-        <%= alert %>
-        <%= notice %>
-
         <header class="has-text-centered">
             <h1 class="regularTitle">./all_inf</h1>
             <h2 class="regularsubTittle"> Dashboard de Administración </h2>
@@ -74,4 +61,3 @@
     <%= render 'shared/screenwarning' %>
 
 </body>
-</html>

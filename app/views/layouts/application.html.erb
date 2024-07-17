@@ -1,20 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Tesis</title>
-    <meta name="csrf-token" content="<%= form_authenticity_token %>">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+<head>
+  <title>Tesis</title>
+  <meta name="csrf-token" content="<%= form_authenticity_token %>">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 
-  </head>
+</head>
 
-  <body>
-    <%= yield %>
-  </body>
+<body>
+  <div id="flash-messages" data-flash='{
+    "notice": "<%= j flash[:notice] %>",
+    "alert": "<%= j flash[:alert] %>",
+    "error": "<%= j flash[:error] %>"
+  }' data-controller="flash"></div>
+
+  <%= yield %>
+
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const flashMessagesElement = document.getElementById("flash-messages");
+      if (flashMessagesElement) {
+        const flashData = JSON.parse(flashMessagesElement.dataset.flash);
+        console.log("Flash data:", flashData);
+        if (flashData.notice) {
+          toastr.success(flashData.notice);
+        }
+        if (flashData.alert) {
+          toastr.warning(flashData.alert);
+        }
+        if (flashData.error) {
+          toastr.error(flashData.error);
+        }
+      } else {
+        console.log("No flash messages element found");
+      }
+    });
+  </script>
+</body>
 </html>

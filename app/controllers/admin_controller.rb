@@ -63,19 +63,19 @@ class AdminController < ApplicationController
       @curso.destroy
     end
     redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
-  rescue ActiveRecord::RecordNotDestroyed => e
-    redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
-  rescue => e
-    redirect_to admin_cursos_path, alert: "Ocurrió un error: #{e.message}"
+    rescue ActiveRecord::RecordNotDestroyed => e
+      redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
+    rescue => e
+      redirect_to admin_cursos_path, alert: "Ocurrió un error: #{e.message}"
   end
 
   def eliminar_feedbacks
     CourseCompletion.where(id: params[:feedback_ids]).destroy_all
     redirect_to request.referer, notice: 'Feedbacks eliminados correctamente.'
-  rescue ActiveRecord::RecordNotFound => e
-    redirect_to request.referer, alert: "Algunos feedbacks no se pudieron encontrar: #{e.message}"
-  rescue => e
-    redirect_to request.referer, alert: "Ocurrió un error al eliminar los feedbacks: #{e.message}"
+    rescue ActiveRecord::RecordNotFound => e
+      redirect_to request.referer, alert: "Algunos feedbacks no se pudieron encontrar: #{e.message}"
+    rescue => e
+      redirect_to request.referer, alert: "Ocurrió un error al eliminar los feedbacks: #{e.message}"
   end
 
   #-------------------Dashboard-------------------#
@@ -119,8 +119,8 @@ class AdminController < ApplicationController
     else
       redirect_to ver_universidad_admin_path(@universidad), alert: 'El nombre de la carrera no puede estar vacío.'
     end
-  rescue => e
-    redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al agregar la carrera: #{e.message}"
+    rescue => e
+      redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al agregar la carrera: #{e.message}"
   end
 
   def eliminar_carreras
@@ -148,9 +148,9 @@ class AdminController < ApplicationController
       degrees.destroy_all
       @universidad.destroy
     end
-    redirect_to admin_universidades_path, notice: 'Universidad eliminada con éxito.'
-  rescue => e
-    redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
+      redirect_to admin_universidades_path, notice: 'Universidad eliminada con éxito.'
+    rescue => e
+      redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
   end
 
   def editar_universidad
@@ -277,20 +277,23 @@ class AdminController < ApplicationController
 
   def update_user
     @usuario = User.find(params[:id])
-
+  
     if params[:user][:password].blank?
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
     end
-
+  
     if @usuario.update(user_params)
-      redirect_to admin_user_info_path(@usuario), notice: 'Usuario actualizado con éxito.'
+      flash[:notice] = 'Usuario actualizado con éxito.'
+      redirect_to admin_user_info_path(@usuario)
     else
+      flash.now[:alert] = 'Error al actualizar el usuario.'
       render 'admin/usuarios/admin_edit_user', status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
   end
+  
 
   def destroy
     @usuario = User.find(params[:id])
