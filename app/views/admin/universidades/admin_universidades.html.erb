@@ -1,6 +1,5 @@
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
     <div class='container'>
-
         <%= render 'shared/screenwarning' %>
         <header class="has-text-centered">
             <h1 class="regularTitle">./all_inf</h1>
@@ -20,8 +19,8 @@
             <!-- Área de Contenido Principal -->
             <div class="column is-three-quarters box p-4 mx-4 mb-5">
                 <div class="p-4">
-                    <div class="is-flex is-justify-content-space-between">
-                        <h3 class="title is-3 mb-4">Listado de Universidades</h3>
+                    <div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
+                        <h3 class="title is-3 mb-0">Listado de Universidades</h3>
                         <button id="add_university_button" class="button is-success">Agregar Universidad</button>
                     </div>
                     
@@ -77,6 +76,30 @@
         // Función para cancelar la acción de agregar universidad
         document.getElementById('cancel_add_university').addEventListener('click', function() {
             document.getElementById('add_university_form').classList.add('is-hidden');
+        });
+
+        document.addEventListener("turbo:load", () => {
+            $('.table-datatables').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':not(:last-child)' // Excluye la última columna
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':not(:last-child)' // Excluye la última columna
+                        }
+                    }
+                ],
+                paging: true,
+                searching: true,
+                info: true,
+                ordering: true
+            });
         });
     </script>
 </body>
