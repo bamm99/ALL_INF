@@ -192,7 +192,7 @@ class AdminController < ApplicationController
   def create_study_material
     @study_material = StudyMaterial.new(study_material_params)
     if @study_material.save
-      redirect_to study_materials_path, notice: 'Material de estudio creado con éxito.'
+      redirect_to admin_study_materials_path, notice: 'Material de estudio creado con éxito.'
     else
       @categories = Category.all
       render 'admin/study_materials/admin_new_study_material'

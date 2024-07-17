@@ -10,16 +10,46 @@
   --info-color: #209cee;
 }
 
+/* Reglas específicas para modo claro */
+@media (prefers-color-scheme: light) {
+  :root {
+    --primary-bg: rgba(0, 0, 0, 0.5);
+    --primary-color: white;
+    --secondary-bg: rgba(53, 53, 53, 0.9);
+    --secondary-bg-alt: rgba(53, 53, 53, 0.5);
+    --secondary-bg-transparent: rgba(53, 53, 53, 0.5);
+    --button-bg: rgb(88, 28, 135);
+    --menu-bg: rgba(100, 50, 150, 0.8);
+    --alert-color: #ff3860;
+    --info-color: #209cee;
+  }
+}
+
+/* Reglas específicas para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-bg: rgba(0, 0, 0, 0.5);
+    --primary-color: white;
+    --secondary-bg: rgba(53, 53, 53, 0.9);
+    --secondary-bg-alt: rgba(53, 53, 53, 0.5);
+    --secondary-bg-transparent: rgba(53, 53, 53, 0.5);
+    --button-bg: rgb(88, 28, 135);
+    --menu-bg: rgba(100, 50, 150, 0.8);
+    --alert-color: #ff3860;
+    --info-color: #209cee;
+  }
+}
+
 html, body {
   background-image: radial-gradient(at left bottom, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42));
   font-family: 'Font Mono', monospace;
   padding: 0;
+  margin: 0;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   width: 100vw;
   height: 100vh;
-  margin: 0;
   display: flex;
   flex-direction: column;
   color: var(--primary-color);
@@ -75,7 +105,9 @@ html, body {
 }
 
 .box_terminal,
-.box_cursos {
+.box_cursos,
+.box_main,
+.box_login {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -87,23 +119,8 @@ html, body {
 }
 
 .box_main {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  background-color: var(--primary-bg);
-  color: var(--primary-color);
-  padding: clamp(1.5rem, 2vw, 2rem);
-  border-radius: 12px;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
   overflow: hidden; /* Evitar el desbordamiento */
-}
-
-.box_login {
-  background-color: var(--primary-bg);
-  color: var(--primary-color);
-  padding: clamp(1.5rem, 2vw, 2rem);
-  border-radius: 12px;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+  background-color: #13151A;
 }
 
 .input-custom, 
@@ -134,14 +151,10 @@ html, body {
   color: var(--primary-color);
 }
 
-.regularsubTitle {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  text-align: center;
-  color: var(--primary-color);
-}
-
+.regularsubTitle,
 .regularheadTitle {
   font-size: clamp(1.5rem, 2vw, 2rem);
+  text-align: center;
   color: var(--primary-color);
 }
 
@@ -189,8 +202,8 @@ html, body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.menu .dropdown-content button {
-  border: none;
+.menu .dropdown-content button,
+.menu-list > li > button {
   background-color: var(--menu-bg);
   text-align: left;
   width: 100%;
@@ -200,13 +213,11 @@ html, body {
   white-space: normal;
   margin: 5px 0;
   border-radius: 8px;
+  border: none;
 }
 
 .menu-list > li > button {
   background-color: var(--button-bg);
-  border: none;
-  color: var(--primary-color);
-  border-radius: 8px;
   margin-bottom: 5px;
 }
 
