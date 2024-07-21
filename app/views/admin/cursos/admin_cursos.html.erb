@@ -17,18 +17,18 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="p-4">
                     <div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
-                        <h3 class="title is-3 mb-0">Listado de Cursos</h3>
+                        <h3 class="title is-3 mb-0 textoblanco">Listado de Cursos</h3>
                         <%= link_to 'Agregar Curso', nuevo_curso_admin_path, class: "button is-success" %>
                     </div>
-                    <table class="table is-fullwidth table-custom table-datatables">
+                    <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                         <thead>
                             <tr>
-                                <th>Nombre del curso</th>
-                                <th>Descripción</th>
-                                <th>Acciones</th>
+                                <th class="textoblanco">Nombre del curso</th>
+                                <th class="textoblanco">Descripción</th>
+                                <th class="textoblanco">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>

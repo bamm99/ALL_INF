@@ -16,11 +16,11 @@
         <%= render 'shared/adminsidebar' %>
       </div>
       <!-- Área de Contenido Principal -->
-      <div class="column is-three-quarters box p-4 mx-4 mb-5">
+      <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
         <div class="ml-4 contenido-principal">
           <div class="pt-4">
-            <h2 class="title is-3 mb-4">Editar Usuario</h2>
-            <%= form_for(@usuario, url: admin_update_user_path(@usuario), method: :patch) do |f| %>
+            <h2 class="title is-3 mb-4 textoblanco">Editar Usuario</h2>
+            <%= form_for(@usuario, url: admin_update_user_path(@usuario), method: :patch, id: 'edit_user_form') do |f| %>
               <div>
                 <%= f.label :user_name, "Nombre" %>
                 <%= f.text_field :user_name, class:"input input-custom my-2" %>
@@ -38,7 +38,7 @@
                 <p class="help">Si no desea cambiar la contraseña, dejar en blanco.</p>
                 <div class="field has-addons">
                   <div class="control is-expanded">
-                    <%= f.password_field :password, autocomplete: "new-password", id: "user_password", placeholder: "Generar contraseña automáticamente", class: "input" %>
+                    <%= f.password_field :password, autocomplete: "new-password", id: "user_password", placeholder: "Generar contraseña automáticamente", class: "input input-custom" %>
                   </div>
                   <div class="control">
                     <button type="button" id="generate_password" class="button is-dark">Generar</button>
@@ -66,7 +66,7 @@
                 <br/>
                 <%= f.label :user_degree_id, "Carrera", for: "degrees_select" %>
                 <div class="control select select-custom my-2">
-                  <%= f.collection_select :user_degree_id, Degree.none, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", disabled: true, class: "select" } %>
+                  <%= f.collection_select :user_degree_id, @degrees, :id, :name, { include_blank: 'Primero elige una universidad' }, { id: "degrees_select", class: "select" } %>
                 </div>
               </div>
               <div class="mt-4 navbar-end">
@@ -86,39 +86,38 @@
         const studentCheckbox = document.getElementById('user_student_checkbox');
         const universitySelect = document.getElementById('universities_select');
         const degreeSelect = document.getElementById('degrees_select');
+        const form = document.getElementById('edit_user_form');
 
-        if (studentCheckbox) {
-            const toggleSelects = (enable) => {
-                if (universitySelect && degreeSelect) {
-                    universitySelect.disabled = !enable;
-                    degreeSelect.disabled = !enable;
-                    if (!enable) {
-                        universitySelect.value = '';
-                        degreeSelect.innerHTML = '<option value="">Primero elige una universidad</option>';
-                    }
+        const toggleSelects = (enable) => {
+            if (universitySelect && degreeSelect) {
+                universitySelect.disabled = !enable;
+                degreeSelect.disabled = !enable;
+                if (!enable) {
+                    universitySelect.value = '';
+                    degreeSelect.innerHTML = '<option value="">Primero elige una universidad</option>';
                 }
-            };
-
-            toggleSelects(studentCheckbox.checked);
-
-            studentCheckbox.addEventListener('change', function () {
-                toggleSelects(this.checked);
-            });
-
-            if (universitySelect) {
-                universitySelect.addEventListener('change', function () {
-                    fetch(`/degrees/by_university?university_id=${this.value}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            degreeSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
-                            degreeSelect.disabled = false;
-                            data.forEach((degree) => {
-                                let option = new Option(degree.name, degree.id);
-                                degreeSelect.appendChild(option);
-                            });
-                        });
-                });
             }
+        };
+
+        toggleSelects(studentCheckbox.checked);
+
+        studentCheckbox.addEventListener('change', function () {
+            toggleSelects(this.checked);
+        });
+
+        if (universitySelect) {
+            universitySelect.addEventListener('change', function () {
+                fetch(`/degrees/by_university?university_id=${this.value}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        degreeSelect.innerHTML = '<option value="">Seleccione una carrera</option>';
+                        degreeSelect.disabled = false;
+                        data.forEach((degree) => {
+                            let option = new Option(degree.name, degree.id);
+                            degreeSelect.appendChild(option);
+                        });
+                    });
+            });
         }
 
         // Generar contraseña automáticamente y copiar al portapapeles
@@ -150,7 +149,13 @@
                 });
             };
         }
+
+        form.addEventListener('submit', function () {
+            if (!studentCheckbox.checked) {
+                universitySelect.value = '';
+                degreeSelect.value = '';
+            }
+        });
     });
   </script>
-
 </body>

@@ -16,50 +16,52 @@
             <%= render 'shared/adminsidebar' %>
         </div>
         <!-- Área de Contenido Principal -->
-        <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
-            <h1 class="title">Editar Material de Estudio</h1>
+        <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_main">
+            <h1 class="title textoblanco">Editar Material de Estudio</h1>
             <%= form_with(model: @study_material, url: update_study_material_path(@study_material), local: true, method: :patch) do |form| %>
-            <div class="field">
-                <%= form.label :title, 'Título' %>
-                <div class="control">
-                <%= form.text_field :title, class: 'input' %>
+                <div class="field">
+                    <%= form.label :title, 'Título', class: 'label textoblanco' %>
+                    <div class="control">
+                        <%= form.text_field :title, class: 'input input-custom' %>
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <%= form.label :description, 'Descripción' %>
-                <div class="control">
-                <%= form.text_area :description, class: 'textarea' %>
+                <div class="field">
+                    <%= form.label :description, 'Descripción', class: 'label textoblanco' %>
+                    <div class="control">
+                        <%= form.text_area :description, class: 'textarea input-custom' %>
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <%= form.label :category_id, 'Categoría' %>
-                <div class="control">
-                <%= form.collection_select :category_id, @categories, :id, :name, {}, { class: 'input' } %>
-                </div>
-            </div>
+                    <div class="field">
+                        <%= form.label :category_id, 'Categoría', class: 'label textoblanco' %>
+                        <div class="control select-custom">
+                            <%= form.collection_select :category_id, @categories, :id, :name, {}, { class: 'select select-custom' } %>
+                        </div>
+                    </div>
 
-            <div class="field">
-                <%= form.label :file, 'Archivo Actual' %>
-                <div class="control">
-                <%= link_to 'Descargar archivo', download_study_material_path(@study_material), class: 'button is-info' %>
+                <div class="field">
+                    <%= form.label :file, 'Archivo Actual', class: 'label textoblanco' %>
+                    <div class="control">
+                        <%= link_to 'Descargar archivo', download_study_material_path(@study_material), class: 'button is-info' %>
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <%= form.label :file, 'Cambiar Archivo (opcional)' %>
-                <div class="control">
-                <%= form.file_field :file, class: 'input' %>
+                <div class="field">
+                    <%= form.label :file, 'Cambiar Archivo (opcional)', class: 'label textoblanco' %>
+                    <div class="control">
+                        <%= form.file_field :file, class: 'input input-custom' %>
+                    </div>
                 </div>
-            </div>
 
-            <div class="field">
-                <div class="control">
-                <%= form.submit 'Guardar', class: 'button is-primary' %>
-                <%= link_to 'Volver', admin_study_materials_path, class: 'button is-light' %>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <%= form.submit 'Guardar', class: 'button is-primary' %>
+                    </div>
+                    <div class="control">
+                        <%= link_to 'Volver', admin_study_materials_path, class: 'button is-light' %>
+                    </div>
                 </div>
-            </div>
             <% end %>
         </div>
         </div>

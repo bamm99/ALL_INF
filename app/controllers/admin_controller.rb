@@ -278,7 +278,7 @@ class AdminController < ApplicationController
 
   def update_study_material
     if @study_material.update(study_material_params)
-      redirect_to study_materials_path, notice: 'Material de estudio actualizado con éxito.'
+      redirect_to admin_study_materials_path, notice: 'Material de estudio actualizado con éxito.'
     else
       @categories = Category.all
       render 'admin/study_materials/admin_edit_study_material'
@@ -287,7 +287,7 @@ class AdminController < ApplicationController
 
   def destroy_study_material
     @study_material.destroy
-    redirect_to study_materials_path, notice: 'Material de estudio eliminado con éxito.'
+    redirect_to admin_study_materials_path, notice: 'Material de estudio eliminado con éxito.'
   end
 
   def download_study_material
@@ -339,20 +339,28 @@ class AdminController < ApplicationController
   def edit_user
     @usuario = User.find(params[:id])
     if @usuario
+      @universities = University.all
+      @degrees = @usuario.user_university.present? ? @usuario.user_university.degrees : Degree.none
       render 'admin/usuarios/admin_edit_user', locals: { usuario: @usuario }
     else
       redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
     end
   end
+  
 
   def update_user
     @usuario = User.find(params[:id])
-
+  
     if params[:user][:password].blank?
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
     end
-
+  
+    if params[:user][:user_student] == '0'
+      params[:user][:user_university_id] = nil
+      params[:user][:user_degree_id] = nil
+    end
+  
     if @usuario.update(user_params)
       flash[:notice] = 'Usuario actualizado con éxito.'
       redirect_to admin_user_info_path(@usuario)
@@ -363,6 +371,7 @@ class AdminController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
   end
+  
 
   def destroy
     @usuario = User.find(params[:id])

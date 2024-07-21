@@ -4,7 +4,6 @@
     <h2 class="text-center text-3xl mb-4">Cambio de contraseña</h2>
 
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
       <%= f.hidden_field :reset_password_token %>
 
       <div class="mb-4">

@@ -17,14 +17,14 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="ml-4 contenido-principal">
                     <div class="content mt-4">
-                    <h4 class="title is-4 ">Información del Curso</h4>
+                        <h4 class="title is-4 textoblanco">Información del Curso</h4>
                         <div>
-                            <p><strong>Título:</strong> <%= @curso.title %></p>
-                            <p><strong>Descripción:</strong> <%= @curso.description %></p>
-                            <p><strong>Usuarios que han completado el curso:</strong> <%= @total_completions %></p>
+                            <p><strong class="textoblanco">Título:</strong> <%= @curso.title %></p>
+                            <p><strong class="textoblanco">Descripción:</strong> <%= @curso.description %></p>
+                            <p><strong class="textoblanco">Usuarios que han completado el curso:</strong> <%= @total_completions %></p>
                             <div class="buttons">
                                 <%= link_to 'Editar', editar_curso_admin_path(@curso), class: "button is-warning" %>
                                 <%= link_to 'Eliminar', eliminar_curso_admin_path(@curso), method: :delete, data: { confirm: "¿Estás seguro de eliminar este curso?" }, class: "button is-danger" %>
@@ -33,25 +33,25 @@
                         </div>
 
                         <% if @feedbacks.any? %>
-                            <h4 class="title is-4 mt-4">Feedback de los usuarios</h4>
+                            <h4 class="title is-4 mt-4 textoblanco">Feedback de los usuarios</h4>
                             <%= form_tag eliminar_feedbacks_admin_path, method: :delete do %>
                                 <div class="table-container is-flex is-justify-content-center">
-                                    <table class="table is-fullwidth table-custom table-datatables">
+                                    <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" id="select_all"></th>
-                                                <th>Usuario</th>
-                                                <th>Feedback</th>
-                                                <th>Fecha</th>
+                                                <th class="textoblanco"><input type="checkbox" id="select_all"></th>
+                                                <th class="textoblanco">Usuario</th>
+                                                <th class="textoblanco">Feedback</th>
+                                                <th class="textoblanco">Fecha</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <% @feedbacks.each do |completion| %>
                                                 <tr>
                                                     <td><input type="checkbox" name="feedback_ids[]" value="<%= completion.id %>"></td>
-                                                    <td><%= completion.user.email %></td>
-                                                    <td><%= completion.feedback %></td>
-                                                    <td><%= completion.completed_at.strftime("%d/%m/%Y") %></td>
+                                                    <td class="textoblanco"><%= completion.user.email %></td>
+                                                    <td class="textoblanco"><%= completion.feedback %></td>
+                                                    <td class="textoblanco"><%= completion.completed_at.strftime("%d/%m/%Y") %></td>
                                                 </tr>
                                             <% end %>
                                         </tbody>
@@ -62,7 +62,7 @@
                                 </div>
                             <% end %>
                         <% else %>
-                            <p>No hay feedback de los usuarios para mostrar.</p>
+                            <p class="textoblanco">No hay feedback de los usuarios para mostrar.</p>
                         <% end %>
                     </div>
                 </div>

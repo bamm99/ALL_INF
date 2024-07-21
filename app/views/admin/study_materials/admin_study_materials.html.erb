@@ -16,16 +16,16 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="p-4">
                     <div class="is-flex is-justify-content-space-between mb-4">
-                        <h1 class="title">Materiales de Estudio</h1>
+                        <h1 class="title textoblanco">Materiales de Estudio</h1>
                         <div>
                             <%= link_to 'Agregar Material de Estudio', new_study_material_path, class: "button is-success" %>
                         </div>
                     </div>
 
-                    <table class="table is-fullwidth table-custom table-datatables">
+                    <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                         <thead>
                             <tr>
                                 <th style="width: 20%;">Título</th>

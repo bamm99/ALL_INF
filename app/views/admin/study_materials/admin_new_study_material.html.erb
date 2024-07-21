@@ -16,34 +16,34 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
-                <h1 class="title">Agregar Material de Estudio</h1>
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_main">
+                <h1 class="title textoblanco">Agregar Material de Estudio</h1>
                 <%= form_with(model: @study_material, url: create_study_material_path, local: true) do |form| %>
                     <div class="field">
-                        <%= form.label :title, 'Título' %>
+                        <%= form.label :title, 'Título', class: 'label textoblanco'  %>
                         <div class="control">
-                            <%= form.text_field :title, class: 'input' %>
+                            <%= form.text_field :title, class: 'input input-custom' %>
                         </div>
                     </div>
 
                     <div class="field">
-                        <%= form.label :description, 'Descripción' %>
+                        <%= form.label :description, 'Descripción', class: 'label textoblanco'  %>
                         <div class="control">
-                            <%= form.text_area :description, class: 'textarea' %>
+                            <%= form.text_area :description, class: 'textarea input-custom' %>
                         </div>
                     </div>
 
                     <div class="field">
-                        <%= form.label :category_id, 'Categoría' %>
-                        <div class="control">
-                            <%= form.collection_select :category_id, @categories, :id, :name, {}, { class: 'input' } %>
+                        <%= form.label :category_id, 'Categoría', class: 'label textoblanco' %>
+                        <div class="control select-custom">
+                            <%= form.collection_select :category_id, @categories, :id, :name, {}, { class: 'select select-custom' } %>
                         </div>
                     </div>
 
                     <div class="field">
-                        <%= form.label :file, 'Archivo' %>
+                        <%= form.label :file, 'Archivo', class: 'label textoblanco'  %>
                         <div class="control">
-                            <%= form.file_field :file, class: 'input' %>
+                            <%= form.file_field :file, class: 'input input-custom' %>
                         </div>
                     </div>
 

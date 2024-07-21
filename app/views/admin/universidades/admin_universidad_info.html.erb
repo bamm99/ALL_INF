@@ -16,14 +16,14 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="ml-4 contenido-principal">
-                    <h3 class="title is-3 pt-4">Información de la Universidad</h3>
+                    <h3 class="title is-3 pt-4 textoblanco">Información de la Universidad</h3>
                         <div>
-                            <p><strong class="pt-2">Nombre:</strong> <%= @universidad.name %></p>
-                            <p><strong class="pt-2">Cantidad de Carreras:</strong> <%= @universidad.degrees.count %></p>
-                            <p><strong class="pt-2">Cantidad de Usuarios:</strong> <%= @usuarios_count %></p>
-                            <p><strong class="pt-2">Fecha de Registro:</strong> <%= @universidad.created_at.strftime("%d/%m/%Y") %></p>
+                            <p><strong class="pt-2 textoblanco">Nombre:</strong> <%= @universidad.name %></p>
+                            <p><strong class="pt-2 textoblanco">Cantidad de Carreras:</strong> <%= @universidad.degrees.count %></p>
+                            <p><strong class="pt-2 textoblanco">Cantidad de Usuarios:</strong> <%= @usuarios_count %></p>
+                            <p><strong class="pt-2 textoblanco">Fecha de Registro:</strong> <%= @universidad.created_at.strftime("%d/%m/%Y") %></p>
                             <div class="buttons">
                                 <button id="edit_university_button" class="button is-warning">Editar</button>
                                 <%= link_to 'Eliminar', eliminar_universidad_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar esta universidad? Hay #{@usuarios_count} usuarios registrados. Los usuarios serán actualizados para no tener universidad." }, class: "button is-danger" %>
@@ -35,10 +35,10 @@
                         <!-- Formulario para editar nombre de la universidad (oculto por defecto) -->
                         <div id="edit_university_form" class="mt-4 is-hidden">
                             <%= form_with(model: @universidad, url: actualizar_universidad_admin_path(@universidad), local: true) do |form| %>
-                                <div class="field">
-                                    <label class="label">Nombre de la Universidad</label>
+                                <div class="field" >
+                                    <label class="textoblanco label">Nombre de la Universidad</label>
                                     <div class="control">
-                                        <%= form.text_field :name, class: 'input' %>
+                                        <%= form.text_field :name, class: 'input input-custom' %>
                                     </div>
                                 </div>
                                 <div class="field is-grouped">
@@ -56,9 +56,9 @@
                         <div id="add_degree_form" class="mt-4 is-hidden">
                         <%= form_tag agregar_carrera_admin_path(@universidad), method: :post do %>
                             <div class="field">
-                            <label class="label">Nombre de la Carrera</label>
+                            <label class="label textoblanco">Nombre de la Carrera</label>
                             <div class="control">
-                                <input type="text" name="degree_name" class="input" required>
+                                <input type="text" name="degree_name" class="input input-custom" required>
                             </div>
                             </div>
                             <div class="field is-grouped">
@@ -73,23 +73,23 @@
                         </div>
 
                         <% if @degrees.any? %>
-                        <h4 class="title is-4 mt-4">Carreras</h4>
+                        <h4 class="title is-4 mt-4 textoblanco">Carreras</h4>
                         <%= form_tag eliminar_carreras_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar las carreras seleccionadas? Los usuarios de estas carreras serán actualizados para no tener carrera." } do %>
                             <div class="table-container is-flex is-justify-content-center">
-                            <table class="table is-fullwidth table-custom table-datatables">
+                            <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                                 <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="select_all"></th>
-                                    <th>Nombre de la Carrera</th>
-                                    <th>Cantidad de Usuarios Registrados</th>
+                                    <th class="textoblanco"><input type="checkbox" id="select_all"></th>
+                                    <th class="textoblanco">Nombre de la Carrera</th>
+                                    <th class="textoblanco">Cantidad de Usuarios Registrados</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <% @degrees.each do |degree| %>
                                     <tr>
                                     <td><input type="checkbox" name="degree_ids[]" value="<%= degree.id %>"></td>
-                                    <td><%= degree.name %></td>
-                                    <td><%= User.where(user_degree: degree).count %></td>
+                                    <td class="textoblanco"><%= degree.name %></td>
+                                    <td class="textoblanco"><%= User.where(user_degree: degree).count %></td>
                                     </tr>
                                 <% end %>
                                 </tbody>
@@ -100,7 +100,7 @@
                             </div>
                         <% end %>
                         <% else %>
-                        <p>No hay carreras para mostrar.</p>
+                        <p class="textoblanco">No hay carreras para mostrar.</p>
                         <% end %>
 
                     </div>
@@ -112,7 +112,13 @@
     <script>
         // Función para mostrar/ocultar el formulario de agregar carrera
         document.getElementById('add_degree_button').addEventListener('click', function() {
-            document.getElementById('add_degree_form').classList.toggle('is-hidden');
+            var editForm = document.getElementById('edit_university_form');
+            var addForm = document.getElementById('add_degree_form');
+
+            if (!addForm.classList.contains('is-hidden')) {
+                addForm.classList.add('is-hidden');
+            }
+            editForm.classList.toggle('is-hidden');
         });
 
         // Función para cancelar la acción de agregar carrera
@@ -122,7 +128,13 @@
 
         // Función para mostrar/ocultar el formulario de editar universidad
         document.getElementById('edit_university_button').addEventListener('click', function() {
-            document.getElementById('edit_university_form').classList.toggle('is-hidden');
+            var editForm = document.getElementById('edit_university_form');
+            var addForm = document.getElementById('add_degree_form');
+
+            if (!editForm.classList.contains('is-hidden')) {
+                editForm.classList.add('is-hidden');
+            }
+            addForm.classList.toggle('is-hidden');
         });
 
         // Función para cancelar la acción de editar universidad

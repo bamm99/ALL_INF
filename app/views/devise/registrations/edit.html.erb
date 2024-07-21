@@ -5,7 +5,6 @@
 <div class="has-text-centered is-flex is-align-items-center is-justify-content-center" style="height: 100vh;">
   <div class="box box_login" style="width: 100%; max-width: 24rem; padding: 1.5rem;">
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="field mb-4">
         <%= f.label :email, class: "label" %>

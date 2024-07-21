@@ -17,10 +17,10 @@
             </div>
 
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="p-4">
                     <div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
-                        <h3 class="title is-3 mb-0">Listado de Universidades</h3>
+                        <h3 class="title is-3 mb-0 textoblanco">Listado de Universidades</h3>
                         <button id="add_university_button" class="button is-success">Agregar Universidad</button>
                     </div>
                     
@@ -28,9 +28,9 @@
                     <div id="add_university_form" class="my-4 is-hidden">
                         <%= form_tag crear_universidad_admin_path, method: :post do %>
                             <div class="field">
-                                <label class="label">Nombre de la Universidad</label>
+                                <label class="label textoblanco">Nombre de la Universidad</label>
                                 <div class="control">
-                                    <input type="text" name="university_name" class="input" required>
+                                    <input type="text" name="university_name" class="input input-custom" required>
                                 </div>
                             </div>
                             <div class="field is-grouped">
@@ -44,7 +44,7 @@
                         <% end %>
                     </div>
 
-                    <table class="table is-fullwidth table-custom table-datatables">
+                    <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                         <thead>
                             <tr>
                                 <th>Nombre de la Universidad</th>

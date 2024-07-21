@@ -18,29 +18,29 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
         <!-- Área de Contenido Principal -->
-<div class="column is-three-quarters box p-4 mx-4 mb-5">
-    <h2 class="title is-2 mb-5">Editar Curso</h2>
+<div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
+    <h2 class="title is-2 mb-5 textoblanco">Editar Curso</h2>
     
     <%= form_with model: @curso, url: actualizar_curso_admin_path(@curso), local: true, class: "space-y-6" do |form| %>
     
     <div class="field">
-        <%= form.label :title, "Título", class: "label" %>
+        <%= form.label :title, "Título", class: "label textoblanco" %>
         <div class="control">
-            <%= form.text_field :title, class: "input" %>
+            <%= form.text_field :title, class: "input input-custom" %>
         </div>
     </div>
 
     <div class="field">
-        <%= form.label :description, "Descripción", class: "label" %>
+        <%= form.label :description, "Descripción", class: "label textoblanco" %>
         <div class="control">
-            <%= form.text_area :description, class: "textarea" %>
+            <%= form.text_area :description, class: "textarea input-custom" %>
         </div>
     </div>
 
     <div class="field">
-        <%= form.label :file, "Contenido del Curso (.md)", class: "label" %>
+        <%= form.label :file, "Contenido del Curso (.md)", class: "label textoblanco" %>
         <div class="control">
-            <%= text_area_tag :file_content, @curso_content, class: "textarea", rows: 10 %>
+            <%= text_area_tag :file_content, @curso_content, class: "textarea input-custom", rows: 10 %>
         </div>
     </div>
 

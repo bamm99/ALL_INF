@@ -11,17 +11,17 @@
 
     <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
       <!-- Sidebar -->
-      <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_main">
+      <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_cursos">
         <%= render 'shared/adminsidebar' %>
       </div>
       <!-- Área de Contenido Principal -->
       <div class="column is-three-quarters box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_statistics">
- <div>
-          <h1>Estadísticas</h1>
+        <div class="p-4">
+          <h1 class="title is-3 mb-4 textoblanco">Estadísticas</h1>
           <%= form_with url: admin_statistics_path, method: :get, local: true do %>
             <div class="field">
-              <label class="label">Seleccionar tipo de gráfico</label>
-              <div class="control">
+              <label class="label textoblanco">Seleccionar tipo de gráfico</label>
+              <div class="control select-custom">
                 <div class="select">
                   <%= select_tag :chart_type, options_for_select([['Cantidad de veces que se terminaron cursos en cada mes del último año', 'courses_completed_per_month'], ['Cursos completados por mes', 'course_completions_by_month'], ['Distribución de usuarios por universidad', 'user_distribution_by_university'], ['Distribución de materiales de estudio por categoría', 'study_materials_distribution_by_category'], ['Distribución de usuarios por carrera y universidad', 'user_distribution_by_degree_and_university']], params[:chart_type]), onchange: 'this.form.submit();' %>
                 </div>

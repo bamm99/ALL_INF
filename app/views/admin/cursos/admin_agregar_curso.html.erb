@@ -17,27 +17,27 @@
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
-            <div class="column is-three-quarters box p-4 mx-4 mb-5">
+            <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="p-4">
                     <div class="p-4">
-                        <h3 class="title is-3 mb-4">Agregar Nuevo Curso</h3>
+                        <h3 class="title is-3 mb-4 textoblanco">Agregar Nuevo Curso</h3>
                         <%= form_with(model: @curso, url: crear_curso_admin_path, local: true) do |form| %>
                             <div class="field mb-4">
-                                <%= form.label :title, "Nombre del curso", class: "label" %>
+                                <%= form.label :title, "Nombre del curso", class: "label textoblanco" %>
                                 <div class="control">
-                                    <%= form.text_field :title, class: "input" %>
+                                    <%= form.text_field :title, class: "input input-custom" %>
                                 </div>
                             </div>
 
                             <div class="field mb-4">
-                                <%= form.label :description, "Descripción", class: "label" %>
+                                <%= form.label :description, "Descripción", class: "label textoblanco" %>
                                 <div class="control">
                                     <%= form.text_area :description, class: "textarea input-custom" %>
                                 </div>
                             </div>
 
                             <div class="field mb-4">
-                                <%= form.label :file, "Archivo del curso (formato '.md' Markdown)", class: "label" %>
+                                <%= form.label :file, "Archivo del curso (formato '.md' Markdown)", class: "label textoblanco" %>
                                 <div class="control">
                                     <%= form.file_field :file, accept: ".md", direct_upload: true, class: "input input-custom" %>
                                 </div>
