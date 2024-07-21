@@ -1,1 +1,39 @@
 <div id="user-distribution-by-university-container" style="width: 100%; height: 400px;" data-chart-data="<%= @chart_data.to_json %>"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const chartContainer = document.getElementById('user-distribution-by-university-container');
+    if (chartContainer) {
+      const chartData = JSON.parse(chartContainer.dataset.chartData);
+
+      Highcharts.chart('user-distribution-by-university-container', {
+        chart: {
+          type: 'pie',
+          backgroundColor: 'white' // Cambiado a blanco
+        },
+        title: {
+          text: 'Distribución de Usuarios por Universidad',
+          style: {
+            color: 'black'
+          }
+        },
+        series: [{
+          name: 'Universidades',
+          data: Object.entries(chartData).map(([name, y]) => ({ name, y })),
+          dataLabels: {
+            color: '#000000',
+            distance: -30
+          }
+        }],
+        legend: {
+          itemStyle: {
+            color: 'black'
+          }
+        },
+        exporting: {
+          enabled: true
+        }
+      });
+    }
+  });
+</script>

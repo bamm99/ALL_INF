@@ -439,12 +439,20 @@ class AdminController < ApplicationController
   end
 
   def generate_user_distribution_by_university_data
-    User.joins(:user_university)
-        .group('universities.name')
-        .count
+    # Obtener el conteo de usuarios por universidad
+    university_data = User.joins(:user_university)
+                          .group('universities.name')
+                          .count
+    
+    # Contar los usuarios sin universidad (externos)
+    external_users_count = User.where(user_university_id: nil).count
+  
+    # Agregar los usuarios externos al conjunto de datos
+    university_data['Externos'] = external_users_count
+  
+    university_data
   end
-
-
+  
 
   def generate_study_materials_distribution_by_category_data
     StudyMaterial.joins(:category)
