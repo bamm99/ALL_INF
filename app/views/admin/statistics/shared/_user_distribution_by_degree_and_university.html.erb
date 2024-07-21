@@ -5,11 +5,18 @@
     const chartContainer = document.getElementById('user-distribution-by-degree-and-university-container');
     if (chartContainer) {
       const chartData = JSON.parse(chartContainer.dataset.chartData);
+      const colors = Highcharts.getOptions().colors;
+
+      const universityColors = {};
+      chartData.browserData.forEach((university, index) => {
+        universityColors[university.name] = colors[index % colors.length];
+        university.color = colors[index % colors.length];
+      });
 
       Highcharts.chart('user-distribution-by-degree-and-university-container', {
         chart: {
           type: 'pie',
-          backgroundColor: 'white' // Cambiado a blanco
+          backgroundColor: 'white'
         },
         title: {
           text: 'Distribución de Usuarios por Carrera y Universidad',
@@ -29,51 +36,38 @@
         series: [{
           name: 'Universidades',
           data: chartData.browserData,
-          size: '45%',
+          size: '60%',
           dataLabels: {
-            color: '#000000', // Ajustado a negro para visibilidad
-            distance: '-50%'
+            color: '#000000',
+            distance: -30
           }
         }, {
           name: 'Carreras',
-          data: chartData.versionsData,
+          data: chartData.versionsData.map(degree => {
+            return {
+              name: degree.name,
+              y: degree.y,
+              color: universityColors[degree.university]
+            };
+          }),
           size: '80%',
           innerSize: '60%',
           dataLabels: {
-            format: '<b>{point.name}:</b> <span style="opacity: 0.5">{y}%</span>',
-            filter: {
-              property: 'y',
-              operator: '>',
-              value: 1
-            },
+            format: '<b>{point.name}:</b> <span style="opacity: 0.5">{y}</span>',
             style: {
               fontWeight: 'normal',
-              color: '#000000' // Ajustado a negro para visibilidad
+              color: '#000000'
             }
           },
           id: 'versions'
         }],
-        responsive: {
-          rules: [{
-            condition: {
-              maxWidth: 400
-            },
-            chartOptions: {
-              series: [{
-              }, {
-                id: 'versions',
-                dataLabels: {
-                  distance: 10,
-                  format: '{point.name}',
-                  filter: {
-                    property: 'percentage',
-                    operator: '>',
-                    value: 2
-                  }
-                }
-              }]
-            }
-          }]
+        legend: {
+          itemStyle: {
+            color: 'black'
+          }
+        },
+        exporting: {
+          enabled: true
         }
       });
     }

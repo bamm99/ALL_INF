@@ -110,7 +110,7 @@ document.addEventListener("turbo:load", () => {
       Highcharts.chart(containerId, {
         chart: {
           type: 'column',
-          backgroundColor: 'white' // Cambiado a blanco
+          backgroundColor: 'white'
         },
         title: {
           text: titleText,
@@ -162,7 +162,7 @@ document.addEventListener("turbo:load", () => {
       Highcharts.chart(containerId, {
         chart: {
           type: 'pie',
-          backgroundColor: 'white' // Cambiado a blanco
+          backgroundColor: 'white'
         },
         title: {
           text: titleText,
@@ -194,7 +194,6 @@ document.addEventListener("turbo:load", () => {
       const versionsData = [];
       const colorMap = new Map();
 
-      // Crear un mapa de colores para las universidades
       chartData.browserData.forEach((university, i) => {
         const color = colors[i % colors.length];
         colorMap.set(university.name, color);
@@ -204,22 +203,18 @@ document.addEventListener("turbo:load", () => {
         });
       });
 
-      // Usar el mismo color para las carreras asociadas a cada universidad
       chartData.versionsData.forEach((degree) => {
-        const university = browserData.find(u => u.name === degree.university);
-        if (university) {
-          const color = colorMap.get(university.name);
-          versionsData.push({
-            ...degree,
-            color
-          });
-        }
+        const universityColor = colorMap.get(degree.university);
+        versionsData.push({
+          ...degree,
+          color: universityColor
+        });
       });
 
       Highcharts.chart(containerId, {
         chart: {
           type: 'pie',
-          backgroundColor: 'white' // Cambiado a blanco
+          backgroundColor: 'white'
         },
         title: {
           text: titleText,

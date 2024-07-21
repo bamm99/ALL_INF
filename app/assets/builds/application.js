@@ -34954,7 +34954,6 @@ document.addEventListener("turbo:load", () => {
         chart: {
           type: "column",
           backgroundColor: "white"
-          // Cambiado a blanco
         },
         title: {
           text: titleText,
@@ -35006,7 +35005,6 @@ document.addEventListener("turbo:load", () => {
         chart: {
           type: "pie",
           backgroundColor: "white"
-          // Cambiado a blanco
         },
         title: {
           text: titleText,
@@ -35045,20 +35043,16 @@ document.addEventListener("turbo:load", () => {
         });
       });
       chartData.versionsData.forEach((degree) => {
-        const university = browserData.find((u) => u.name === degree.university);
-        if (university) {
-          const color = colorMap.get(university.name);
-          versionsData.push({
-            ...degree,
-            color
-          });
-        }
+        const universityColor = colorMap.get(degree.university);
+        versionsData.push({
+          ...degree,
+          color: universityColor
+        });
       });
       import_highcharts.default.chart(containerId, {
         chart: {
           type: "pie",
           backgroundColor: "white"
-          // Cambiado a blanco
         },
         title: {
           text: titleText,

@@ -113,34 +113,46 @@ class AdminController < ApplicationController
   def generate_user_distribution_by_degree_and_university_data
     universities = University.includes(degrees: :users)
     data = { browserData: [], versionsData: [] }
-  
+    
     universities.each do |university|
       degrees = university.degrees.joins(:users).group('degrees.name').count
       next if degrees.empty?
-  
+    
       university_data = {
         name: university.name,
-        y: degrees.values.sum,
-        color: nil # Dejar nulo para manejarlo en el cliente
+        y: degrees.values.sum
       }
       data[:browserData] << university_data
-  
+    
       degrees.each do |degree_name, count|
         degree_data = {
           name: degree_name,
           y: count,
-          university: university.name # Incluimos el nombre de la universidad para identificarlo en el lado del cliente
+          university: university.name
         }
         data[:versionsData] << degree_data
       end
     end
-  
+    
+    external_users_count = User.where(user_university_id: nil).count
+    if external_users_count > 0
+      external_data = {
+        name: 'Externos',
+        y: external_users_count
+      }
+      data[:browserData] << external_data
+      
+      degree_data = {
+        name: 'No pertenecen a ninguna universidad',
+        y: external_users_count,
+        university: 'Externos'
+      }
+      data[:versionsData] << degree_data
+    end
+    
     data
   end
   
-  
-  
-
 
   def adjust_color_opacity(hex_color, brightness)
     rgb = hex_color.scan(/../).map { |c| c.to_i(16) }
