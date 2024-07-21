@@ -4,7 +4,6 @@ import "bulma/css/bulma.css";
 import "../assets/stylesheets/application.css";
 import "../assets/stylesheets/dataTables_custom.css";
 
-import { Application } from "@hotwired/stimulus";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import 'datatables.net-dt/css/dataTables.dataTables.css';
@@ -21,9 +20,16 @@ window.$ = window.jQuery = $;
 Rails.start();
 require("@rails/activestorage").start();
 
-import "chartkick/chart.js";
-import { Chart, registerables } from 'chart.js';
-Chart.register(...registerables);
+import Highcharts from 'highcharts';
+import Exporting from 'highcharts/modules/exporting';
+import ExportData from 'highcharts/modules/export-data';
+import Accessibility from 'highcharts/modules/accessibility';
+
+Exporting(Highcharts);
+ExportData(Highcharts);
+Accessibility(Highcharts);
+
+window.Highcharts = Highcharts;
 
 function calculatePageLength() {
   const windowHeight = $(window).height();
@@ -86,7 +92,6 @@ document.addEventListener("turbo:load", () => {
   const flashMessagesElement = document.getElementById("flash-messages");
   if (flashMessagesElement) {
     const flashData = JSON.parse(flashMessagesElement.dataset.flash);
-    console.log("Flash data:", flashData);
     if (flashData.notice) {
       toastr.success(flashData.notice);
     }
@@ -96,89 +101,193 @@ document.addEventListener("turbo:load", () => {
     if (flashData.error) {
       toastr.error(flashData.error);
     }
-  } else {
-    console.log("No flash messages element found");
   }
 
   initializeDataTables();
 
-  const chartContainer = document.getElementById('chart-container');
-  if (chartContainer) {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const chartData = JSON.parse(chartContainer.dataset.chartData);
-    const chartType = chartContainer.dataset.chartType;
-    
-    let config;
-
-    if (chartType === 'courses_completed_per_month' || chartType === 'course_completions_by_month') {
-      config = {
-        type: 'bar',
-        data: {
-          labels: Object.keys(chartData),
-          datasets: [{
-            label: 'Cantidad',
-            data: Object.values(chartData),
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          }]
+  function initializeHighchartsBar(containerId, chartData, titleText) {
+    if (document.getElementById(containerId)) {
+      Highcharts.chart(containerId, {
+        chart: {
+          type: 'column',
+          backgroundColor: 'white' // Cambiado a blanco
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Gráfico de Barras'
+        title: {
+          text: titleText,
+          style: {
+            color: 'black'
+          }
+        },
+        xAxis: {
+          categories: Object.keys(chartData),
+          labels: {
+            style: {
+              color: 'black'
             }
           }
-        }
-      };
-    } else if (chartType === 'user_distribution_by_university' || chartType === 'study_materials_distribution_by_category' || chartType === 'user_distribution_by_degree_and_university') {
-      config = {
-        type: 'pie',
-        data: {
-          labels: Object.keys(chartData),
-          datasets: [{
-            label: 'Cantidad',
-            data: Object.values(chartData),
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Gráfico de Torta'
+        yAxis: {
+          title: {
+            text: 'Cantidad',
+            style: {
+              color: 'black'
             }
+          },
+          labels: {
+            style: {
+              color: 'black'
+            }
+          },
+          allowDecimals: false
+        },
+        series: [{
+          name: 'Cantidad',
+          data: Object.values(chartData),
+          color: '#7cb5ec'
+        }],
+        legend: {
+          itemStyle: {
+            color: 'black'
           }
+        },
+        exporting: {
+          enabled: true
         }
-      };
+      });
     }
+  }
 
-    new Chart(ctx, config);
+  function initializeHighchartsPie(containerId, chartData, titleText) {
+    if (document.getElementById(containerId)) {
+      Highcharts.chart(containerId, {
+        chart: {
+          type: 'pie',
+          backgroundColor: 'white' // Cambiado a blanco
+        },
+        title: {
+          text: titleText,
+          style: {
+            color: 'black'
+          }
+        },
+        series: [{
+          name: 'Cantidad',
+          data: Object.entries(chartData).map(([key, value]) => ({ name: key, y: value })),
+          colors: Highcharts.getOptions().colors
+        }],
+        legend: {
+          itemStyle: {
+            color: 'black'
+          }
+        },
+        exporting: {
+          enabled: true
+        }
+      });
+    }
+  }
+
+  function initializeUserDistributionByDegreeAndUniversityChart(containerId, chartData, titleText) {
+    if (document.getElementById(containerId)) {
+      const colors = Highcharts.getOptions().colors;
+      const browserData = [];
+      const versionsData = [];
+      const colorMap = new Map();
+
+      // Crear un mapa de colores para las universidades
+      chartData.browserData.forEach((university, i) => {
+        const color = colors[i % colors.length];
+        colorMap.set(university.name, color);
+        browserData.push({
+          ...university,
+          color
+        });
+      });
+
+      // Usar el mismo color para las carreras asociadas a cada universidad
+      chartData.versionsData.forEach((degree) => {
+        const university = browserData.find(u => u.name === degree.university);
+        if (university) {
+          const color = colorMap.get(university.name);
+          versionsData.push({
+            ...degree,
+            color
+          });
+        }
+      });
+
+      Highcharts.chart(containerId, {
+        chart: {
+          type: 'pie',
+          backgroundColor: 'white' // Cambiado a blanco
+        },
+        title: {
+          text: titleText,
+          style: {
+            color: 'black'
+          }
+        },
+        series: [{
+          name: 'Universidades',
+          data: browserData,
+          size: '60%',
+          dataLabels: {
+            color: '#000000',
+            distance: -30
+          }
+        }, {
+          name: 'Carreras',
+          data: versionsData,
+          size: '80%',
+          innerSize: '60%',
+          dataLabels: {
+            format: '<b>{point.name}:</b> <span style="opacity: 0.5">{y}</span>',
+            style: {
+              fontWeight: 'normal',
+              color: '#000000'
+            }
+          },
+          id: 'versions'
+        }],
+        legend: {
+          itemStyle: {
+            color: 'black'
+          }
+        },
+        exporting: {
+          enabled: true
+        }
+      });
+    }
+  }
+
+  const coursesCompletedPerMonthContainer = document.getElementById('courses-completed-per-month-container');
+  if (coursesCompletedPerMonthContainer) {
+    const coursesCompletedPerMonthData = JSON.parse(coursesCompletedPerMonthContainer.dataset.chartData);
+    initializeHighchartsBar('courses-completed-per-month-container', coursesCompletedPerMonthData, 'Cantidad de veces que se terminaron cursos en cada mes del último año');
+  }
+
+  const courseCompletionsByMonthContainer = document.getElementById('course-completions-by-month-container');
+  if (courseCompletionsByMonthContainer) {
+    const courseCompletionsByMonthData = JSON.parse(courseCompletionsByMonthContainer.dataset.chartData);
+    initializeHighchartsBar('course-completions-by-month-container', courseCompletionsByMonthData, 'Cursos completados por mes');
+  }
+
+  const userDistributionByUniversityContainer = document.getElementById('user-distribution-by-university-container');
+  if (userDistributionByUniversityContainer) {
+    const userDistributionByUniversityData = JSON.parse(userDistributionByUniversityContainer.dataset.chartData);
+    initializeHighchartsPie('user-distribution-by-university-container', userDistributionByUniversityData, 'Distribución de usuarios por universidad');
+  }
+
+  const studyMaterialsDistributionByCategoryContainer = document.getElementById('study-materials-distribution-by-category-container');
+  if (studyMaterialsDistributionByCategoryContainer) {
+    const studyMaterialsDistributionByCategoryData = JSON.parse(studyMaterialsDistributionByCategoryContainer.dataset.chartData);
+    initializeHighchartsPie('study-materials-distribution-by-category-container', studyMaterialsDistributionByCategoryData, 'Distribución de materiales de estudio por categoría');
+  }
+
+  const userDistributionByDegreeAndUniversityContainer = document.getElementById('user-distribution-by-degree-and-university-container');
+  if (userDistributionByDegreeAndUniversityContainer) {
+    const userDistributionByDegreeAndUniversityData = JSON.parse(userDistributionByDegreeAndUniversityContainer.dataset.chartData);
+    initializeUserDistributionByDegreeAndUniversityChart('user-distribution-by-degree-and-university-container', userDistributionByDegreeAndUniversityData, 'Distribución de Usuarios por Carrera y Universidad');
   }
 });

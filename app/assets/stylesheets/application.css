@@ -107,7 +107,8 @@ html, body {
 .box_terminal,
 .box_cursos,
 .box_main,
-.box_login {
+.box_login,
+.box_statistics {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -120,6 +121,11 @@ html, body {
 
 .box_main {
   overflow: hidden; /* Evitar el desbordamiento */
+  background-color: #13151A;
+}
+
+.box_statistics {
+  overflow-y: auto;
   background-color: #13151A;
 }
 

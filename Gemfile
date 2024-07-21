@@ -39,3 +39,5 @@ gem 'toastr-rails'
 gem 'chart-js-rails'
 gem 'chartkick'
 gem 'groupdate'
+gem 'highcharts-rails'
+

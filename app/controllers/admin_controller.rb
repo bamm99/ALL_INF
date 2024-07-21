@@ -85,10 +85,13 @@ class AdminController < ApplicationController
   #-------------------Estadisticas----------------#
   def statistics
     @chart_type = params[:chart_type] || 'courses_completed_per_month'
-    @month = params[:month].present? ? Date.strptime(params[:month], "%Y-%m") : Date.today.beginning_of_month
     @universities = University.all
-    @selected_university = params[:university_id].present? ? University.find(params[:university_id]) : nil
-
+    @selected_university = params[:university_id] ? University.find(params[:university_id]) : @universities.first
+  
+    if @chart_type == 'course_completions_by_month'
+      @month = params[:month] ? Date.strptime(params[:month], "%Y-%m") : Date.today.beginning_of_month
+    end
+  
     @chart_data = case @chart_type
                   when 'courses_completed_per_month'
                     generate_courses_completed_per_month_data
@@ -97,14 +100,51 @@ class AdminController < ApplicationController
                   when 'user_distribution_by_university'
                     generate_user_distribution_by_university_data
                   when 'user_distribution_by_degree_and_university'
-                    generate_user_distribution_by_degree_and_university_data(@selected_university)
+                    generate_user_distribution_by_degree_and_university_data
                   when 'study_materials_distribution_by_category'
                     generate_study_materials_distribution_by_category_data
                   else
                     {}
                   end
-
+  
     render 'admin/statistics/admin_statistics'
+  end
+
+  def generate_user_distribution_by_degree_and_university_data
+    universities = University.includes(degrees: :users)
+    data = { browserData: [], versionsData: [] }
+  
+    universities.each do |university|
+      degrees = university.degrees.joins(:users).group('degrees.name').count
+      next if degrees.empty?
+  
+      university_data = {
+        name: university.name,
+        y: degrees.values.sum,
+        color: nil # Dejar nulo para manejarlo en el cliente
+      }
+      data[:browserData] << university_data
+  
+      degrees.each do |degree_name, count|
+        degree_data = {
+          name: degree_name,
+          y: count,
+          university: university.name # Incluimos el nombre de la universidad para identificarlo en el lado del cliente
+        }
+        data[:versionsData] << degree_data
+      end
+    end
+  
+    data
+  end
+  
+  
+  
+
+
+  def adjust_color_opacity(hex_color, brightness)
+    rgb = hex_color.scan(/../).map { |c| c.to_i(16) }
+    "rgba(#{rgb[0]}, #{rgb[1]}, #{rgb[2]}, #{brightness})"
   end
   #-------------------Universidades-------------------#
   def universidades
@@ -371,9 +411,12 @@ class AdminController < ApplicationController
 
   def generate_courses_completed_per_month_data
     (0..11).map { |i| Date.today.beginning_of_month - i.months }.reverse.map do |month|
-      [month.strftime("%B %Y"), CourseCompletion.where(completed_at: month..month.end_of_month).count]
+      completions_count = CourseCompletion.where(completed_at: month..month.end_of_month).count
+      Rails.logger.info "Month: #{month.strftime("%B %Y")}, Completions: #{completions_count}"
+      [month.strftime("%B %Y"), completions_count]
     end.to_h
   end
+  
 
   def generate_course_completions_by_month_data(month)
     CourseCompletion.where(completed_at: month.beginning_of_month..month.end_of_month)
@@ -389,13 +432,7 @@ class AdminController < ApplicationController
         .count
   end
 
-  def generate_user_distribution_by_degree_and_university_data(university)
-    return {} unless university
 
-    university.users.joins(:user_degree)
-              .group('degrees.name')
-              .count
-  end
 
   def generate_study_materials_distribution_by_category_data
     StudyMaterial.joins(:category)

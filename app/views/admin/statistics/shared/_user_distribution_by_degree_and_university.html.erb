@@ -1,0 +1,81 @@
+<div id="user-distribution-by-degree-and-university-container" style="width: 100%; height: 400px;" data-chart-data="<%= @chart_data.to_json %>"></div>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const chartContainer = document.getElementById('user-distribution-by-degree-and-university-container');
+    if (chartContainer) {
+      const chartData = JSON.parse(chartContainer.dataset.chartData);
+
+      Highcharts.chart('user-distribution-by-degree-and-university-container', {
+        chart: {
+          type: 'pie',
+          backgroundColor: 'white' // Cambiado a blanco
+        },
+        title: {
+          text: 'Distribución de Usuarios por Carrera y Universidad',
+          style: {
+            color: 'black'
+          }
+        },
+        plotOptions: {
+          pie: {
+            shadow: false,
+            center: ['50%', '50%']
+          }
+        },
+        tooltip: {
+          valueSuffix: '%'
+        },
+        series: [{
+          name: 'Universidades',
+          data: chartData.browserData,
+          size: '45%',
+          dataLabels: {
+            color: '#000000', // Ajustado a negro para visibilidad
+            distance: '-50%'
+          }
+        }, {
+          name: 'Carreras',
+          data: chartData.versionsData,
+          size: '80%',
+          innerSize: '60%',
+          dataLabels: {
+            format: '<b>{point.name}:</b> <span style="opacity: 0.5">{y}%</span>',
+            filter: {
+              property: 'y',
+              operator: '>',
+              value: 1
+            },
+            style: {
+              fontWeight: 'normal',
+              color: '#000000' // Ajustado a negro para visibilidad
+            }
+          },
+          id: 'versions'
+        }],
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 400
+            },
+            chartOptions: {
+              series: [{
+              }, {
+                id: 'versions',
+                dataLabels: {
+                  distance: 10,
+                  format: '{point.name}',
+                  filter: {
+                    property: 'percentage',
+                    operator: '>',
+                    value: 2
+                  }
+                }
+              }]
+            }
+          }]
+        }
+      });
+    }
+  });
+</script>
