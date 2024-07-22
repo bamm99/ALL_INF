@@ -1,5 +1,4 @@
 import "@hotwired/turbo-rails";
-import "./controllers";
 import "bulma/css/bulma.css";
 import "../assets/stylesheets/application.css";
 import "../assets/stylesheets/dataTables_custom.css";

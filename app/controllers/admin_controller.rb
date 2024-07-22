@@ -6,6 +6,7 @@ class AdminController < ApplicationController
   before_action :set_study_material, only: [:edit_study_material, :update_study_material, :destroy_study_material, :download_study_material]
 
   include MarkdownHelper
+
   #-------------------Cursos-------------------#
   def cursos
     @cursos = Course.all
@@ -59,13 +60,11 @@ class AdminController < ApplicationController
     ActiveRecord::Base.transaction do
       @curso = Course.find(params[:id])
       @curso.course_completions.destroy_all
-      @curso.destroy
+      @curso.destroy!
     end
     redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
-  rescue ActiveRecord::RecordNotDestroyed => e
+  rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::RecordInvalid => e
     redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
-  rescue => e
-    redirect_to admin_cursos_path, alert: "Ocurrió un error: #{e.message}"
   end
 
   def eliminar_feedbacks
@@ -153,11 +152,11 @@ class AdminController < ApplicationController
     data
   end
   
-
   def adjust_color_opacity(hex_color, brightness)
     rgb = hex_color.scan(/../).map { |c| c.to_i(16) }
     "rgba(#{rgb[0]}, #{rgb[1]}, #{rgb[2]}, #{brightness})"
   end
+
   #-------------------Universidades-------------------#
   def universidades
     @universidades = University.all
@@ -197,17 +196,19 @@ class AdminController < ApplicationController
   end
 
   def eliminar_carreras
-    begin
-      Degree.transaction do
-        Degree.where(id: params[:degree_ids]).each do |degree|
-          User.where(user_degree: degree).update_all(user_degree_id: nil)
-          degree.destroy!
-        end
+    Degree.transaction do
+      Degree.where(id: params[:degree_ids]).each do |degree|
+        User.where(user_degree: degree).update_all(user_degree_id: nil)
+        degree.destroy!
       end
-      redirect_to ver_universidad_admin_path(@universidad), notice: 'Carreras eliminadas con éxito. Los usuarios han sido actualizados.'
-    rescue => e
-      redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al eliminar las carreras: #{e.message}"
     end
+    redirect_to ver_universidad_admin_path(@universidad), notice: 'Carreras eliminadas con éxito. Los usuarios han sido actualizados.'
+  rescue ActiveRecord::RecordNotDestroyed => e
+    redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al eliminar las carreras: #{e.message}"
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error al actualizar los usuarios: #{e.message}"
+  rescue => e
+    redirect_to ver_universidad_admin_path(@universidad), alert: "Ocurrió un error: #{e.message}"
   end
 
   def eliminar_universidad
@@ -219,11 +220,15 @@ class AdminController < ApplicationController
       end
       User.where(user_university_id: @universidad.id).update_all(user_university_id: nil)
       degrees.destroy_all
-      @universidad.destroy
+      @universidad.destroy!
     end
     redirect_to admin_universidades_path, notice: 'Universidad eliminada con éxito.'
-  rescue => e
+  rescue ActiveRecord::RecordNotDestroyed => e
     redirect_to admin_universidades_path, alert: "Ocurrió un error al eliminar la universidad: #{e.message}"
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_universidades_path, alert: "Ocurrió un error al actualizar los usuarios: #{e.message}"
+  rescue => e
+    redirect_to admin_universidades_path, alert: "Ocurrió un error: #{e.message}"
   end
 
   def editar_universidad
@@ -278,7 +283,7 @@ class AdminController < ApplicationController
 
   def update_study_material
     if @study_material.update(study_material_params)
-      redirect_to admin_study_materials_path, notice: 'Material de estudio actualizado con éxito.'
+      redirect_to study_materials_path, notice: 'Material de estudio actualizado con éxito.'
     else
       @categories = Category.all
       render 'admin/study_materials/admin_edit_study_material'
@@ -288,6 +293,8 @@ class AdminController < ApplicationController
   def destroy_study_material
     @study_material.destroy
     redirect_to admin_study_materials_path, notice: 'Material de estudio eliminado con éxito.'
+  rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::RecordInvalid => e
+    redirect_to admin_study_materials_path, alert: "Ocurrió un error al eliminar el material de estudio: #{e.message}"
   end
 
   def download_study_material
@@ -346,7 +353,6 @@ class AdminController < ApplicationController
       redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
     end
   end
-  
 
   def update_user
     @usuario = User.find(params[:id])
@@ -371,16 +377,20 @@ class AdminController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to admin_usuarios_path, alert: 'Usuario no encontrado.'
   end
-  
 
   def destroy
     @usuario = User.find(params[:id])
     if @usuario == current_user
       render json: { error: "No puedes eliminar tu propio usuario." }, status: :forbidden
     else
-      @usuario.destroy
+      ActiveRecord::Base.transaction do
+        @usuario.course_completions.destroy_all
+        @usuario.destroy!
+      end
       head :no_content
     end
+  rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   rescue ActiveRecord::RecordNotFound
     head :not_found
   end
@@ -438,7 +448,6 @@ class AdminController < ApplicationController
     end.to_h
   end
   
-
   def generate_course_completions_by_month_data(month)
     CourseCompletion.where(completed_at: month.beginning_of_month..month.end_of_month)
                     .group('course_id')
@@ -462,7 +471,6 @@ class AdminController < ApplicationController
     university_data
   end
   
-
   def generate_study_materials_distribution_by_category_data
     StudyMaterial.joins(:category)
                  .group('categories.name')
