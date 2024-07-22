@@ -15,7 +15,6 @@ import Rails from "@rails/ujs";
 
 import $ from 'jquery';
 window.$ = window.jQuery = $;
-window.toastr = toastr;
 
 Rails.start();
 require("@rails/activestorage").start();
@@ -30,6 +29,7 @@ ExportData(Highcharts);
 Accessibility(Highcharts);
 
 window.Highcharts = Highcharts;
+window.toastr = toastr; // Asegúrate de que toastr esté disponible globalmente
 
 function calculatePageLength() {
   const windowHeight = $(window).height();
@@ -57,34 +57,36 @@ function calculatePageLength() {
 
 function initializeDataTables() {
   document.querySelectorAll('.table-datatables').forEach(table => {
-    if (!$.fn.DataTable.isDataTable(table)) {
-      var tableInstance = $(table).DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-          {
-            extend: 'csv',
-            exportOptions: {
-              columns: ':not(:last-child)'
-            }
-          },
-          {
-            extend: 'print',
-            exportOptions: {
-              columns: ':not(:last-child)'
-            }
-          }
-        ],
-        paging: true,
-        searching: true,
-        info: true,
-        ordering: true,
-        pageLength: calculatePageLength(),
-      });
-
-      window.addEventListener('resize', function() {
-        tableInstance.page.len(calculatePageLength()).draw();
-      });
+    if ($.fn.DataTable.isDataTable(table)) {
+      $(table).DataTable().destroy();
     }
+
+    var tableInstance = $(table).DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        {
+          extend: 'csv',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        },
+        {
+          extend: 'print',
+          exportOptions: {
+            columns: ':not(:last-child)'
+          }
+        }
+      ],
+      paging: true,
+      searching: true,
+      info: true,
+      ordering: true,
+      pageLength: calculatePageLength(),
+    });
+
+    window.addEventListener('resize', function() {
+      tableInstance.page.len(calculatePageLength()).draw();
+    });
   });
 }
 

@@ -1,6 +1,7 @@
+<!-- app/views/shared/_feedback_form.html.erb -->
 <div class='text-black overflow-hidden'>
-  <%= form_with url: complete_course_path, method: :post, class: "space-y-4" do |form| %>
-    <%= form.hidden_field :course_id, value: @curso.id %>
+  <%= form_with url: complete_course_path, method: :post, remote: true, class: "space-y-4" do |form| %>
+    <%= form.hidden_field :course_id, value: curso.id %>
     
     <div>
       <label for="feedback" class="">¿Qué te pareció el curso?</label>

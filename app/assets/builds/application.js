@@ -32402,13 +32402,13 @@ var import_exporting = __toESM(require_exporting());
 var import_export_data = __toESM(require_export_data());
 var import_accessibility = __toESM(require_accessibility());
 window.$ = window.jQuery = import_jquery.default;
-window.toastr = import_toastr.default;
 Rails.start();
 require_activestorage().start();
 (0, import_exporting.default)(import_highcharts.default);
 (0, import_export_data.default)(import_highcharts.default);
 (0, import_accessibility.default)(import_highcharts.default);
 window.Highcharts = import_highcharts.default;
+window.toastr = import_toastr.default;
 function calculatePageLength() {
   const windowHeight = (0, import_jquery.default)(window).height();
   const baseLength = 8;
@@ -32432,33 +32432,34 @@ function calculatePageLength() {
 }
 function initializeDataTables() {
   document.querySelectorAll(".table-datatables").forEach((table) => {
-    if (!import_jquery.default.fn.DataTable.isDataTable(table)) {
-      var tableInstance = (0, import_jquery.default)(table).DataTable({
-        dom: "Bfrtip",
-        buttons: [
-          {
-            extend: "csv",
-            exportOptions: {
-              columns: ":not(:last-child)"
-            }
-          },
-          {
-            extend: "print",
-            exportOptions: {
-              columns: ":not(:last-child)"
-            }
-          }
-        ],
-        paging: true,
-        searching: true,
-        info: true,
-        ordering: true,
-        pageLength: calculatePageLength()
-      });
-      window.addEventListener("resize", function() {
-        tableInstance.page.len(calculatePageLength()).draw();
-      });
+    if (import_jquery.default.fn.DataTable.isDataTable(table)) {
+      (0, import_jquery.default)(table).DataTable().destroy();
     }
+    var tableInstance = (0, import_jquery.default)(table).DataTable({
+      dom: "Bfrtip",
+      buttons: [
+        {
+          extend: "csv",
+          exportOptions: {
+            columns: ":not(:last-child)"
+          }
+        },
+        {
+          extend: "print",
+          exportOptions: {
+            columns: ":not(:last-child)"
+          }
+        }
+      ],
+      paging: true,
+      searching: true,
+      info: true,
+      ordering: true,
+      pageLength: calculatePageLength()
+    });
+    window.addEventListener("resize", function() {
+      tableInstance.page.len(calculatePageLength()).draw();
+    });
   });
 }
 document.addEventListener("turbo:load", () => {
