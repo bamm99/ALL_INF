@@ -243,7 +243,7 @@ class AdminController < ApplicationController
       render :editar_universidad
     end
   end
-
+  
   #-------------------Materiales de Estudio-------------------#
   def study_materials
     @categories = Category.all
@@ -283,7 +283,7 @@ class AdminController < ApplicationController
 
   def update_study_material
     if @study_material.update(study_material_params)
-      redirect_to study_materials_path, notice: 'Material de estudio actualizado con éxito.'
+      redirect_to admin_study_materials_path, notice: 'Material de estudio actualizado con éxito.'
     else
       @categories = Category.all
       render 'admin/study_materials/admin_edit_study_material'
@@ -307,27 +307,31 @@ class AdminController < ApplicationController
     render 'admin/studentview'
   end
 
-  def mostrar_curso
+  def mostrar_curso_admin
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download
     html_content = MarkdownHelper.markdown_to_html(markdown_content)
 
     curso_html = render_to_string(partial: 'shared/curso', locals: { curso: @curso, html_content: html_content })
-    feedback_form_html = render_to_string(partial: 'shared/feedback_form', locals: { curso: @curso })
+    feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', locals: { curso: @curso })
 
     render json: { curso_html: curso_html, feedback_form_html: feedback_form_html }
   end
 
-  def complete_course
+  def complete_course_admin
     completion = CourseCompletion.new(course_id: params[:course_id], user_id: current_user.id, feedback: params[:feedback], completed_at: Time.current)
-
+  
     if completion.save
-      redirect_to student_dashboard_path, notice: '¡Curso completado con éxito! Gracias por tu feedback.'
+      curso = Course.find(params[:course_id])
+      curso_html_content = MarkdownHelper.markdown_to_html(curso.file.download)
+      html_content = render_to_string(partial: 'shared/curso', formats: [:html], locals: { curso: curso, html_content: curso_html_content })
+      feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', formats: [:html], locals: { curso: curso })
+  
+      render json: { success: true, message: '¡Curso completado con éxito! Gracias por tu feedback.', curso_html: html_content, feedback_form_html: feedback_form_html }
     else
-      redirect_to student_dashboard_path, alert: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.'
+      render json: { success: false, message: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.' }
     end
   end
-
   #-------------------Usuarios-------------------#
   def usuarios
     @usuarios = User.all

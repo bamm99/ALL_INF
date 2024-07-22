@@ -1,88 +1,142 @@
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Dashboard de Estudiante">
-    <title>Dashboard de Estudiante</title>
-    <%= stylesheet_link_tag 'github_markdown' %>
-    <%= stylesheet_link_tag 'application.css'%>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Dashboard de Administrador">
+  <title>Dashboard de Administrador</title>
+  <%= stylesheet_link_tag 'github_markdown' %>
+  <%= stylesheet_link_tag 'application.css'%>
 </head>
 
 <body data-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
-    <div class="container">
-        <header class="has-text-centered regularTitle">
-            <h1>./all_inf</h1>
-        </header>
-        
-        <nav class="navbar navbar_custom mx-3 my-1 is-flex is-align-items-center">
-            <div class="navbar-start">
-                <%= link_to "Vista Administrador", admin_dashboard_path, class: "button is-info is-small ml-2" %>
-            </div>
-            <div class="navbar-end is-flex is-align-items-center">
-                <div class="navbar-item">
-                    <span>Logged in as <strong><%= current_user.email %></strong></span>
-                </div>
-                <div class="navbar-item">
-                    <%= link_to "Edit profile", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
-                    <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
-                </div>
-            </div>
-        </nav>
-
-        <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
-            <!-- div de la terminal -->
-            <div class="column is-two-thirds box p-4 ml-4 is-flex is-flex-direction-column box_main">
-                <div class="box box_disclaimer textoblanco">
-                    <p>Para iniciar sesión en la terminal tu usuario es "la primera letra de tu nombre"+"tu apellido", la clave genérica es "allinf". Puedes cambiarla si deseas, pero no la pierdas, ya que deberás contactarte con un administrador para poder recuperarla.</p>
-                </div>
-                
-                <div class="is-flex-grow-1" style="background-color: white;">
-                    <iframe src="https://146.83.194.188:4321/" style="width: 100%; height: 100%; border: none;"></iframe>
-                </div>
-            </div>
-            <!-- div de los cursos -->
-            <div class="column box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
-                <h1 class="cursoTitle mb-2">Cursos</h1>
-                <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
-                    <div class="select select_curso is-fullwidth">
-                        <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select" } %>
-                    </div>
-                <% end %>
-                <div class="contenido-curso is-flex-grow-1">
-                    <div id="course_content" class="markdown-body"></div>
-                    <div id="feedback_form" class="feedback-container"></div>
-                </div>
-            </div>
+  <div class="container">
+    <header class="has-text-centered regularTitle">
+      <h1>./all_inf</h1>
+    </header>
+    
+    <nav class="navbar navbar_custom mx-3 my-1 is-flex is-align-items-center">
+      <div class="navbar-start">
+        <%= link_to "Vista Administrador", admin_dashboard_path, class: "button is-info is-small ml-2" %>
+      </div>
+      <div class="navbar-end is-flex is-align-items-center">
+        <div class="navbar-item">
+          <span>Logged in as <strong><%= current_user.email %></strong></span>
         </div>
+        <div class="navbar-item">
+          <%= link_to "Edit profile", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+      <!-- div de la terminal -->
+      <div class="column is-two-thirds box p-4 ml-4 is-flex is-flex-direction-column box_main">
+        <div class="box box_disclaimer textoblanco">
+          <p>Para iniciar sesión en la terminal tu usuario es "la primera letra de tu nombre"+"tu apellido", la clave genérica es "allinf". Puedes cambiarla si deseas, pero no la pierdas, ya que deberás contactarte con un administrador para poder recuperarla.</p>
+        </div>
+        
+        <div class="is-flex-grow-1" style="background-color: white;">
+          <iframe src="https://146.83.194.188:4321/" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+      </div>
+      <!-- div de los cursos -->
+      <div class="column box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
+        <h1 class="cursoTitle mb-2">Cursos</h1>
+        <%= form_with(url: mostrar_curso_admin_path, local: false, id: "courses_form", method: :get) do |form| %>
+          <div class="select select_curso is-fullwidth">
+            <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select" } %>
+          </div>
+        <% end %>
+        <div class="contenido-curso is-flex-grow-1">
+          <div id="course_content" class="markdown-body"></div>
+          <div id="feedback_form" class="feedback-container"></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
+  <script>
     document.addEventListener("turbo:load", function() {
-        const selectElement = document.getElementById("courses_select");
+    const selectElement = document.getElementById("courses_select");
 
-        selectElement.addEventListener("change", function() {
-            const courseId = this.value;
-            if (courseId) {
-                fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const courseContentDiv = document.getElementById("course_content");
-                        courseContentDiv.innerHTML = data.curso_html;
-                        document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
-                        courseContentDiv.parentElement.style.overflowY = 'auto';
-                        courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
-                    })
-                    .catch(error => {
-                        console.error('Error al cargar el curso:', error);
-                        alert('Hubo un problema al cargar el curso. Por favor, inténtalo nuevamente.');
-                    });
-            } else {
-                document.getElementById("course_content").innerHTML = '';
-                document.getElementById("feedback_form").innerHTML = '';
+    selectElement.addEventListener("change", function() {
+        const courseId = this.value;
+        if (courseId) {
+        fetch(`/admin_dashboard/mostrar_curso?course_id=${courseId}`)
+            .then(response => response.json())
+            .then(data => {
+            const courseContentDiv = document.getElementById("course_content");
+            courseContentDiv.innerHTML = data.curso_html;
+            document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
+            courseContentDiv.parentElement.style.overflowY = 'auto';
+            courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
+
+            const feedbackForm = document.querySelector('#feedback_form form');
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                handleFeedbackFormSubmission(feedbackForm);
+                });
             }
-        });
+            })
+            .catch(error => {
+            console.error('Error al cargar el curso:', error);
+            alert('Hubo un problema al cargar el curso. Por favor, inténtalo nuevamente.');
+            });
+        } else {
+        document.getElementById("course_content").innerHTML = '';
+        document.getElementById("feedback_form").innerHTML = '';
+        }
     });
-    </script>
-        <%= render 'shared/screenwarning' %>
-</body>
 
+    function handleFeedbackFormSubmission(feedbackForm) {
+        const formData = new FormData(feedbackForm);
+        const url = feedbackForm.action;
+
+        fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-Token': formData.get('authenticity_token'),
+            'Accept': 'application/json'
+        },
+        body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+        if (data.success) {
+            toastr.success(data.message);
+            const courseContentDiv = document.getElementById("course_content");
+            courseContentDiv.innerHTML = data.curso_html;
+            document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
+            courseContentDiv.parentElement.style.overflowY = 'auto';
+            courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
+
+            const newFeedbackForm = document.querySelector('#feedback_form form');
+            if (newFeedbackForm) {
+            newFeedbackForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                handleFeedbackFormSubmission(newFeedbackForm);
+            });
+            }
+        } else {
+            toastr.error(data.message);
+        }
+        })
+        .catch(error => {
+        console.error('Error:', error);
+        toastr.error('Hubo un problema al completar el curso. Por favor, inténtalo nuevamente.');
+        });
+    }
+
+    const initialFeedbackForm = document.querySelector('#feedback_form form');
+    if (initialFeedbackForm) {
+        initialFeedbackForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        handleFeedbackFormSubmission(initialFeedbackForm);
+        });
+    }
+    });
+  </script>
+  <%= render 'shared/screenwarning' %>
+</body>

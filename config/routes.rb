@@ -54,8 +54,10 @@ Rails.application.routes.draw do
   # ruta admin/statistics
   get 'admin/statistics', to: 'admin#statistics', as: 'admin_statistics'
 
-    # ruta student_view para admin
+  # ruta student_view para admin
   get '/admin/student_view', to: 'admin#student_view', as: 'admin_student_view'
+  get 'admin_dashboard/mostrar_curso', to: 'admin#mostrar_curso_admin', as: 'mostrar_curso_admin'
+  post 'admin/complete_course', to: 'admin#complete_course_admin', as: 'complete_course_admin'
 
   # rutas students
   get 'student_dashboard', to: 'students#dashboard', as: 'student_dashboard'
@@ -69,3 +71,4 @@ Rails.application.routes.draw do
   # Ruta de chequeo de salud
   get "up" => "rails/health#show", as: :rails_health_check
 end
+  

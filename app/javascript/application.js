@@ -15,6 +15,7 @@ import Rails from "@rails/ujs";
 
 import $ from 'jquery';
 window.$ = window.jQuery = $;
+window.toastr = toastr;
 
 Rails.start();
 require("@rails/activestorage").start();

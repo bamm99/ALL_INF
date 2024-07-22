@@ -32402,6 +32402,7 @@ var import_exporting = __toESM(require_exporting());
 var import_export_data = __toESM(require_export_data());
 var import_accessibility = __toESM(require_accessibility());
 window.$ = window.jQuery = import_jquery.default;
+window.toastr = import_toastr.default;
 Rails.start();
 require_activestorage().start();
 (0, import_exporting.default)(import_highcharts.default);

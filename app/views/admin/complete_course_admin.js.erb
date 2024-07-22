@@ -1,0 +1,6 @@
+<% if flash[:notice] %>
+  toastr.success("<%= j flash[:notice] %>");
+<% elsif flash[:alert] %>
+  toastr.error("<%= j flash[:alert] %>");
+<% end %>
+
