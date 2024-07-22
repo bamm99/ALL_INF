@@ -32430,38 +32430,58 @@ function calculatePageLength() {
     return pageLength;
   }
 }
-function initializeDataTables() {
+function destroyDataTables() {
+  console.log("Destroying existing DataTables...");
   document.querySelectorAll(".table-datatables").forEach((table) => {
     if (import_jquery.default.fn.DataTable.isDataTable(table)) {
-      (0, import_jquery.default)(table).DataTable().destroy();
+      console.log("Destroying DataTable on table:", table);
+      (0, import_jquery.default)(table).DataTable().clear().destroy();
     }
-    var tableInstance = (0, import_jquery.default)(table).DataTable({
-      dom: "Bfrtip",
-      buttons: [
-        {
-          extend: "csv",
-          exportOptions: {
-            columns: ":not(:last-child)"
-          }
-        },
-        {
-          extend: "print",
-          exportOptions: {
-            columns: ":not(:last-child)"
-          }
-        }
-      ],
-      paging: true,
-      searching: true,
-      info: true,
-      ordering: true,
-      pageLength: calculatePageLength()
-    });
-    window.addEventListener("resize", function() {
-      tableInstance.page.len(calculatePageLength()).draw();
-    });
   });
 }
+function initializeDataTables() {
+  console.log("Initializing DataTables...");
+  const tables = document.querySelectorAll(".table-datatables");
+  if (tables.length === 0) {
+    console.log("No tables found with the class 'table-datatables'.");
+    return;
+  }
+  tables.forEach((table) => {
+    if (!import_jquery.default.fn.DataTable.isDataTable(table)) {
+      console.log("Initializing DataTable on table:", table);
+      var tableInstance = (0, import_jquery.default)(table).DataTable({
+        dom: "Bfrtip",
+        buttons: [
+          {
+            extend: "csv",
+            exportOptions: {
+              columns: ":not(:last-child)"
+            }
+          },
+          {
+            extend: "print",
+            exportOptions: {
+              columns: ":not(:last-child)"
+            }
+          }
+        ],
+        paging: true,
+        searching: true,
+        info: true,
+        ordering: true,
+        pageLength: calculatePageLength()
+      });
+      window.addEventListener("resize", function() {
+        tableInstance.page.len(calculatePageLength()).draw();
+      });
+    } else {
+      console.log("Table already initialized:", table);
+    }
+  });
+}
+document.addEventListener("turbo:before-cache", () => {
+  destroyDataTables();
+});
 document.addEventListener("turbo:load", () => {
   const flashMessagesElement = document.getElementById("flash-messages");
   if (flashMessagesElement) {
@@ -32475,6 +32495,7 @@ document.addEventListener("turbo:load", () => {
     if (flashData.error) {
       import_toastr.default.error(flashData.error);
     }
+    flashMessagesElement.dataset.flash = JSON.stringify({});
   }
   initializeDataTables();
   function initializeHighchartsBar(containerId, chartData, titleText) {

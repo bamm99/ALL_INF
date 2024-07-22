@@ -76,7 +76,7 @@
                         <h4 class="title is-4 mt-4 textoblanco">Carreras</h4>
                         <%= form_tag eliminar_carreras_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar las carreras seleccionadas? Los usuarios de estas carreras serán actualizados para no tener carrera." } do %>
                             <div class="table-container is-flex is-justify-content-center">
-                            <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
+                            <table id="degrees_table" class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                                 <thead>
                                 <tr>
                                     <th class="textoblanco"><input type="checkbox" id="select_all"></th>

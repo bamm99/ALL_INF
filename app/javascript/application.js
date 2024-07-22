@@ -55,40 +55,62 @@ function calculatePageLength() {
   }
 }
 
-function initializeDataTables() {
+function destroyDataTables() {
+  console.log("Destroying existing DataTables...");
   document.querySelectorAll('.table-datatables').forEach(table => {
     if ($.fn.DataTable.isDataTable(table)) {
-      $(table).DataTable().destroy();
+      console.log("Destroying DataTable on table:", table);
+      $(table).DataTable().clear().destroy(); // Asegúrate de que la tabla esté completamente destruida
     }
-
-    var tableInstance = $(table).DataTable({
-      dom: 'Bfrtip',
-      buttons: [
-        {
-          extend: 'csv',
-          exportOptions: {
-            columns: ':not(:last-child)'
-          }
-        },
-        {
-          extend: 'print',
-          exportOptions: {
-            columns: ':not(:last-child)'
-          }
-        }
-      ],
-      paging: true,
-      searching: true,
-      info: true,
-      ordering: true,
-      pageLength: calculatePageLength(),
-    });
-
-    window.addEventListener('resize', function() {
-      tableInstance.page.len(calculatePageLength()).draw();
-    });
   });
 }
+
+function initializeDataTables() {
+  console.log("Initializing DataTables...");
+  const tables = document.querySelectorAll('.table-datatables');
+  if (tables.length === 0) {
+    console.log("No tables found with the class 'table-datatables'.");
+    return;
+  }
+
+  tables.forEach(table => {
+    if (!$.fn.DataTable.isDataTable(table)) {
+      console.log("Initializing DataTable on table:", table);
+      var tableInstance = $(table).DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          {
+            extend: 'csv',
+            exportOptions: {
+              columns: ':not(:last-child)'
+            }
+          },
+          {
+            extend: 'print',
+            exportOptions: {
+              columns: ':not(:last-child)'
+            }
+          }
+        ],
+        paging: true,
+        searching: true,
+        info: true,
+        ordering: true,
+        pageLength: calculatePageLength(),
+      });
+
+      window.addEventListener('resize', function() {
+        tableInstance.page.len(calculatePageLength()).draw();
+      });
+    } else {
+      console.log("Table already initialized:", table);
+    }
+  });
+}
+
+document.addEventListener("turbo:before-cache", () => {
+  destroyDataTables();
+});
 
 document.addEventListener("turbo:load", () => {
   const flashMessagesElement = document.getElementById("flash-messages");
@@ -103,6 +125,8 @@ document.addEventListener("turbo:load", () => {
     if (flashData.error) {
       toastr.error(flashData.error);
     }
+    // Limpia los mensajes flash después de mostrarlos
+    flashMessagesElement.dataset.flash = JSON.stringify({});
   }
 
   initializeDataTables();

@@ -27,7 +27,6 @@
       const flashMessagesElement = document.getElementById("flash-messages");
       if (flashMessagesElement) {
         const flashData = JSON.parse(flashMessagesElement.dataset.flash);
-        console.log("Flash data:", flashData);
         if (flashData.notice) {
           toastr.success(flashData.notice);
         }
@@ -38,7 +37,6 @@
           toastr.error(flashData.error);
         }
       } else {
-        console.log("No flash messages element found");
       }
     });
   </script>
