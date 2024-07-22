@@ -21519,6 +21519,9 @@ body {
   overflow: hidden;
   background-color: #13151A;
 }
+.box_disclaimer {
+  background-color: #202124;
+}
 .box_statistics {
   overflow-y: auto;
   background-color: #13151A;

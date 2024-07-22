@@ -12,16 +12,15 @@
         <!-- Navbar -->
         <%= render 'shared/basicnavbar' %>
         <!-- Contenido principal -->
-        <div class="box mt-2 is-flex is-flex-direction-column is-flex-grow-1 mx-3 mb-5">
-            <h2 class="regularheadTitle">Material de Estudio</h2>
+        <div class="box mt-2 is-flex is-flex-direction-column is-flex-grow-1 mx-3 mb-5 box_main">
 
             <div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
-                <h3 class="title is-3 mb-0">Material de Estudio</h3>
-                <%= link_to 'Agregar Material de Estudio', new_study_material_path, class: "button is-success" %>
+                <h3 class="title is-3 mb-0 textoblanco">Material de Estudio</h3>
+
             </div>
 
             <div class="is-flex-grow-1">
-                <table class="table is-fullwidth table-custom table-datatables">
+                <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
                     <thead>
                         <tr>
                             <th style="width: 20%;">Título</th>
