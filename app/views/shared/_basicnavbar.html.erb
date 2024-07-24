@@ -1,15 +1,15 @@
 <nav class="navbar navbar_custom mx-3 my-1 is-flex is-align-items-center">
     <div class="navbar-start">
         <%= link_to "Entorno de práctica", student_dashboard_path, class: "button is-info is-small ml-2" %>
-        <%= link_to "Material de estudio", student_materials_path, class: "button is-info is-small ml-2" %>
+        <%= link_to "Material de estudio", student_study_materials_path, class: "button is-info is-small ml-2" %>
     </div>
     <div class="navbar-end is-flex is-align-items-center">
         <div class="navbar-item">
-            <span>Logged in as <strong><%= current_user.email %></strong></span>
+            <span> Conectado con <strong><%= current_user.email %></strong></span>
         </div>
         <div class="navbar-item">
-            <%= link_to "Edit profile", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
+            <%= link_to "Editar perfil", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
+            <%= link_to "Cerrar Sesión", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
         </div>
     </div>
 </nav>

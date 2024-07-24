@@ -2,6 +2,7 @@ import "@hotwired/turbo-rails";
 import "bulma/css/bulma.css";
 import "../assets/stylesheets/application.css";
 import "../assets/stylesheets/dataTables_custom.css";
+import "../assets/stylesheets/print.css"; // Importa el CSS de impresión
 
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
@@ -83,12 +84,20 @@ function initializeDataTables() {
             extend: 'csv',
             exportOptions: {
               columns: ':not(:last-child)'
+            },
+            customize: function (csv) {
+              return "\uFEFF" + csv; // Añade BOM para que se muestren caracteres especiales
             }
           },
           {
             extend: 'print',
             exportOptions: {
               columns: ':not(:last-child)'
+            },
+            customize: function (win) {
+              $(win.document.body).find('table').addClass('table').css('color', 'black');
+              $(win.document.body).css('background-color', 'white');
+              $(win.document.body).css('color', 'black');
             }
           }
         ],

@@ -54,31 +54,5 @@
     </div>
 
     <%= render 'shared/screenwarning' %>
-
-    <script>
-        document.addEventListener("turbo:load", () => {
-            $('.table-datatables').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'csv',
-                        exportOptions: {
-                            columns: ':not(:last-child)' // Excluye la última columna
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(:last-child)' // Excluye la última columna
-                        }
-                    }
-                ],
-                paging: true,
-                searching: true,
-                info: true,
-                ordering: true
-            });
-        });
-    </script>
 </body>
-</html>
+

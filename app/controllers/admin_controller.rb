@@ -4,7 +4,7 @@ class AdminController < ApplicationController
   before_action :set_curso, only: [:ver_curso, :editar_curso, :actualizar_curso, :eliminar_curso]
   before_action :set_universidad, only: [:ver_universidad, :editar_universidad, :actualizar_universidad, :eliminar_universidad, :eliminar_carreras, :agregar_carrera]
   before_action :set_study_material, only: [:edit_study_material, :update_study_material, :destroy_study_material, :download_study_material]
-
+  before_action :load_wetty_url, only: [:student_view]
   include MarkdownHelper
 
   #-------------------Cursos-------------------#
@@ -304,9 +304,9 @@ class AdminController < ApplicationController
   #-------------------Studentview-------------------#
   def student_view
     @cursos = Course.all
+    @wetty_url = session[:wetty_url]
     render 'admin/studentview'
   end
-
   def mostrar_curso_admin
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download
@@ -404,6 +404,10 @@ class AdminController < ApplicationController
 
   def user_params
     params.require(:user).permit(:user_name, :user_last_name, :email, :user_rol, :user_student, :user_university_id, :user_degree_id, :password, :password_confirmation)
+  end
+
+  def load_wetty_url
+    @wetty_url = session[:wetty_url]
   end
 
   def check_admin

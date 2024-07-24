@@ -1,0 +1,14 @@
+@media print {
+    body {
+      color: black !important;
+      background: white !important;
+    }
+  
+    .table {
+      color: black !important;
+    }
+  
+    .table th, .table td {
+      color: black !important;
+    }
+  }

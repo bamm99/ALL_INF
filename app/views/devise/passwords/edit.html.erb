@@ -1,31 +1,37 @@
-<div class="font-mono flex items-center justify-center h-screen">
-  <div class="w-full max-w-md p-6 mx-auto">
-    <h1 class="text-center pt-4 font-mono text-6xl">/ALL_IECI</h1>
-    <h2 class="text-center text-3xl mb-4">Cambio de contraseña</h2>
+<div class="is-flex is-justify-content-center is-align-items-center is-fullheight">
+  <div class="box" style="max-width: 400px; width: 100%;">
+    <h1 class="title has-text-centered">/ALL_IECI</h1>
+    <h2 class="subtitle has-text-centered">Cambio de contraseña</h2>
 
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
       <%= f.hidden_field :reset_password_token %>
 
-      <div class="mb-4">
-        <%= f.label :password, "Nueva contraseña", class: "block text-sm font-bold mb-1" %>
+      <div class="field">
+        <%= f.label :password, "Nueva contraseña", class: "label" %>
         <% if @minimum_password_length %>
-          <em class="block text-xs mb-2">(mínimo <%= @minimum_password_length %> caracteres)</em>
+          <p class="help">(mínimo <%= @minimum_password_length %> caracteres)</p>
         <% end %>
-        <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        <div class="control">
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "input" %>
+        </div>
       </div>
 
-      <div class="mb-4">
-        <%= f.label :password_confirmation, "Confirma la nueva contraseña", class: "block text-sm font-bold mb-1" %>
-        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+      <div class="field">
+        <%= f.label :password_confirmation, "Confirma la nueva contraseña", class: "label" %>
+        <div class="control">
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+        </div>
       </div>
 
-      <div class="text-center mt-2">
-        <%= f.submit "Cambiar mi contraseña", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" %>
+      <div class="field is-grouped is-grouped-centered">
+        <div class="control">
+          <%= f.submit "Cambiar mi contraseña", class: "button is-primary" %>
+        </div>
       </div>
     <% end %>
 
-    <div class="text-center mt-4">
-      <%= render "devise/shared/links", class: "text-blue-600 hover:text-blue-800" %>
+    <div class="has-text-centered mt-4">
+      <%= render "devise/shared/links" %>
     </div>
   </div>
 </div>

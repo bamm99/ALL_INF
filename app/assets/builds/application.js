@@ -32456,12 +32456,20 @@ function initializeDataTables() {
             extend: "csv",
             exportOptions: {
               columns: ":not(:last-child)"
+            },
+            customize: function(csv) {
+              return "\uFEFF" + csv;
             }
           },
           {
             extend: "print",
             exportOptions: {
               columns: ":not(:last-child)"
+            },
+            customize: function(win) {
+              (0, import_jquery.default)(win.document.body).find("table").addClass("table").css("color", "black");
+              (0, import_jquery.default)(win.document.body).css("background-color", "white");
+              (0, import_jquery.default)(win.document.body).css("color", "black");
             }
           }
         ],

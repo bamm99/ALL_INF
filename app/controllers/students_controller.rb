@@ -3,6 +3,11 @@ class StudentsController < ApplicationController
 
   def dashboard
     @cursos = Course.all
+    @wetty_url = session[:wetty_url]
+  end
+
+  def study_materials
+    @study_materials = StudyMaterial.all
   end
 
   def mostrar_curso
@@ -33,10 +38,9 @@ class StudentsController < ApplicationController
 
 private
 
-
   def set_curso
     @curso = Course.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      redirect_to admin_cursos_path, alert: 'Curso no encontrado.'
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_cursos_path, alert: 'Curso no encontrado.'
   end
 end

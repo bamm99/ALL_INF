@@ -9,8 +9,8 @@
             <span>Logged in as <strong><%= current_user.email %></strong></span>
         </div>
         <div class="navbar-item">
-            <%= link_to "Edit profile", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
+            <%= link_to "Editar perfil", edit_user_registration_path, class: "button is-primary is-small ml-2" %>
+            <%= link_to "Cerrar Sesión", destroy_user_session_path, method: :delete, class: "button is-danger is-small ml-2" %>
         </div>
     </div>
 </nav>

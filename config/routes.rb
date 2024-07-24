@@ -61,7 +61,7 @@ Rails.application.routes.draw do
 
   # rutas students
   get 'student_dashboard', to: 'students#dashboard', as: 'student_dashboard'
-  get 'student_dashboard/materiales', to: 'students#study_materials', as: 'student_materials'
+  get 'student_dashboard/materiales', to: 'students#study_materials', as: 'student_study_materials'
   get 'student_dashboard/mostrar_cursos', to: 'students#mostrar_curso', as: 'mostrar_curso'
   post 'students/complete_course', to: 'students#complete_course', as: 'complete_course'
 

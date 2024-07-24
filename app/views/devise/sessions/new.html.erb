@@ -4,43 +4,43 @@
             <h1 class="regularTitle has-text-centered mt-4">./all_inf</h1>
             <h2 class="regularsubTitle has-text-centered mb-4">Iniciar sesión</h2>
             <div class="box box_login">
-              <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
-              <div class="field mb-4">
-                  <label class="label has-text-primary-color"><%= f.label :email %></label>
-                  <div class="control">
-                      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-custom" %>
-                  </div>
-              </div>
+            <div class="field mb-4">
+                <label class="label has-text-primary-color">Correo electrónico</label>
+                <div class="control">
+                    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-custom" %>
+                </div>
+            </div>
 
-              <div class="field mb-4">
-                  <label class="label has-text-primary-color"><%= f.label :password %></label>
-                  <div class="control">
-                      <%= f.password_field :password, autocomplete: "current-password", class: "input input-custom" %>
-                  </div>
-              </div>
+            <div class="field mb-4">
+                <label class="label has-text-primary-color">Contraseña</label>
+                <div class="control">
+                    <%= f.password_field :password, autocomplete: "current-password", class: "input input-custom" %>
+                </div>
+            </div>
 
-              <% if devise_mapping.rememberable? %>
-                  <div class="field mb-4">
-                      <div class="control">
-                          <label class="checkbox has-text-primary-color">
-                              <%= f.check_box :remember_me %>
-                              <%= f.label :remember_me %>
-                          </label>
-                      </div>
-                  </div>
-              <% end %>
+            <% if devise_mapping.rememberable? %>
+                <div class="field mb-4">
+                    <div class="control">
+                        <label class="checkbox has-text-primary-color">
+                            <p><%= f.check_box :remember_me %>
+                                Recordarme</p>
+                        </label>
+                    </div>
+                </div>
+            <% end %>
 
-              <div class="field is-grouped is-grouped-centered">
-                  <div class="control">
-                      <%= f.submit "Iniciar sesión", class: "button is-primary" %>
-                  </div>
-              </div>
-              <% end %>
+            <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                    <%= f.submit "Iniciar sesión", class: "button is-primary" %>
+                </div>
+            </div>
+            <% end %>
 
-              <div class="has-text-centered mt-2">
-                  <%= render "devise/shared/links" %>
-              </div>
+            <div class="has-text-centered mt-2">
+                <%= render "devise/shared/links" %>
+            </div>
             </div>
         </div>
     </div>

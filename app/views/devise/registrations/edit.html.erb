@@ -1,6 +1,6 @@
 <%= render 'shared/header' %>
 
-<h2 class="title is-3 has-text-centered mb-4">Editar <%= resource_name.to_s.humanize %></h2>
+<h2 class="title is-3 has-text-centered mb-4">Editar Perfil</h2>
 
 <div class="has-text-centered is-flex is-align-items-center is-justify-content-center" style="height: 100vh;">
   <div class="box box_login" style="width: 100%; max-width: 24rem; padding: 1.5rem;">
@@ -14,12 +14,12 @@
       </div>
 
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-        <div class="notification is-warning mb-4">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+        <div class="notification is-warning mb-4">Actualmente esperando confirmación para: <%= resource.unconfirmed_email %></div>
       <% end %>
 
       <div class="field mb-4">
         <%= f.label :password, "Nueva contraseña", class: "label" %>
-        <p> (dejar en blanco si no deseas cambiarla)</p>
+        <p class= "help"> (dejar en blanco si no deseas cambiarla)</p>
         <div class="control">
           <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
         </div>
@@ -29,14 +29,14 @@
       </div>
 
       <div class="field mb-4">
-        <%= f.label :password_confirmation, class: "label" %>
+        <%= f.label :password_confirmation, "Confirmar nueva contraseña", class: "label" %>
         <div class="control">
           <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
         </div>
       </div>
 
       <div class="field mb-4">
-        <%= f.label :current_password, "Contraseña actual (necesaria para confirmar cambios)", class: "label" %>
+        <%= f.label :current_password, "Contraseña actual ", class: "label" %><p class="help">(necesaria para confirmar cambios)</p>
         <div class="control">
           <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
         </div>
@@ -45,15 +45,17 @@
       <div class="field is-grouped is-grouped-centered mt-2">
         <div class="control">
           <%= f.submit "Actualizar", class: "button is-success" %>
+          <% if resource.admin? %>
+            <%= link_to "Volver", admin_dashboard_path, class: "button is-warning mx-auto" %>
+          <% else %>
+            <%= link_to "Volver", student_dashboard_path, class: "button is-warning mx-auto" %>
+          <% end %>
         </div>
       </div>
     <% end %>
-
     <div class="has-text-centered mt-4">
-      <h3 class="subtitle is-5">Cancelar mi cuenta</h3>
-      <p>¿No estás contento? <%= button_to "Cancelar mi cuenta", registration_path(resource_name), data: { confirm: "¿Estás seguro?", turbo_confirm: "¿Estás seguro?" }, method: :delete, class: "button is-danger" %></p>
+      <p class="help">¿No estás contento?</p> 
+      <%= button_to "Cancelar mi cuenta", registration_path(resource_name), data: { confirm: "¿Estás seguro?", turbo_confirm: "¿Estás seguro?" }, method: :delete, class: "button is-danger is-small mb-2" %>
     </div>
-
-    <%= link_to "Volver", :back, class: "button is-text is-link" %>
   </div>
 </div>

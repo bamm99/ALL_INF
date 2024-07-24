@@ -7,25 +7,29 @@
   <%= stylesheet_link_tag 'github_markdown' %>
   <%= stylesheet_link_tag 'application.css'%>
 </head>
-
 <body data-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
   <div class="container">
     <header class="has-text-centered regularTitle">
       <h1>./all_inf</h1>
     </header>
     
+    <!-- Navbar -->
     <%= render 'shared/basicnavbar' %>
     
+    <!--contenido principal -->
     <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
+      <!-- div de la terminal -->
       <div class="column is-two-thirds box p-4 ml-4 is-flex is-flex-direction-column box_main">
         <div class="box box_disclaimer textoblanco">
-          <p>Para iniciar sesión en la terminal tu usuario es "la primera letra de tu nombre"+"tu apellido", la clave genérica es "allinf". Puedes cambiarla si deseas, pero no la pierdas, ya que deberás contactarte con un administrador para poder recuperarla.</p>
+          <p>Tu contraseña de usuario en la terminal es la misma que usas para la web.</p>
         </div>
         
         <div class="is-flex-grow-1" style="background-color: white;">
-          <iframe src="https://146.83.194.188:4321/" style="width: 100%; height: 100%; border: none;"></iframe>
+          <% username = "#{current_user.user_name[0].downcase}#{current_user.user_last_name.downcase}#{current_user.id}" %>
+          <iframe src="<%= @wetty_url %>" style="width: 100%; height: 100%; border: none;"></iframe>
         </div>
       </div>
+      <!-- div de los cursos -->
       <div class="column box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
         <h1 class="cursoTitle mb-2">Cursos</h1>
         <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
@@ -43,84 +47,29 @@
 
   <script>
     document.addEventListener("turbo:load", function() {
-    const selectElement = document.getElementById("courses_select");
+      const selectElement = document.getElementById("courses_select");
 
-    selectElement.addEventListener("change", function() {
+      selectElement.addEventListener("change", function() {
         const courseId = this.value;
         if (courseId) {
-        fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
+          fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
             .then(response => response.json())
             .then(data => {
-            const courseContentDiv = document.getElementById("course_content");
-            courseContentDiv.innerHTML = data.curso_html;
-            document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
-            courseContentDiv.parentElement.style.overflowY = 'auto';
-            courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
-
-            const feedbackForm = document.querySelector('#feedback_form form');
-            if (feedbackForm) {
-                feedbackForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                handleFeedbackFormSubmission(feedbackForm);
-                });
-            }
+              const courseContentDiv = document.getElementById("course_content");
+              courseContentDiv.innerHTML = data.curso_html;
+              document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
+              courseContentDiv.parentElement.style.overflowY = 'auto';
+              courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
             })
             .catch(error => {
-            console.error('Error al cargar el curso:', error);
-            alert('Hubo un problema al cargar el curso. Por favor, inténtalo nuevamente.');
+              console.error('Error al cargar el curso:', error);
+              alert('Hubo un problema al cargar el curso. Por favor, inténtalo nuevamente.');
             });
         } else {
-        document.getElementById("course_content").innerHTML = '';
-        document.getElementById("feedback_form").innerHTML = '';
+          document.getElementById("course_content").innerHTML = '';
+          document.getElementById("feedback_form").innerHTML = '';
         }
-    });
-
-    function handleFeedbackFormSubmission(feedbackForm) {
-        const formData = new FormData(feedbackForm);
-        const url = feedbackForm.action;
-
-        fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-Token': formData.get('authenticity_token'),
-            'Accept': 'application/json'
-        },
-        body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-        if (data.success) {
-            toastr.success(data.message);
-            const courseContentDiv = document.getElementById("course_content");
-            courseContentDiv.innerHTML = data.curso_html;
-            document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
-            courseContentDiv.parentElement.style.overflowY = 'auto';
-            courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
-
-            const newFeedbackForm = document.querySelector('#feedback_form form');
-            if (newFeedbackForm) {
-            newFeedbackForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                handleFeedbackFormSubmission(newFeedbackForm);
-            });
-            }
-        } else {
-            toastr.error(data.message);
-        }
-        })
-        .catch(error => {
-        console.error('Error:', error);
-        toastr.error('Hubo un problema al completar el curso. Por favor, inténtalo nuevamente.');
-        });
-    }
-
-    const initialFeedbackForm = document.querySelector('#feedback_form form');
-    if (initialFeedbackForm) {
-        initialFeedbackForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        handleFeedbackFormSubmission(initialFeedbackForm);
-        });
-    }
+      });
     });
   </script>
   <%= render 'shared/screenwarning' %>
