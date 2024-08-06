@@ -1,0 +1,28 @@
+<div class="select select_curso is-fullwidth">
+  <select id="courses_select" name="course_id">
+    <option value="">Seleccione un curso</option>
+    <% if completed_courses.any? %>
+      <optgroup label="Cursos Completados">
+        <% completed_courses.each do |course| %>
+          <option value="<%= course.id %>"><%= course.title %></option>
+        <% end %>
+      </optgroup>
+    <% else %>
+      <optgroup label="Cursos Completados">
+        <option value="">No hay cursos completados</option>
+      </optgroup>
+    <% end %>
+    
+    <% if incomplete_courses.any? %>
+      <optgroup label="Cursos Incompletos">
+        <% incomplete_courses.each do |course| %>
+          <option value="<%= course.id %>"><%= course.title %></option>
+        <% end %>
+      </optgroup>
+    <% else %>
+      <optgroup label="Cursos Incompletos">
+        <option value="">Ya completaste todos los cursos</option>
+      </optgroup>
+    <% end %>
+  </select>
+</div>

@@ -303,10 +303,13 @@ class AdminController < ApplicationController
 
   #-------------------Studentview-------------------#
   def student_view
-    @cursos = Course.all
+    completed_course_ids = current_user.course_completions.pluck(:course_id)
+    @completed_courses = Course.where(id: completed_course_ids)
+    @incomplete_courses = Course.where.not(id: completed_course_ids)
     @wetty_url = session[:wetty_url]
     render 'admin/studentview'
   end
+
   def mostrar_curso_admin
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download
@@ -320,14 +323,20 @@ class AdminController < ApplicationController
 
   def complete_course_admin
     completion = CourseCompletion.new(course_id: params[:course_id], user_id: current_user.id, feedback: params[:feedback], completed_at: Time.current)
-  
+
     if completion.save
       curso = Course.find(params[:course_id])
       curso_html_content = MarkdownHelper.markdown_to_html(curso.file.download)
       html_content = render_to_string(partial: 'shared/curso', formats: [:html], locals: { curso: curso, html_content: curso_html_content })
       feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', formats: [:html], locals: { curso: curso })
-  
-      render json: { success: true, message: '¡Curso completado con éxito! Gracias por tu feedback.', curso_html: html_content, feedback_form_html: feedback_form_html }
+      
+      # Actualiza las listas de cursos
+      completed_course_ids = current_user.course_completions.pluck(:course_id)
+      @completed_courses = Course.where(id: completed_course_ids)
+      @incomplete_courses = Course.where.not(id: completed_course_ids)
+      select_html = render_to_string(partial: 'shared/course_select', formats: [:html], locals: { completed_courses: @completed_courses, incomplete_courses: @incomplete_courses })
+
+      render json: { success: true, message: '¡Curso completado con éxito! Gracias por tu feedback.', curso_html: html_content, feedback_form_html: feedback_form_html, select_html: select_html }
     else
       render json: { success: false, message: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.' }
     end

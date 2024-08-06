@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get 'student_dashboard/materiales', to: 'students#study_materials', as: 'student_study_materials'
   get 'student_dashboard/mostrar_cursos', to: 'students#mostrar_curso', as: 'mostrar_curso'
   post 'students/complete_course', to: 'students#complete_course', as: 'complete_course'
+  get 'student_dashboard/course_select', to: 'students#course_select'
 
   # Ruta raíz
   root 'home#index'

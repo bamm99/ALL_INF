@@ -33,8 +33,8 @@
       <div class="column box p-4 mx-4 mb-5 is-flex is-flex-direction-column box_cursos">
         <h1 class="cursoTitle mb-2">Cursos</h1>
         <%= form_with(url: mostrar_curso_path, local: false, id: "courses_form", method: :get) do |form| %>
-          <div class="select select_curso is-fullwidth">
-            <%= form.select :course_id, @cursos.collect { |c| [c.title, c.id] }, { include_blank: 'Seleccione un curso' }, { id: "courses_select" } %>
+          <div id="course_select_container">
+            <%= render 'shared/course_select', completed_courses: @completed_courses, incomplete_courses: @incomplete_courses %>
           </div>
         <% end %>
         <div class="contenido-curso is-flex-grow-1">
@@ -47,29 +47,91 @@
 
   <script>
     document.addEventListener("turbo:load", function() {
-      const selectElement = document.getElementById("courses_select");
+      console.log("Turbo load event triggered");
 
-      selectElement.addEventListener("change", function() {
-        const courseId = this.value;
-        if (courseId) {
-          fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
-            .then(response => response.json())
-            .then(data => {
-              const courseContentDiv = document.getElementById("course_content");
-              courseContentDiv.innerHTML = data.curso_html;
-              document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
-              courseContentDiv.parentElement.style.overflowY = 'auto';
-              courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
-            })
-            .catch(error => {
-              console.error('Error al cargar el curso:', error);
-              alert('Hubo un problema al cargar el curso. Por favor, inténtalo nuevamente.');
-            });
-        } else {
-          document.getElementById("course_content").innerHTML = '';
-          document.getElementById("feedback_form").innerHTML = '';
+      function initializeSelect() {
+        const selectElement = document.getElementById("courses_select");
+
+        if (selectElement) {
+          selectElement.addEventListener("change", function() {
+            const courseId = this.value;
+            if (courseId) {
+              fetch(`/student_dashboard/mostrar_cursos?course_id=${courseId}`)
+                .then(response => response.json())
+                .then(data => {
+                  const courseContentDiv = document.getElementById("course_content");
+                  courseContentDiv.innerHTML = data.curso_html;
+                  document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
+                  courseContentDiv.parentElement.style.overflowY = 'auto';
+                  courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
+                  
+                  const feedbackForm = document.querySelector('#feedback_form form');
+                  if (feedbackForm) {
+                    feedbackForm.addEventListener('submit', function(event) {
+                      event.preventDefault();
+                      handleFeedbackFormSubmission(feedbackForm);
+                    });
+                  }
+                })
+                .catch(error => {
+                  console.error('Error al cargar el curso:', error);
+                  alert('Hubo un problema al cargar el curso. Por favor, inténtalo nuevamente.');
+                });
+            } else {
+              document.getElementById("course_content").innerHTML = '';
+              document.getElementById("feedback_form").innerHTML = '';
+            }
+          });
         }
-      });
+      }
+
+      function handleFeedbackFormSubmission(feedbackForm) {
+        const formData = new FormData(feedbackForm);
+        const url = feedbackForm.action;
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-Token': formData.get('authenticity_token'),
+            'Accept': 'application/json'
+          },
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            toastr.success(data.message);
+            const courseContentDiv = document.getElementById("course_content");
+            courseContentDiv.innerHTML = data.curso_html;
+            document.getElementById("feedback_form").innerHTML = data.feedback_form_html;
+            courseContentDiv.parentElement.style.overflowY = 'auto';
+            courseContentDiv.parentElement.style.maxHeight = 'calc(100vh - 250px)';
+
+            // Actualiza el select de cursos
+            document.getElementById('course_select_container').innerHTML = data.select_html;
+
+            const newFeedbackForm = document.querySelector('#feedback_form form');
+            if (newFeedbackForm) {
+              newFeedbackForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                handleFeedbackFormSubmission(newFeedbackForm);
+              });
+            }
+
+            // Reinitialize the select after update
+            initializeSelect();
+          } else {
+            toastr.error(data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          toastr.error('Hubo un problema al completar el curso. Por favor, inténtalo nuevamente.');
+        });
+      }
+
+      // Inicializa el select al cargar la página
+      initializeSelect();
     });
   </script>
   <%= render 'shared/screenwarning' %>

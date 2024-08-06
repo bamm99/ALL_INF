@@ -2,7 +2,7 @@ import "@hotwired/turbo-rails";
 import "bulma/css/bulma.css";
 import "../assets/stylesheets/application.css";
 import "../assets/stylesheets/dataTables_custom.css";
-import "../assets/stylesheets/print.css"; // Importa el CSS de impresión
+import "../assets/stylesheets/print.css";
 
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
