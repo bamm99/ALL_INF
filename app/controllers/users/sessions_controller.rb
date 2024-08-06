@@ -43,7 +43,9 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def generate_wetty_username(resource)
-    "#{resource.user_name[0].downcase}#{resource.user_last_name.downcase}#{resource.id}"
+    user_name = I18n.transliterate(resource.user_name[0].downcase)
+    user_last_name = I18n.transliterate(resource.user_last_name.downcase)
+    "#{user_name}#{user_last_name}#{resource.id}"
   end
 
   def execute_user_setup_script(ssh, username, password, ssh_password)

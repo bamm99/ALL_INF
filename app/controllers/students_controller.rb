@@ -5,7 +5,7 @@ class StudentsController < ApplicationController
     flash.clear
     head :ok
   end
-  
+
   def dashboard
     completed_course_ids = current_user.course_completions.pluck(:course_id)
     @completed_courses = Course.where(id: completed_course_ids)
@@ -17,9 +17,10 @@ class StudentsController < ApplicationController
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download
     html_content = MarkdownHelper.markdown_to_html(markdown_content)
+    course_completed = current_user.course_completions.exists?(course_id: @curso.id)
 
     curso_html = render_to_string(partial: 'shared/curso', locals: { curso: @curso, html_content: html_content })
-    feedback_form_html = render_to_string(partial: 'shared/feedback_form', locals: { curso: @curso })
+    feedback_form_html = render_to_string(partial: 'shared/feedback_form', locals: { curso: @curso, course_completed: course_completed })
 
     render json: { curso_html: curso_html, feedback_form_html: feedback_form_html }
   end
@@ -30,11 +31,11 @@ class StudentsController < ApplicationController
     if completion.save
       flash[:notice] = '¡Curso completado con éxito! Gracias por tu feedback.'
       curso = Course.find(params[:course_id])
+      course_completed = current_user.course_completions.exists?(course_id: curso.id)
       curso_html_content = MarkdownHelper.markdown_to_html(curso.file.download)
       html_content = render_to_string(partial: 'shared/curso', formats: [:html], locals: { curso: curso, html_content: curso_html_content })
-      feedback_form_html = render_to_string(partial: 'shared/feedback_form', formats: [:html], locals: { curso: curso })
+      feedback_form_html = render_to_string(partial: 'shared/feedback_form', formats: [:html], locals: { curso: curso, course_completed: course_completed })
 
-      # Actualiza las listas de cursos
       completed_course_ids = current_user.course_completions.pluck(:course_id)
       @completed_courses = Course.where(id: completed_course_ids)
       @incomplete_courses = Course.where.not(id: completed_course_ids)

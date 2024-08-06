@@ -1,4 +1,3 @@
-<!-- app/views/shared/_feedback_form.html.erb -->
 <div class='text-black overflow-hidden'>
   <%= form_with url: complete_course_path, method: :post, remote: true, class: "space-y-4" do |form| %>
     <%= form.hidden_field :course_id, value: curso.id %>
@@ -9,7 +8,7 @@
     </div>
     
     <div class="flex justify-end">
-      <%= form.submit "Terminar Curso", class: "button is-primary flex" %>
+      <%= form.submit (course_completed ? "Agregar Feedback" : "Terminar Curso"), class: "button is-primary flex" %>
     </div>
   <% end %>
 </div>

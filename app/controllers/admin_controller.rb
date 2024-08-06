@@ -314,9 +314,10 @@ class AdminController < ApplicationController
     @curso = Course.find(params[:course_id])
     markdown_content = @curso.file.download
     html_content = MarkdownHelper.markdown_to_html(markdown_content)
+    course_completed = current_user.course_completions.exists?(course_id: @curso.id)
 
     curso_html = render_to_string(partial: 'shared/curso', locals: { curso: @curso, html_content: html_content })
-    feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', locals: { curso: @curso })
+    feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', locals: { curso: @curso, course_completed: course_completed })
 
     render json: { curso_html: curso_html, feedback_form_html: feedback_form_html }
   end
@@ -326,11 +327,11 @@ class AdminController < ApplicationController
 
     if completion.save
       curso = Course.find(params[:course_id])
+      course_completed = current_user.course_completions.exists?(course_id: curso.id)
       curso_html_content = MarkdownHelper.markdown_to_html(curso.file.download)
       html_content = render_to_string(partial: 'shared/curso', formats: [:html], locals: { curso: curso, html_content: curso_html_content })
-      feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', formats: [:html], locals: { curso: curso })
-      
-      # Actualiza las listas de cursos
+      feedback_form_html = render_to_string(partial: 'shared/feedback_form_admin', formats: [:html], locals: { curso: curso, course_completed: course_completed })
+
       completed_course_ids = current_user.course_completions.pluck(:course_id)
       @completed_courses = Course.where(id: completed_course_ids)
       @incomplete_courses = Course.where.not(id: completed_course_ids)
@@ -341,6 +342,7 @@ class AdminController < ApplicationController
       render json: { success: false, message: 'Hubo un error al completar el curso. Por favor, inténtalo de nuevo.' }
     end
   end
+
   #-------------------Usuarios-------------------#
   def usuarios
     @usuarios = User.all

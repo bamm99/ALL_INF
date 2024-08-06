@@ -40,4 +40,6 @@ gem 'chart-js-rails'
 gem 'chartkick'
 gem 'groupdate'
 gem 'highcharts-rails'
+gem 'unidecoder'
+
 
