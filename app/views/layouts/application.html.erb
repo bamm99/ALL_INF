@@ -23,23 +23,5 @@
 
   <%= yield %>
 
-  <script>
-    document.addEventListener("turbo:load", () => {
-      const flashMessagesElement = document.getElementById("flash-messages");
-      if (flashMessagesElement) {
-        const flashData = JSON.parse(flashMessagesElement.dataset.flash);
-        if (flashData.notice) {
-          toastr.success(flashData.notice);
-        }
-        if (flashData.alert) {
-          toastr.warning(flashData.alert);
-        }
-        if (flashData.error) {
-          toastr.error(flashData.error);
-        }
-      } else {
-      }
-    });
-  </script>
 </body>
 </html>
