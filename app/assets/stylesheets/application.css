@@ -336,3 +336,7 @@ html, body {
   color: lightgrey;
   opacity: 1; /* Asegura que el color se aplique correctamente en todos los navegadores */
 }
+
+body.swal2-shown {
+  overflow-y: hidden !important;
+}

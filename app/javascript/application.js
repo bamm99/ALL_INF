@@ -30,7 +30,8 @@ ExportData(Highcharts);
 Accessibility(Highcharts);
 
 window.Highcharts = Highcharts;
-window.toastr = toastr; // Asegúrate de que toastr esté disponible globalmente
+window.toastr = toastr; 
+
 
 function calculatePageLength() {
   const windowHeight = $(window).height();

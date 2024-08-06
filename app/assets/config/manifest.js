@@ -3,3 +3,4 @@
 //= link github_markdown.css
 //= link chartkick.js
  //= link print.css
+//= link bulma.css

@@ -19,18 +19,18 @@
             <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="ml-4 contenido-principal">
                     <h3 class="title is-3 pt-4 textoblanco">Información de la Universidad</h3>
-                        <div>
-                            <p><strong class="pt-2 textoblanco">Nombre:</strong> <%= @universidad.name %></p>
-                            <p><strong class="pt-2 textoblanco">Cantidad de Carreras:</strong> <%= @universidad.degrees.count %></p>
-                            <p><strong class="pt-2 textoblanco">Cantidad de Usuarios:</strong> <%= @usuarios_count %></p>
-                            <p><strong class="pt-2 textoblanco">Fecha de Registro:</strong> <%= @universidad.created_at.strftime("%d/%m/%Y") %></p>
-                            <div class="buttons">
-                                <button id="edit_university_button" class="button is-warning">Editar</button>
-                                <%= link_to 'Eliminar', eliminar_universidad_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar esta universidad? Hay #{@usuarios_count} usuarios registrados. Los usuarios serán actualizados para no tener universidad." }, class: "button is-danger" %>
-                                <%= link_to 'Volver', admin_universidades_path, class: "button is-link" %>
-                                <button id="add_degree_button" class="button is-success">Agregar Carrera</button>
-                            </div>
+                    <div>
+                        <p><strong class="pt-2 textoblanco">Nombre:</strong> <%= @universidad.name %></p>
+                        <p><strong class="pt-2 textoblanco">Cantidad de Carreras:</strong> <%= @universidad.degrees.count %></p>
+                        <p><strong class="pt-2 textoblanco">Cantidad de Usuarios:</strong> <%= @usuarios_count %></p>
+                        <p><strong class="pt-2 textoblanco">Fecha de Registro:</strong> <%= @universidad.created_at.strftime("%d/%m/%Y") %></p>
+                        <div class="buttons">
+                            <button id="edit_university_button" class="button is-warning">Editar</button>
+                            <button class="button is-danger btn-eliminar-universidad" data-university-id="<%= @universidad.id %>">Eliminar</button>
+                            <%= link_to 'Volver', admin_universidades_path, class: "button is-link" %>
+                            <button id="add_degree_button" class="button is-success">Agregar Carrera</button>
                         </div>
+                    </div>
                     <div class="content mt-2">
                         <!-- Formulario para editar nombre de la universidad (oculto por defecto) -->
                         <div id="edit_university_form" class="mt-4 is-hidden">
@@ -54,99 +54,172 @@
 
                         <!-- Formulario para agregar nueva carrera (oculto por defecto) -->
                         <div id="add_degree_form" class="mt-4 is-hidden">
-                        <%= form_tag agregar_carrera_admin_path(@universidad), method: :post do %>
-                            <div class="field">
-                            <label class="label textoblanco">Nombre de la Carrera</label>
-                            <div class="control">
-                                <input type="text" name="degree_name" class="input input-custom" required>
-                            </div>
-                            </div>
-                            <div class="field is-grouped">
-                            <div class="control">
-                                <button type="submit" class="button is-primary">Agregar</button>
-                            </div>
-                            <div class="control">
-                                <button type="button" id="cancel_add_degree" class="button is-light">Cancelar</button>
-                            </div>
-                            </div>
-                        <% end %>
+                            <%= form_tag agregar_carrera_admin_path(@universidad), method: :post do %>
+                                <div class="field">
+                                    <label class="label textoblanco">Nombre de la Carrera</label>
+                                    <div class="control">
+                                        <input type="text" name="degree_name" class="input input-custom" required>
+                                    </div>
+                                </div>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary">Agregar</button>
+                                    </div>
+                                    <div class="control">
+                                        <button type="button" id="cancel_add_degree" class="button is-light">Cancelar</button>
+                                    </div>
+                                </div>
+                            <% end %>
                         </div>
 
                         <% if @degrees.any? %>
-                        <h4 class="title is-4 mt-4 textoblanco">Carreras</h4>
-                        <%= form_tag eliminar_carreras_admin_path(@universidad), method: :delete, data: { confirm: "¿Estás seguro de eliminar las carreras seleccionadas? Los usuarios de estas carreras serán actualizados para no tener carrera." } do %>
-                            <div class="table-container is-flex is-justify-content-center">
-                            <table id="degrees_table" class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
-                                <thead>
-                                <tr>
-                                    <th class="textoblanco"><input type="checkbox" id="select_all"></th>
-                                    <th class="textoblanco">Nombre de la Carrera</th>
-                                    <th class="textoblanco">Cantidad de Usuarios Registrados</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <% @degrees.each do |degree| %>
-                                    <tr>
-                                    <td><input type="checkbox" name="degree_ids[]" value="<%= degree.id %>"></td>
-                                    <td class="textoblanco"><%= degree.name %></td>
-                                    <td class="textoblanco"><%= User.where(user_degree: degree).count %></td>
-                                    </tr>
-                                <% end %>
-                                </tbody>
-                            </table>
-                            </div>
-                            <div class="is-flex is-justify-content-flex-end mt-4">
-                            <button type="submit" class="button is-danger">Eliminar Carreras Seleccionadas</button>
-                            </div>
-                        <% end %>
+                            <h4 class="title is-4 mt-4 textoblanco">Carreras</h4>
+                            <%= form_tag eliminar_carreras_admin_path(@universidad), method: :delete, id: "eliminar-carreras-form" do %>
+                                <div class="table-container is-flex is-justify-content-center">
+                                    <table id="degrees_table" class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
+                                        <thead>
+                                            <tr>
+                                                <th class="textoblanco"><input type="checkbox" id="select_all"></th>
+                                                <th class="textoblanco">Nombre de la Carrera</th>
+                                                <th class="textoblanco">Cantidad de Usuarios Registrados</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% @degrees.each do |degree| %>
+                                                <tr>
+                                                    <td><input type="checkbox" name="degree_ids[]" value="<%= degree.id %>"></td>
+                                                    <td class="textoblanco"><%= degree.name %></td>
+                                                    <td class="textoblanco"><%= User.where(user_degree: degree).count %></td>
+                                                </tr>
+                                            <% end %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="is-flex is-justify-content-flex-end mt-4">
+                                    <button type="button" class="button is-danger btn-eliminar-carreras">Eliminar Carreras Seleccionadas</button>
+                                </div>
+                            <% end %>
                         <% else %>
-                        <p class="textoblanco">No hay carreras para mostrar.</p>
+                            <p class="textoblanco">No hay carreras para mostrar.</p>
                         <% end %>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <p id="delete-modal-text" class="is-size-4 has-text-weight-bold"></p>
+                <div class="buttons is-centered mt-4">
+                    <button class="button is-danger" id="confirmDelete">Sí</button>
+                    <button class="button" id="cancelDelete">No</button>
+                </div>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
     <script>
-        // Función para mostrar/ocultar el formulario de agregar carrera
-        document.getElementById('add_degree_button').addEventListener('click', function() {
-            var editForm = document.getElementById('edit_university_form');
-            var addForm = document.getElementById('add_degree_form');
+        document.addEventListener("turbo:load", function() {
+            const deleteModal = document.getElementById('delete-modal');
+            const confirmDeleteButton = document.getElementById('confirmDelete');
+            const cancelDeleteButton = document.getElementById('cancelDelete');
+            const modalCloseButton = deleteModal.querySelector('.modal-close');
+            let deleteUrl = null;
+            let deleteForm = null;
 
-            if (!addForm.classList.contains('is-hidden')) {
-                addForm.classList.add('is-hidden');
+            // Mostrar/ocultar formularios de edición/agregado
+            document.getElementById('add_degree_button').addEventListener('click', function() {
+                document.getElementById('edit_university_form').classList.add('is-hidden');
+                document.getElementById('add_degree_form').classList.toggle('is-hidden');
+            });
+
+            document.getElementById('cancel_add_degree').addEventListener('click', function() {
+                document.getElementById('add_degree_form').classList.add('is-hidden');
+            });
+
+            document.getElementById('edit_university_button').addEventListener('click', function() {
+                document.getElementById('add_degree_form').classList.add('is-hidden');
+                document.getElementById('edit_university_form').classList.toggle('is-hidden');
+            });
+
+            document.getElementById('cancel_edit_university').addEventListener('click', function() {
+                document.getElementById('edit_university_form').classList.add('is-hidden');
+            });
+
+            // Eliminar Universidad
+            document.querySelectorAll('.btn-eliminar-universidad').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const universityId = this.getAttribute('data-university-id');
+                    deleteUrl = `/admin/universidades/${universityId}`;
+                    document.getElementById('delete-modal-text').innerText = '¿Estás seguro que deseas eliminar esta universidad?';
+                    deleteModal.classList.add('is-active');
+                });
+            });
+
+            // Eliminar Carreras Seleccionadas
+            document.querySelector('.btn-eliminar-carreras').addEventListener('click', function(e) {
+                e.preventDefault();
+                deleteForm = document.getElementById('eliminar-carreras-form');
+                document.getElementById('delete-modal-text').innerText = '¿Estás seguro que deseas eliminar las carreras seleccionadas?';
+                deleteModal.classList.add('is-active');
+            });
+
+            confirmDeleteButton.addEventListener('click', function() {
+                if (deleteUrl) {
+                    deleteModal.classList.remove('is-active');
+                    deleteResource(deleteUrl);
+                } else if (deleteForm) {
+                    deleteModal.classList.remove('is-active');
+                    deleteForm.submit();
+                }
+            });
+
+            cancelDeleteButton.addEventListener('click', function() {
+                deleteModal.classList.remove('is-active');
+                deleteUrl = null;
+                deleteForm = null;
+            });
+
+            modalCloseButton.addEventListener('click', function() {
+                deleteModal.classList.remove('is-active');
+                deleteUrl = null;
+                deleteForm = null;
+            });
+
+            function deleteResource(url) {
+                const form = document.createElement('form');
+                form.action = url;
+                form.method = 'POST';
+
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = '_method';
+                hiddenInput.value = 'delete';
+                form.appendChild(hiddenInput);
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'authenticity_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+
+                document.body.appendChild(form);
+                form.submit();
             }
-            editForm.classList.toggle('is-hidden');
-        });
 
-        // Función para cancelar la acción de agregar carrera
-        document.getElementById('cancel_add_degree').addEventListener('click', function() {
-            document.getElementById('add_degree_form').classList.add('is-hidden');
-        });
-
-        // Función para mostrar/ocultar el formulario de editar universidad
-        document.getElementById('edit_university_button').addEventListener('click', function() {
-            var editForm = document.getElementById('edit_university_form');
-            var addForm = document.getElementById('add_degree_form');
-
-            if (!editForm.classList.contains('is-hidden')) {
-                editForm.classList.add('is-hidden');
-            }
-            addForm.classList.toggle('is-hidden');
-        });
-
-        // Función para cancelar la acción de editar universidad
-        document.getElementById('cancel_edit_university').addEventListener('click', function() {
-            document.getElementById('edit_university_form').classList.add('is-hidden');
-        });
-
-        // Función para seleccionar/deseleccionar todos los checkboxes
-        document.getElementById('select_all').addEventListener('click', function(event) {
-            var checkboxes = document.querySelectorAll('input[name="degree_ids[]"]');
-            checkboxes.forEach(function(checkbox) {
-                checkbox.checked = event.target.checked;
+            // Función para seleccionar/deseleccionar todos los checkboxes
+            document.getElementById('select_all').addEventListener('click', function(event) {
+                var checkboxes = document.querySelectorAll('input[name="degree_ids[]"]');
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = event.target.checked;
+                });
             });
         });
     </script>

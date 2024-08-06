@@ -28,14 +28,12 @@ class AdminController < ApplicationController
   end
 
   def ver_curso
-    @curso = Course.find(params[:id])
     @total_completions = @curso.course_completions.select(:user_id).distinct.count
     @feedbacks = @curso.course_completions.where.not(feedback: [nil, ""])
     render 'admin/cursos/admin_curso_info'
   end
 
   def editar_curso
-    @curso = Course.find(params[:id])
     if @curso.file.attached?
       @curso_content = @curso.file.download.force_encoding('UTF-8')
     else
@@ -58,13 +56,18 @@ class AdminController < ApplicationController
 
   def eliminar_curso
     ActiveRecord::Base.transaction do
-      @curso = Course.find(params[:id])
       @curso.course_completions.destroy_all
       @curso.destroy!
     end
-    redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.'
+    respond_to do |format|
+      format.html { redirect_to admin_cursos_path, notice: 'Curso eliminado con éxito.' }
+      format.json { head :no_content }
+    end
   rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::RecordInvalid => e
-    redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}"
+    respond_to do |format|
+      format.html { redirect_to admin_cursos_path, alert: "Ocurrió un error al eliminar el curso: #{e.message}" }
+      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+    end
   end
 
   def eliminar_feedbacks
@@ -437,8 +440,6 @@ class AdminController < ApplicationController
 
   def set_curso
     @curso = Course.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to admin_cursos_path, alert: 'Curso no encontrado.'
   end
 
   def course_params
