@@ -6,6 +6,10 @@ class StudentsController < ApplicationController
     head :ok
   end
 
+  def study_materials
+    @study_materials = StudyMaterial.includes(:category).all
+  end
+
   def dashboard
     completed_course_ids = current_user.course_completions.pluck(:course_id)
     @completed_courses = Course.where(id: completed_course_ids)
