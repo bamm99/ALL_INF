@@ -25,6 +25,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Generate Gemfile.lock
+        run: bundle lock --add-platform ruby
+      
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
@@ -55,14 +58,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Generate Gemfile.lock
+        run: bundle lock --add-platform ruby
+
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.0
           bundler-cache: true
-
-      - name: Disable bundler frozen mode
-        run: bundle config set frozen false
       
       - name: Install Node.js and yarn
         uses: actions/setup-node@v3
