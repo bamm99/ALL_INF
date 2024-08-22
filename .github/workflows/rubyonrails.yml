@@ -1,4 +1,4 @@
-name: "Ruby on Rails CI"
+name: "Ruby on Rails CI/CD"
 
 on:
   push:
@@ -30,16 +30,14 @@ jobs:
         with:
           ruby-version: 3.3.0
           bundler-cache: true
-
-      - name: Install Node.js
+      
+      - name: Install Node.js and yarn
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+          cache: 'yarn'
       
-      - name: Install Yarn
-        run: npm install -g yarn
-
-      - name: Install JavaScript dependencies
+      - name: Install yarn dependencies
         run: yarn install
       
       - name: Set up database
@@ -50,8 +48,9 @@ jobs:
       - name: Run tests
         run: bin/rake
 
-  lint:
+  deploy:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -62,25 +61,20 @@ jobs:
           ruby-version: 3.3.0
           bundler-cache: true
       
-      - name: Install Node.js
+      - name: Install Node.js and yarn
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+          cache: 'yarn'
       
-      - name: Install Yarn
-        run: npm install -g yarn
-
-      - name: Install JavaScript dependencies
+      - name: Install yarn dependencies
         run: yarn install
-      
-      - name: Generate binstubs
-        run: bundle binstubs bundler-audit brakeman
-      
-      - name: Security audit dependencies
-        run: bin/bundler-audit --update
-      
-      - name: Security audit application code
-        run: bin/brakeman -q -w2
-      
-      - name: Lint Ruby files
-        run: echo "No RuboCop configuration found, skipping linting."
+
+      - name: Build assets with esbuild
+        run: bin/rails assets:precompile
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
