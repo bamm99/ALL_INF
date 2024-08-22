@@ -60,6 +60,9 @@ jobs:
         with:
           ruby-version: 3.3.0
           bundler-cache: true
+
+      - name: Disable bundler frozen mode
+        run: bundle config set frozen false
       
       - name: Install Node.js and yarn
         uses: actions/setup-node@v3
