@@ -41,5 +41,5 @@ gem 'chartkick'
 gem 'groupdate'
 gem 'highcharts-rails'
 gem 'unidecoder'
-
+gem 'bundler-audit'
 
