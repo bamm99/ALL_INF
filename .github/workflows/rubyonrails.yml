@@ -30,6 +30,17 @@ jobs:
         with:
           ruby-version: 3.3.0
           bundler-cache: true
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install
       
       - name: Set up database
         run: |
@@ -50,6 +61,17 @@ jobs:
         with:
           ruby-version: 3.3.0
           bundler-cache: true
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install
       
       - name: Generate binstubs
         run: bundle binstubs bundler-audit brakeman
