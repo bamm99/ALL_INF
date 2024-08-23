@@ -1,3 +1,0 @@
-limpiar input de apellido al generar usuarios.
-    apellidos separados por espacios dan errores
-    
