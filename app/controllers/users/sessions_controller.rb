@@ -26,10 +26,10 @@ class Users::SessionsController < Devise::SessionsController
     username = generate_wetty_username(resource)
     password = session[:user_password]
     generic_password = "allinf"
-    hostname = '146.83.194.188'
-    port = 22
-    ssh_username = 'dev'
-    ssh_password = 'dolcegusto'
+    hostname = ENV['HOSTNAME']
+    port = ENV['PORT'].to_i
+    ssh_username = ENV['SSH_USERNAME']
+    ssh_password = ENV['SSH_PASSWORD']
 
     add_host_key_to_known_hosts(hostname)
 
@@ -79,7 +79,7 @@ class Users::SessionsController < Devise::SessionsController
   def generate_wetty_url(resource)
     username = generate_wetty_username(resource)
     password = session[:user_password]
-    wetty_url = "http://146.83.194.188:3000/wetty/ssh/#{username}?pass=#{password}"
+    wetty_url = "http://#{ENV['HOSTNAME']}:3000/wetty/ssh/#{username}?pass=#{password}"
     session[:wetty_url] = wetty_url
   end
 
