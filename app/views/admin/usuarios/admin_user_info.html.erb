@@ -1,5 +1,5 @@
 <body data-current-user-id="<%= current_user.id %>" class="is-flex is-flex-direction-column h-full">
-    <div class='container'>
+    <div class='container'> 
         <%= render 'shared/screenwarning' %>
         <header class="has-text-centered">
             <h1 class="regularTitle">./all_inf</h1>
@@ -12,141 +12,91 @@
 
         <div class="is-flex is-flex-grow-1 columns p-2 mb-2 mt-1">
             <!-- Sidebar -->
-            <div class="column is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
+            <div class="is-one-quarters box p-4 ml-4 is-flex is-flex-direction-column box_terminal">
                 <%= render 'shared/adminsidebar' %>
             </div>
             <!-- Área de Contenido Principal -->
             <div class="column is-three-quarters box p-4 mx-4 mb-5 box_main">
                 <div class="ml-4 contenido-principal">
-                    <div class="content mt-4">
-                        <h4 class="title is-4 textoblanco">Información del Curso</h4>
-                        <div>
-                            <p><strong class="textoblanco">Título:</strong> <%= @curso.title %></p>
-                            <p><strong class="textoblanco">Descripción:</strong> <%= @curso.description %></p>
-                            <p><strong class="textoblanco">Usuarios que han completado el curso:</strong> <%= @total_completions %></p>
-                            <div class="buttons">
-                                <%= link_to 'Editar', editar_curso_admin_path(@curso), class: "button is-warning" %>
-                                <button class="button is-danger btn-eliminar" data-course-id="<%= @curso.id %>">Eliminar</button>
-                                <%= link_to 'Volver', admin_cursos_path, class: "button is-link" %>
-                            </div>
+                    <div class="pt-4">
+                        <h2 class="title is-3 mb-4 textoblanco">Información del Usuario</h2>
+                        <div class="textoblanco">
+                            <div><strong class="textoblanco">Nombre:</strong> <%= usuario.user_name.presence || "-" %></div>
+                            <div><strong class="textoblanco">Apellido:</strong> <%= usuario.user_last_name.presence || "-" %></div>
+                            <div><strong class="textoblanco">Email:</strong> <%= usuario.email.presence || "-" %></div>
+                            <div><strong class="textoblanco">Administrador:</strong> <%= usuario.admin? ? "Sí" : "No" %></div>
+                            <div><strong class="textoblanco">Estudiante:</strong> <%= usuario.user_student == 0 ? "No" : "Sí" %></div>
+                            <div><strong class="textoblanco">Universidad:</strong> <%= usuario.user_university&.name || "-" %></div>
+                            <div><strong class="textoblanco">Carrera:</strong> <%= usuario.user_degree&.name || "-" %></div>
+                            <div><strong class="textoblanco">Fecha de registro:</strong> <%= usuario.created_at || "-" %></div>
                         </div>
+                        <div class="mt-4 navbar-end">
+                            <!-- Botón de Editar -->
+                            <%= link_to 'Editar', admin_edit_user_path(usuario), class: "button is-dark mx-2" %>
 
-                        <% if @feedbacks.any? %>
-                            <h4 class="title is-4 mt-4 textoblanco">Feedback de los usuarios</h4>
-                            <%= form_tag eliminar_feedbacks_admin_path, method: :delete do %>
-                                <div class="table-container is-flex is-justify-content-center">
-                                    <table class="dt-container dt-bulma table-custom is-fullwidth table-datatables">
-                                        <thead>
-                                            <tr>
-                                                <th class="textoblanco"><input type="checkbox" id="select_all"></th>
-                                                <th class="textoblanco">Usuario</th>
-                                                <th class="textoblanco">Feedback</th>
-                                                <th class="textoblanco">Fecha</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% @feedbacks.each do |completion| %>
-                                                <tr>
-                                                    <td><input type="checkbox" name="feedback_ids[]" value="<%= completion.id %>"></td>
-                                                    <td class="textoblanco"><%= completion.user.email %></td>
-                                                    <td class="textoblanco"><%= completion.feedback %></td>
-                                                    <td class="textoblanco"><%= completion.completed_at.strftime("%d/%m/%Y") %></td>
-                                                </tr>
-                                            <% end %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="is-flex is-justify-content-flex-end mt-4">
-                                    <button type="submit" class="button is-danger">Eliminar Registros</button>
-                                </div>
-                            <% end %>
-                        <% else %>
-                            <p class="textoblanco">No hay feedback de los usuarios para mostrar.</p>
-                        <% end %>
+                            <!-- Botón de Eliminar -->
+                            <%= link_to 'Eliminar', admin_delete_user_path(usuario), method: :delete, 
+                                        class: "btn-eliminar button is-danger", 
+                                        data: { 
+                                        user_id: usuario.id, 
+                                        current_user_id: current_user.id
+                                        } %>
+
+                            <!-- Botón de Volver Atrás -->
+                            <%= link_to 'Volver Atrás', admin_users_path, class: "button is-warning mx-2" %>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal" id="delete-modal">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box has-text-centered">
-                <p class="is-size-4 has-text-weight-bold">¿Estás seguro que deseas eliminar este curso?</p>
-                <div class="buttons is-centered mt-4">
-                    <button class="button is-danger" id="confirmDelete">Sí</button>
-                    <button class="button" id="cancelDelete">No</button>
-                </div>
-            </div>
-        </div>
-        <button class="modal-close is-large" aria-label="close"></button>
-    </div>
-
     <script>
         document.addEventListener("turbo:load", function() {
-            const deleteModal = document.getElementById('delete-modal');
-            const confirmDeleteButton = document.getElementById('confirmDelete');
-            const cancelDeleteButton = document.getElementById('cancelDelete');
-            const modalCloseButton = deleteModal.querySelector('.modal-close');
-            let courseIdToDelete = null;
-
             document.querySelectorAll('.btn-eliminar').forEach(function(button) {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    courseIdToDelete = this.getAttribute('data-course-id');
+                // Asegura que solo se añade un event listener por botón
+                if (button.getAttribute("data-listener-added") !== "true") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const userId = this.getAttribute('data-user-id');
+                        const currentUserId = document.body.getAttribute('data-current-user-id');
 
-                    // Mostrar el modal
-                    deleteModal.classList.add('is-active');
-                });
-            });
+                        if (userId === currentUserId) {
+                            alert('No puedes eliminar tu propio usuario.');
+                            return;
+                        }
 
-            confirmDeleteButton.addEventListener('click', function() {
-                if (courseIdToDelete) {
-                    deleteCourse(courseIdToDelete);
-                    deleteModal.classList.remove('is-active');
+                        if (!confirm("¿Estás seguro que deseas eliminar este usuario?")) {
+                            return; // Usuario cancela la acción.
+                        }
+
+                        // Construye la URL para la petición DELETE
+                        const deleteUrl = `/admin_delete_user/${userId}`;
+                        fetch(deleteUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include',
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Redirige al listado de usuarios después de eliminar.
+                                window.location.href = '/admin/usuarios';
+                            } else {
+                                alert('No se pudo eliminar el usuario.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error al eliminar el usuario.');
+                        });
+                    });
+
+                    // Marca el botón como ya procesado.
+                    button.setAttribute("data-listener-added", "true");
                 }
-            });
-
-            cancelDeleteButton.addEventListener('click', function() {
-                deleteModal.classList.remove('is-active');
-            });
-
-            modalCloseButton.addEventListener('click', function() {
-                deleteModal.classList.remove('is-active');
-            });
-
-            function deleteCourse(courseId) {
-                const deleteUrl = `/admin/cursos/${courseId}`;
-                fetch(deleteUrl, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                })
-                .then(response => {
-                    if (response.ok) {
-                        toastr.success('Curso eliminado con éxito.');
-                        window.location.href = '/admin/cursos';
-                    } else {
-                        toastr.error('No se pudo eliminar el curso.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    toastr.error('Error al eliminar el curso.');
-                });
-            }
-
-            // Función para seleccionar/deseleccionar todos los checkboxes
-            document.getElementById('select_all').addEventListener('click', function(event) {
-                var checkboxes = document.querySelectorAll('input[name="feedback_ids[]"]');
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = event.target.checked;
-                });
             });
         });
     </script>

@@ -7,7 +7,7 @@ class AdminController < ApplicationController
   before_action :load_wetty_url, only: [:student_view]
   include MarkdownHelper
 
-  #-------------------Cursos-------------------#
+#-------------------Cursos-------------------#
   def cursos
     @cursos = Course.all
     render 'admin/cursos/admin_cursos'
@@ -79,12 +79,12 @@ class AdminController < ApplicationController
     redirect_to request.referer, alert: "Ocurrió un error al eliminar los feedbacks: #{e.message}"
   end
 
-  #-------------------Dashboard-------------------#
+#-------------------Dashboard-------------------#
   def dashboard
     # Dashboard content
   end
 
-  #-------------------Estadisticas----------------#
+#-------------------Estadisticas----------------#
   def statistics
     @chart_type = params[:chart_type] || 'courses_completed_per_month'
     @universities = University.all
@@ -160,7 +160,7 @@ class AdminController < ApplicationController
     "rgba(#{rgb[0]}, #{rgb[1]}, #{rgb[2]}, #{brightness})"
   end
 
-  #-------------------Universidades-------------------#
+#-------------------Universidades-------------------#
   def universidades
     @universidades = University.all
     render 'admin/universidades/admin_universidades'
@@ -247,7 +247,7 @@ class AdminController < ApplicationController
     end
   end
   
-  #-------------------Materiales de Estudio-------------------#
+#-------------------Materiales de Estudio-------------------#
   def study_materials
     @categories = Category.all
     @study_materials = StudyMaterial.all
@@ -304,7 +304,7 @@ class AdminController < ApplicationController
     redirect_to rails_blob_path(@study_material.file, disposition: 'attachment')
   end
 
-  #-------------------Studentview-------------------#
+#-------------------Studentview-------------------#
   def student_view
     completed_course_ids = current_user.course_completions.pluck(:course_id)
     @completed_courses = Course.where(id: completed_course_ids)
@@ -346,7 +346,7 @@ class AdminController < ApplicationController
     end
   end
 
-  #-------------------Usuarios-------------------#
+#-------------------Usuarios-------------------#
   def usuarios
     @usuarios = User.all
     render 'admin/usuarios/admin_users', locals: { usuarios: @usuarios }
@@ -407,13 +407,13 @@ class AdminController < ApplicationController
       end
       head :no_content
     end
-  rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::RecordInvalid => e
-    render json: { error: e.message }, status: :unprocessable_entity
-  rescue ActiveRecord::RecordNotFound
-    head :not_found
+    rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    rescue ActiveRecord::RecordNotFound
+      head :not_found
   end
 
-  #-------------------Privado-------------------#
+#-------------------Privado-------------------#
   private
 
   def user_params
@@ -493,7 +493,7 @@ class AdminController < ApplicationController
   
   def generate_study_materials_distribution_by_category_data
     StudyMaterial.joins(:category)
-                 .group('categories.name')
-                 .count
+      .group('categories.name')
+      .count
   end
 end
